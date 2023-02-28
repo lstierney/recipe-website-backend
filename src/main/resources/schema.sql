@@ -1,6 +1,8 @@
+use recipes;
+
 create table recipe
 (
-    id           int unsigned auto_increment primary key,
+    id           int auto_increment primary key,
     name         varchar(100) not null,
     description  text         not null,
     cooking_time time         not null,
@@ -10,8 +12,8 @@ create table recipe
 
 create table method_step
 (
-    id          int unsigned auto_increment primary key,
-    recipe_id   int unsigned not null,
+    id          int auto_increment primary key,
+    recipe_id   int          not null,
     ordering    int          not null,
     description varchar(255) not null,
     constraint method_recipe_id_fk
@@ -20,7 +22,7 @@ create table method_step
 
 create table unit
 (
-    id           int unsigned auto_increment primary key,
+    id           int auto_increment primary key,
     name         varchar(20) not null,
     abbreviation varchar(10) not null,
     constraint unit_abbreviation_uk
@@ -31,11 +33,11 @@ create table unit
 
 create table ingredient
 (
-    id          int unsigned auto_increment primary key,
+    id          int auto_increment primary key,
     description varchar(255) not null,
     quantity    decimal      not null,
-    recipe_id   int unsigned not null,
-    unit_id     int unsigned not null,
+    recipe_id   int          not null,
+    unit_id     int          not null,
     constraint ingredient_unit_fk
         foreign key (unit_id) references unit (id),
     constraint ingredient_recipe_fk
