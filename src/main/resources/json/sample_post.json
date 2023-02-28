@@ -1,0 +1,31 @@
+{
+  "name": "Spaghetti Bolognaise",
+  "description": "The all time classic",
+  "cookingTime": "2017-01-23T12:34:56.123456789Z",
+  "methodSteps": [
+    {
+      "ordering": 1,
+      "description": "The first step"
+    },
+    {
+      "ordering": 2,
+      "description": "The second step"
+    }
+  ],
+  "ingredients": [
+    {
+      "description": "Chopped Tomatoes",
+      "quantity": 1,
+      "unit": {
+        "id": 8
+      }
+    },
+    {
+      "description": "Dried Spaghetti",
+      "quantity": 10,
+      "unit": {
+        "id": 6
+      }
+    }
+  ]
+}

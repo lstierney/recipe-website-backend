@@ -1,12 +1,16 @@
 insert into unit(name, abbreviation)
-values ("Teaspoon", "tsp");
+values ("teaspoon", "tsp");
 insert into unit(name, abbreviation)
-values ("Tablespoon", "tbsp");
+values ("tablespoon", "tbsp");
 insert into unit(name, abbreviation)
-values ("Gram", "g");
+values ("gram", "g");
 insert into unit(name, abbreviation)
-values ("Kilogram", "kg");
+values ("kilogram", "kg");
 insert into unit(name, abbreviation)
-values ("Pound", "lb");
+values ("pound", "lb");
 insert into unit(name, abbreviation)
-values ("Cup", "cup");
+values ("ounce", "oz");
+insert into unit(name, abbreviation)
+values ("cup", "cup");
+insert into unit(name, abbreviation)
+values ("400g can", "can");
