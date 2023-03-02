@@ -24,22 +24,6 @@ public class Recipe implements java.io.Serializable {
     public Recipe() {
     }
 
-    public Recipe(int id, String name, String description, Date cookingTime) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.cookingTime = cookingTime;
-    }
-
-    public Recipe(int id, String name, String description, Date cookingTime, List<MethodStep> methodSteps, List<Ingredient> ingredients) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.cookingTime = cookingTime;
-        this.methodSteps = methodSteps;
-        this.ingredients = ingredients;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -100,6 +84,17 @@ public class Recipe implements java.io.Serializable {
         this.ingredients = ingredients;
         ingredients.forEach(ingredient -> ingredient.setRecipe(this));
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", cookingTime=" + cookingTime +
+                '}';
+    }
+
 }
 
 

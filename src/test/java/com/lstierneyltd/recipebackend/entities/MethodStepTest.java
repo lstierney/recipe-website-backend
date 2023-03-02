@@ -1,9 +1,10 @@
 package com.lstierneyltd.recipebackend.entities;
 
+import com.lstierneyltd.recipebackend.utils.TestStubs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.lstierneyltd.recipebackend.stubs.TestStubs.*;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -16,14 +17,6 @@ public class MethodStepTest {
     }
 
     @Test
-    public void testConstructor() {
-        assertThat(METHOD_STEP.getId(), equalTo(ID));
-        assertThat(METHOD_STEP.getDescription(), equalTo(DESCRIPTION));
-        assertThat(METHOD_STEP.getRecipe(), equalTo(RECIPE_1));
-        assertThat(METHOD_STEP.getOrdering(), equalTo(ORDERING));
-    }
-
-    @Test
     public void testSetGetId() {
         methodStep.setId(ID);
         assertThat(methodStep.getId(), equalTo(ID));
@@ -31,8 +24,10 @@ public class MethodStepTest {
 
     @Test
     public void testSetGetRecipe() {
-        methodStep.setRecipe(RECIPE_1);
-        assertThat(methodStep.getRecipe(), equalTo(RECIPE_1));
+        final Recipe recipe = TestStubs.getRecipe();
+
+        methodStep.setRecipe(recipe);
+        assertThat(methodStep.getRecipe(), equalTo(recipe));
     }
 
     @Test

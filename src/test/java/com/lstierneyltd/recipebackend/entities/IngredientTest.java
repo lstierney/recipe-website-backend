@@ -3,7 +3,9 @@ package com.lstierneyltd.recipebackend.entities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.lstierneyltd.recipebackend.stubs.TestStubs.*;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getUnit;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -16,15 +18,6 @@ public class IngredientTest {
     }
 
     @Test
-    public void testConstructor() {
-        assertThat(INGREDIENT.getId(), equalTo(ID));
-        assertThat(INGREDIENT.getRecipe(), equalTo(RECIPE_1));
-        assertThat(INGREDIENT.getUnit(), equalTo(UNIT_1));
-        assertThat(INGREDIENT.getDescription(), equalTo(DESCRIPTION));
-        assertThat(INGREDIENT.getQuantity(), equalTo(QUANTITY));
-    }
-
-    @Test
     public void testSetGetId() {
         ingredient.setId(ID);
         assertThat(ingredient.getId(), equalTo(ID));
@@ -32,14 +25,18 @@ public class IngredientTest {
 
     @Test
     public void testSetGetRecipe() {
-        ingredient.setRecipe(RECIPE_1);
-        assertThat(ingredient.getRecipe(), equalTo(RECIPE_1));
+        final Recipe recipe = getRecipe();
+        ingredient.setRecipe(recipe);
+
+        assertThat(ingredient.getRecipe(), equalTo(recipe));
     }
 
     @Test
     public void testSetGetUnit() {
-        ingredient.setUnit(UNIT_1);
-        assertThat(ingredient.getUnit(), equalTo(UNIT_1));
+        final Unit unit = getUnit();
+        ingredient.setUnit(unit);
+
+        assertThat(ingredient.getUnit(), equalTo(unit));
     }
 
     @Test

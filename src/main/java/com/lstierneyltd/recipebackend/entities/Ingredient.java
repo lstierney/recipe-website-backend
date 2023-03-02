@@ -17,15 +17,6 @@ public class Ingredient implements java.io.Serializable {
 
     public Ingredient() {
     }
-
-    public Ingredient(int id, Recipe recipe, Unit unit, String description, long quantity) {
-        this.id = id;
-        this.recipe = recipe;
-        this.unit = unit;
-        this.description = description;
-        this.quantity = quantity;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
@@ -74,6 +65,17 @@ public class Ingredient implements java.io.Serializable {
 
     public void setQuantity(long quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "id=" + id +
+                ", recipe=" + recipe +
+                ", unit=" + unit +
+                ", description='" + description + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 }
 

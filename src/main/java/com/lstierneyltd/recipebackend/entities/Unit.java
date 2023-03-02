@@ -18,13 +18,6 @@ public class Unit implements java.io.Serializable {
 
     public Unit() {
     }
-
-    public Unit(int id, String name, String abbreviation) {
-        this.id = id;
-        this.name = name;
-        this.abbreviation = abbreviation;
-    }
-
     @Id
     @GeneratedValue
     @Column(name = "id", unique = true, nullable = false)

@@ -17,13 +17,6 @@ public class MethodStep implements java.io.Serializable {
     public MethodStep() {
     }
 
-    public MethodStep(int id, Recipe recipe, int ordering, String description) {
-        this.id = id;
-        this.recipe = recipe;
-        this.ordering = ordering;
-        this.description = description;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
