@@ -14,7 +14,10 @@ public class TestStubs {
     public static final long QUANTITY = 69;
 
     public final static Unit UNIT_1 = new Unit(ID, NAME, ABBREVIATION);
-    public final static Ingredient INGREDIENT = new Ingredient(ID, RECIPE, UNIT_1, DESCRIPTION, QUANTITY);
+
     public final static Recipe RECIPE = new Recipe();
+
+    public final static Ingredient INGREDIENT = new Ingredient(ID, RECIPE, UNIT_1, DESCRIPTION, QUANTITY);
+
     public final static MethodStep METHOD_STEP = new MethodStep(ID, RECIPE, ORDERING, DESCRIPTION);
 }
