@@ -7,7 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RecipeBackendApplicationTests {
@@ -23,6 +25,6 @@ class RecipeBackendApplicationTests {
     void testRest() throws Exception {
         ResponseEntity<Unit[]> response = testRestTemplate.getForEntity("/units", Unit[].class);
         Unit[] units = response.getBody();
-        assertNotNull(units);
+        assertThat(units, is(notNullValue()));
     }
 }
