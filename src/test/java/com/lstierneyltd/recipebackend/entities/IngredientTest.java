@@ -18,7 +18,7 @@ public class IngredientTest {
     @Test
     public void testConstructor() {
         assertThat(INGREDIENT.getId(), equalTo(ID));
-        assertThat(INGREDIENT.getRecipe(), equalTo(RECIPE));
+        assertThat(INGREDIENT.getRecipe(), equalTo(RECIPE_1));
         assertThat(INGREDIENT.getUnit(), equalTo(UNIT_1));
         assertThat(INGREDIENT.getDescription(), equalTo(DESCRIPTION));
         assertThat(INGREDIENT.getQuantity(), equalTo(QUANTITY));
@@ -32,8 +32,8 @@ public class IngredientTest {
 
     @Test
     public void testSetGetRecipe() {
-        ingredient.setRecipe(RECIPE);
-        assertThat(ingredient.getRecipe(), equalTo(RECIPE));
+        ingredient.setRecipe(RECIPE_1);
+        assertThat(ingredient.getRecipe(), equalTo(RECIPE_1));
     }
 
     @Test
