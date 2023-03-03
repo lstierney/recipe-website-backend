@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,11 @@ import static org.hamcrest.core.Is.is;
 /**
  * Yes I'm ordering the tests. Makes it easier for lazy old me! Shoot me!
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RestIntegrationTests {
+    @LocalServerPort
+    private int localServerPort;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -39,7 +42,7 @@ public class RestIntegrationTests {
     @Test
     @Order(1)
     void contextLoads() {
-        // sanity check
+        System.out.println("############ LOCAL_SERVER_PORT: " + localServerPort + " #############");
     }
 
     @Test
