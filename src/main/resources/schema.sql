@@ -5,7 +5,7 @@ create table recipe
     id           int auto_increment primary key,
     name         varchar(100) not null,
     description  text         not null,
-    cooking_time time         not null,
+    cooking_time int          not null,
     constraint recipes_name_uk
         unique (name)
 );
@@ -37,7 +37,7 @@ create table ingredient
     description varchar(255) not null,
     quantity    decimal      not null,
     recipe_id   int          not null,
-    unit_id     int          not null,
+    unit_id     int,
     constraint ingredient_unit_fk
         foreign key (unit_id) references unit (id),
     constraint ingredient_recipe_fk

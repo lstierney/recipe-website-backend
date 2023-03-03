@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,7 +16,7 @@ public class Recipe implements java.io.Serializable {
     private int id;
     private String name;
     private String description;
-    private Date cookingTime;
+    private int cookingTime;
     private List<MethodStep> methodSteps = new ArrayList<>();
     private List<Ingredient> ingredients = new ArrayList<>();
 
@@ -53,13 +52,13 @@ public class Recipe implements java.io.Serializable {
         this.description = description;
     }
 
-    @Temporal(TemporalType.TIME)
-    @Column(name = "cooking_time", nullable = false, length = 8)
-    public Date getCookingTime() {
+
+    @Column(name = "cooking_time", nullable = false)
+    public int getCookingTime() {
         return this.cookingTime;
     }
 
-    public void setCookingTime(Date cookingTime) {
+    public void setCookingTime(int cookingTime) {
         this.cookingTime = cookingTime;
     }
 
@@ -92,9 +91,10 @@ public class Recipe implements java.io.Serializable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cookingTime=" + cookingTime +
+                ", methodSteps=" + methodSteps +
+                ", ingredients=" + ingredients +
                 '}';
     }
-
 }
 
 

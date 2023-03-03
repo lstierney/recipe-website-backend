@@ -16,6 +16,14 @@ public class UnitTest {
     }
 
     @Test
+    public void testConstructor() {
+        final Unit unit = new Unit(ID, NAME, ABBREVIATION);
+        assertThat(unit.getId(), equalTo(ID));
+        assertThat(unit.getName(), equalTo(NAME));
+        assertThat(unit.getAbbreviation(), equalTo(ABBREVIATION));
+    }
+
+    @Test
     public void testSetGetAbbreviation() {
         unit.setAbbreviation(ABBREVIATION);
         assertThat(unit.getAbbreviation(), equalTo(ABBREVIATION));

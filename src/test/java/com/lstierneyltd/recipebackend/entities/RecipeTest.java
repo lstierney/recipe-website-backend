@@ -28,14 +28,14 @@ public class RecipeTest {
 
     @Test
     public void testGetSetName() {
-        recipe.setName(NAME);
-        assertThat(recipe.getName(), equalTo(NAME));
+        recipe.setName(RECIPE_1_NAME);
+        assertThat(recipe.getName(), equalTo(RECIPE_1_NAME));
     }
 
     @Test
     public void testGetSetDescription() {
-        recipe.setDescription(DESCRIPTION);
-        assertThat(recipe.getDescription(), equalTo(DESCRIPTION));
+        recipe.setDescription(RECIPE_1_DESCRIPTION);
+        assertThat(recipe.getDescription(), equalTo(RECIPE_1_DESCRIPTION));
     }
 
     @Test

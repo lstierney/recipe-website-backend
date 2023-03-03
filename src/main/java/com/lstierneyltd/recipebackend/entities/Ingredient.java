@@ -13,7 +13,7 @@ public class Ingredient implements java.io.Serializable {
     private Recipe recipe;
     private Unit unit;
     private String description;
-    private long quantity;
+    private int quantity;
 
     public Ingredient() {
     }
@@ -39,7 +39,7 @@ public class Ingredient implements java.io.Serializable {
         this.recipe = recipe;
     }
 
-    @JoinColumn(name = "unit_id", nullable = false, referencedColumnName = "id")
+    @JoinColumn(name = "unit_id", referencedColumnName = "id")
     @OneToOne
     public Unit getUnit() {
         return this.unit;
@@ -59,11 +59,11 @@ public class Ingredient implements java.io.Serializable {
     }
 
     @Column(name = "quantity", nullable = false, precision = 10, scale = 0)
-    public long getQuantity() {
+    public int getQuantity() {
         return this.quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -71,7 +71,6 @@ public class Ingredient implements java.io.Serializable {
     public String toString() {
         return "Ingredient{" +
                 "id=" + id +
-                ", recipe=" + recipe +
                 ", unit=" + unit +
                 ", description='" + description + '\'' +
                 ", quantity=" + quantity +

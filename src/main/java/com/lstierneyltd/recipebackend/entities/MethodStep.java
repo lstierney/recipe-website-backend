@@ -56,6 +56,15 @@ public class MethodStep implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "MethodStep{" +
+                "id=" + id +
+                ", ordering=" + ordering +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
 
 

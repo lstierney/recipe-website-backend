@@ -24,9 +24,13 @@ public final class TestStubs {
     public static Recipe getRecipe() {
         final Recipe recipe = getRecipeNoIngredient();
         final Ingredient ingredient = getIngredientNoRecipe();
+        final MethodStep methodStep = getMethodStepNoRecipe();
 
         ingredient.setRecipe(recipe);
         recipe.setIngredients(List.of(ingredient));
+
+        methodStep.setRecipe(recipe);
+        recipe.setMethodSteps(List.of(methodStep));
 
         return recipe;
     }
@@ -34,7 +38,8 @@ public final class TestStubs {
     private static Recipe getRecipeNoIngredient() {
         final Recipe recipe = new Recipe();
         recipe.setId(ID);
-        recipe.setDescription(DESCRIPTION);
+        recipe.setName(RECIPE_1_NAME);
+        recipe.setDescription(RECIPE_1_DESCRIPTION);
         recipe.setCookingTime(COOKING_TIME);
         return recipe;
     }
@@ -48,11 +53,16 @@ public final class TestStubs {
         return ingredient;
     }
 
-    public static MethodStep getMethodStep() {
+    private static MethodStep getMethodStepNoRecipe() {
         final MethodStep methodStep = new MethodStep();
         methodStep.setId(ID);
         methodStep.setOrdering(ORDERING);
         methodStep.setDescription(DESCRIPTION);
+        return methodStep;
+    }
+
+    public static MethodStep getMethodStep() {
+        final MethodStep methodStep = getMethodStepNoRecipe();
         methodStep.setRecipe(getRecipe());
         return methodStep;
     }

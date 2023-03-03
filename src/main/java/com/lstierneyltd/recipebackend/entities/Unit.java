@@ -1,8 +1,12 @@
 package com.lstierneyltd.recipebackend.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Immutable;
+
+import java.util.Objects;
 
 @Entity
+@Immutable
 @Table(
         name = "unit",
         catalog = "recipes",
@@ -18,6 +22,13 @@ public class Unit implements java.io.Serializable {
 
     public Unit() {
     }
+
+    public Unit(int id, String name, String abbreviation) {
+        this.id = id;
+        this.name = name;
+        this.abbreviation = abbreviation;
+    }
+
     @Id
     @GeneratedValue
     @Column(name = "id", unique = true, nullable = false)
@@ -45,6 +56,19 @@ public class Unit implements java.io.Serializable {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Unit unit = (Unit) o;
+        return id == unit.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 
