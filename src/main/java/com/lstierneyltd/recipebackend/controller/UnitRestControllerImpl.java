@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class UnitRestControllerImpl implements UnitRestController {
     private final UnitRepository unitRepository;
 

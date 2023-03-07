@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class RecipeRestControllerImpl implements RecipeRestController {
     private final Logger logger = LoggerFactory.getLogger(RecipeRestControllerImpl.class);
     static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";
