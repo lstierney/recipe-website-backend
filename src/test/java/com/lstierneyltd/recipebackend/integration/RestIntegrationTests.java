@@ -17,6 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -27,6 +28,7 @@ import static org.hamcrest.core.Is.is;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("dev")
 public class RestIntegrationTests {
     @LocalServerPort
     private int localServerPort;

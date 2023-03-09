@@ -80,6 +80,15 @@ public class RecipeRestControllerImplTest {
     }
 
     @Test
+    public void testGetRecipesList() {
+        // When
+        recipeRestController.getRecipesList();
+
+        // then
+        then(recipeRepository).should().findAllRecipeIdAndNameBy();
+    }
+
+    @Test
     public void testNewRecipe() {
         // given
         final Recipe recipe = getRecipe();
