@@ -29,7 +29,7 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     @Override
     @GetMapping("/recipes/{id}")
     public Recipe getRecipeById(@PathVariable Integer id) {
-        logger.debug("Getting recipe by id:" + id);
+        logger.info("Getting recipe by id:" + id);
         return recipeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
     }
 
@@ -40,6 +40,12 @@ public class RecipeRestControllerImpl implements RecipeRestController {
         List<Recipe> recipes = recipeRepository.findAll();
         logger.debug("Got " + recipes.size() + " recipes");
         return recipes;
+    }
+
+    @Override
+    @GetMapping("/recipes/list")
+    public List<RecipeRepository.RecipeIdAndName> getRecipesList() {
+        return recipeRepository.findAllRecipeIdAndNameBy();
     }
 
     @Override
