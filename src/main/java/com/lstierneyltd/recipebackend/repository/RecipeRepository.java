@@ -8,27 +8,9 @@ import java.util.List;
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<RecipeIdAndName> findAllRecipeIdAndNameBy();
 
-    class RecipeIdAndName {
-        private int id;
-        private String name;
+    interface RecipeIdAndName {
+        int getId();
 
-        public RecipeIdAndName() {
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+        String getName();
     }
 }
