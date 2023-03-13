@@ -1,0 +1,64 @@
+{
+  "name": "Spaghetti Aglio e Olio",
+  "description": "Spaghetti served with garlic, chilli and parsley. Very light.",
+  "ingredients": [
+    {
+      "description": "chilli flakes",
+      "quantity": 1,
+      "unit": {
+        "id": 1
+      }
+    },
+    {
+      "description": "cloves of garlic (finely chopped)",
+      "quantity": 4
+    },
+    {
+      "description": "fresh parsley (chopped)",
+      "quantity": 1,
+      "unit": {
+        "id": 7
+      }
+    },
+    {
+      "description": "olive oil",
+      "quantity": 4,
+      "unit": {
+        "id": 2
+      }
+    },
+    {
+      "description": "spaghetti",
+      "quantity": 12,
+      "unit": {
+        "id": 6
+      }
+    }
+  ],
+  "methodSteps": [
+    {
+      "ordering": 1,
+      "description": "Chop the garlic and parsley."
+    },
+    {
+      "ordering": 2,
+      "description": "Put the Spaghetti onto boil"
+    },
+    {
+      "ordering": 3,
+      "description": "In a small pot, heat the oil (not too hot), add the garlic and chilli (don't let the garlic brown)"
+    },
+    {
+      "ordering": 4,
+      "description": "Once the garlic is partially cooked add the parsley and cook a bit more. This should only take a minute or so. Put this \"oil\" aside (it's ok to let it sit for a bit)"
+    },
+    {
+      "ordering": 5,
+      "description": "Let the spaghetti finish cooking, then drain and mix with oil."
+    },
+    {
+      "ordering": 6,
+      "description": "Serve in heated bowls"
+    }
+  ]
+}

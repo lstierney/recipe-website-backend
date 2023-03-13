@@ -31,6 +31,15 @@ create table unit
         unique (name)
 );
 
+create table tag
+(
+    id          int auto_increment primary key,
+    name        varchar(20) not null,
+    description varchar(100),
+    constraint tag_name_uk
+        unique (name)
+);
+
 create table ingredient
 (
     id          int auto_increment primary key,
