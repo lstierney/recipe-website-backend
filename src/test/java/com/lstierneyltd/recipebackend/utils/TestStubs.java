@@ -1,9 +1,6 @@
 package com.lstierneyltd.recipebackend.utils;
 
-import com.lstierneyltd.recipebackend.entities.Ingredient;
-import com.lstierneyltd.recipebackend.entities.MethodStep;
-import com.lstierneyltd.recipebackend.entities.Recipe;
-import com.lstierneyltd.recipebackend.entities.Unit;
+import com.lstierneyltd.recipebackend.entities.*;
 
 import java.util.List;
 
@@ -75,5 +72,13 @@ public final class TestStubs {
         recipe.setIngredients(List.of(ingredient));
 
         return ingredient;
+    }
+
+    public static Tag getTag() {
+        final Tag tag = new Tag();
+        tag.setId(TAG_ID);
+        tag.setName(TAG_NAME);
+        tag.setDescription(TAG_DESCRIPTION);
+        return tag;
     }
 }

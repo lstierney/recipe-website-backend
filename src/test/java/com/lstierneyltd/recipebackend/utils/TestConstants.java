@@ -13,6 +13,10 @@ public final class TestConstants {
     public static final int QUANTITY = 69;
     public static final int COOKING_TIME = 90;
 
+    public static final int TAG_ID = 12346;
+    public static final String TAG_NAME = "onepot";
+    public static final String TAG_DESCRIPTION = "A recipe that only uses one pot. Hurrah!";
+
     private TestConstants() {
     }
 }

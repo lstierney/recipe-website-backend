@@ -2,10 +2,7 @@ package com.lstierneyltd.recipebackend.integration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lstierneyltd.recipebackend.entities.Ingredient;
-import com.lstierneyltd.recipebackend.entities.MethodStep;
-import com.lstierneyltd.recipebackend.entities.Recipe;
-import com.lstierneyltd.recipebackend.entities.Unit;
+import com.lstierneyltd.recipebackend.entities.*;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,6 +16,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
@@ -144,4 +144,76 @@ public class RestIntegrationTests {
 
         verifyRecipe(response.getBody());
     }
+
+    @Test
+    @Order(20)
+    public void testPostTag() throws Exception {
+        final Tag tag = getTag();
+        final ResponseEntity<Tag> response = testRestTemplate.postForEntity("/api/tags", tag, Tag.class);
+
+        verifyStatusOk(response.getStatusCode());
+        final Tag returnedTag = response.getBody();
+
+        verifyTag(returnedTag);
+    }
+
+    private void verifyTag(final Tag tag) {
+        assertThat(tag.getDescription(), equalTo(TAG_DESCRIPTION));
+        assertThat(tag.getName(), equalTo(TAG_NAME));
+    }
+
+    @Test
+    @Order(21)
+    public void testGetAllTags() throws Exception {
+        final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
+
+        verifyStatusOk(response.getStatusCode());
+        final Tag[] returnedTags = response.getBody();
+
+        assertThat(returnedTags.length, equalTo(1));
+        verifyTag(returnedTags[0]);
+    }
+
+    @Test
+    @Order(22)
+    public void testGetTagById() throws Exception {
+        final Tag tag = getTag();
+        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/1", Tag.class);
+
+        verifyStatusOk(response.getStatusCode());
+        verifyTag(response.getBody());
+    }
+
+    @Test
+    @Order(23)
+    public void testUpdateTag() throws Exception {
+        final Tag tag = getTag();
+        String newName = "new name";
+        String newDescription = "new description";
+        tag.setName(newName);
+        tag.setDescription(newDescription);
+
+        testRestTemplate.put("/api/tags/1", tag);
+
+        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/1", Tag.class);
+        final Tag updatedTag = response.getBody();
+
+        verifyStatusOk(response.getStatusCode());
+        assertThat(updatedTag.getDescription(), equalTo(newDescription));
+        assertThat(updatedTag.getName(), equalTo(newName));
+    }
+
+    @Test
+    @Order(24)
+    public void testDeleteTag() throws Exception {
+        testRestTemplate.delete("/api/tags/1");
+
+        final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
+        final Tag[] tags = response.getBody();
+
+        verifyStatusOk(response.getStatusCode());
+        assertThat(tags.length, equalTo(0));
+    }
+
+
 }
