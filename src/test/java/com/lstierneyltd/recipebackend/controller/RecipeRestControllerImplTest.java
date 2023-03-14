@@ -143,4 +143,14 @@ public class RecipeRestControllerImplTest {
 
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_TAG_WITH_ID + TAG_ID));
     }
+
+    @Test
+    public void testGetRecipesByTagName() {
+        final String tagName = "pasta";
+        // When
+        recipeRestController.getRecipesByTagName(tagName);
+
+        // then
+        then(recipeRepository).should().findByTagName(tagName);
+    }
 }

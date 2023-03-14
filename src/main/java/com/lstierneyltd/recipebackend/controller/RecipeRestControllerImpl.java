@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/recipes")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class RecipeRestControllerImpl implements RecipeRestController {
     private final Logger logger = LoggerFactory.getLogger(RecipeRestControllerImpl.class);
@@ -34,14 +35,23 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
-    @GetMapping("/recipes/{id}")
+    @GetMapping("/{id}")
     public Recipe getRecipeById(@PathVariable Integer id) {
         logger.info("Getting recipe by id:" + id);
         return recipeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
     }
 
     @Override
-    @GetMapping("/recipes")
+    @GetMapping(params = "tagName")
+    public List<Recipe> getRecipesByTagName(@RequestParam("tagName") String tagName) {
+        logger.info("Getting recipes by tagName:" + tagName);
+        List<Recipe> recipes = recipeRepository.findByTagName(tagName);
+        logger.debug("Got " + recipes.size() + " recipes");
+        return recipes;
+    }
+
+    @Override
+    @GetMapping
     public List<Recipe> getAllRecipes() {
         logger.debug("Getting all recipes");
         List<Recipe> recipes = recipeRepository.findAll();
@@ -50,13 +60,13 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
-    @GetMapping("/recipes/list")
+    @GetMapping("/list")
     public List<RecipeRepository.RecipeIdAndName> getRecipesList() {
         return recipeRepository.findAllRecipeIdAndNameBy();
     }
 
     @Override
-    @PostMapping("/recipes")
+    @PostMapping
     public Recipe newRecipe(@RequestBody Recipe recipe) {
         logger.debug("Adding new recipe: " + recipe);
         for (final Ingredient ingredient : recipe.getIngredients()) {

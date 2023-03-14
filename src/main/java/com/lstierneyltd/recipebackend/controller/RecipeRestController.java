@@ -13,4 +13,6 @@ public interface RecipeRestController {
     Recipe newRecipe(Recipe recipe);
 
     List<RecipeRepository.RecipeIdAndName> getRecipesList();
+
+    List<Recipe> getRecipesByTagName(String tagName);
 }

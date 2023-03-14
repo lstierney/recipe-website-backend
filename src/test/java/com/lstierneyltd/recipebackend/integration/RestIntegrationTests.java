@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
+import static java.util.Objects.requireNonNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
@@ -80,7 +81,7 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
 
         // Good recipe?
-        verifyRecipe(response.getBody());
+        verifyRecipe(requireNonNull(response.getBody()));
     }
 
     private Recipe getRecipeFromJsonFile(String fileName) throws Exception {
@@ -136,7 +137,7 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
 
         // Recipes
-        final Recipe[] recipes = response.getBody();
+        final Recipe[] recipes = requireNonNull(response.getBody());
         assertThat(recipes.length, equalTo(1));
 
         // Just one just now
@@ -151,7 +152,7 @@ public class RestIntegrationTests {
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        verifyRecipe(response.getBody());
+        verifyRecipe(requireNonNull(response.getBody()));
     }
 
     @Test
@@ -161,7 +162,7 @@ public class RestIntegrationTests {
         final ResponseEntity<Tag> response = testRestTemplate.postForEntity("/api/tags", tag, Tag.class);
 
         verifyStatusOk(response.getStatusCode());
-        final Tag returnedTag = response.getBody();
+        final Tag returnedTag = requireNonNull(response.getBody());
 
         verifyTag(returnedTag, TAG_NAME, TAG_DESCRIPTION);
     }
@@ -172,7 +173,7 @@ public class RestIntegrationTests {
         final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
 
         verifyStatusOk(response.getStatusCode());
-        final Tag[] returnedTags = response.getBody();
+        final Tag[] returnedTags = requireNonNull(response.getBody());
 
         assertThat(returnedTags.length, equalTo(7));
         verifyTag(returnedTags[0], "easy", "Simple to make");
@@ -184,7 +185,7 @@ public class RestIntegrationTests {
         final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/5", Tag.class);
 
         verifyStatusOk(response.getStatusCode());
-        verifyTag(response.getBody(), "one-pot", "Gotta keep that washing down");
+        verifyTag(requireNonNull(response.getBody()), "one-pot", "Gotta keep that washing down");
     }
 
     @Test
@@ -199,7 +200,7 @@ public class RestIntegrationTests {
         testRestTemplate.put("/api/tags/1", tag);
 
         final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/1", Tag.class);
-        final Tag updatedTag = response.getBody();
+        final Tag updatedTag = requireNonNull(response.getBody());
 
         verifyStatusOk(response.getStatusCode());
         assertThat(updatedTag.getDescription(), equalTo(newDescription));
@@ -212,11 +213,25 @@ public class RestIntegrationTests {
         testRestTemplate.delete("/api/tags/1");
 
         final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
-        final Tag[] tags = response.getBody();
+        final Tag[] tags = requireNonNull(response.getBody());
 
         verifyStatusOk(response.getStatusCode());
         assertThat(tags.length, equalTo(6));
     }
 
+    @Test
+    @Order(25)
+    public void testGetRecipeByTagName() {
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/recipes?tagName=one-pot", Recipe[].class);
 
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        // Recipes
+        final Recipe[] recipes = requireNonNull(response.getBody());
+        assertThat(recipes.length, equalTo(1));
+
+        // Just one just now
+        verifyRecipe(recipes[0]);
+    }
 }
