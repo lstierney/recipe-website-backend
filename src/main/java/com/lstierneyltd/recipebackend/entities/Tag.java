@@ -1,6 +1,9 @@
 package com.lstierneyltd.recipebackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(
@@ -11,16 +14,31 @@ import jakarta.persistence.*;
         }
 )
 public class Tag implements java.io.Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private int id;
+    @Column(name = "name", unique = true, nullable = false, length = 10)
     private String name;
+    @Column(name = "description", length = 100)
     private String description;
+
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name = "recipe_tag",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> recipes;
 
     public Tag() {
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+
     public int getId() {
         return this.id;
     }
@@ -29,7 +47,7 @@ public class Tag implements java.io.Serializable {
         this.id = id;
     }
 
-    @Column(name = "name", unique = true, nullable = false, length = 10)
+
     public String getName() {
         return this.name;
     }
@@ -38,13 +56,22 @@ public class Tag implements java.io.Serializable {
         this.name = name;
     }
 
-    @Column(name = "description", length = 100)
+
     public String getDescription() {
         return this.description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @JsonBackReference(value = "tagsList")
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
 
