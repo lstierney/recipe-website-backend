@@ -1,6 +1,10 @@
 insert into unit(name, abbreviation)
 values ('teaspoon', 'tsp');
 insert into unit(name, abbreviation)
+values ('half a teaspoon', '1/2 tsp');
+insert into unit(name, abbreviation)
+values ('quarter of a teaspoon', '1/4 tsp');
+insert into unit(name, abbreviation)
 values ('tablespoon', 'tbsp');
 insert into unit(name, abbreviation)
 values ('gram', 'g');

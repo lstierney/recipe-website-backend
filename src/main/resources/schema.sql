@@ -23,7 +23,7 @@ create table method_step
 create table unit
 (
     id           int auto_increment primary key,
-    name         varchar(20) not null,
+    name         varchar(30) not null,
     abbreviation varchar(10) not null,
     constraint unit_abbreviation_uk
         unique (abbreviation),

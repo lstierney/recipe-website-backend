@@ -67,8 +67,8 @@ public class RestIntegrationTests {
         assertThat(unit.getAbbreviation(), equalTo("tsp"));
 
         unit = units[4];
-        assertThat(unit.getName(), equalTo("pound"));
-        assertThat(unit.getAbbreviation(), equalTo("lb"));
+        assertThat(unit.getName(), equalTo("gram"));
+        assertThat(unit.getAbbreviation(), equalTo("g"));
     }
 
     @Test
