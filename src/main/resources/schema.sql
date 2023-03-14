@@ -40,6 +40,16 @@ create table tag
         unique (name)
 );
 
+create table recipe_tag
+(
+    recipe_id int not null,
+    tag_id    int not null,
+    constraint recipe_tag_recipe_id_fk
+        foreign key (recipe_id) references recipe (id),
+    constraint recipe_tag_recipe_fk
+        foreign key (tag_id) references tag (id)
+);
+
 create table ingredient
 (
     id          int auto_increment primary key,

@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
-import static com.lstierneyltd.recipebackend.utils.TestStubs.getIngredient;
-import static com.lstierneyltd.recipebackend.utils.TestStubs.getMethodStep;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
@@ -62,5 +61,12 @@ public class RecipeTest {
 
         // Check to see that the recipe was set in the MethodStep too
         assertThat(recipe.getMethodSteps().get(0).getRecipe(), sameInstance(recipe));
+    }
+
+    @Test
+    public void testGetSetTags() {
+        List<Tag> tags = List.of(getTag());
+        recipe.setTags(tags);
+        assertThat(recipe.getTags(), equalTo(tags));
     }
 }

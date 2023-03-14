@@ -29,6 +29,8 @@ public final class TestStubs {
         methodStep.setRecipe(recipe);
         recipe.setMethodSteps(List.of(methodStep));
 
+        recipe.setTags(List.of(getTag()));
+
         return recipe;
     }
 

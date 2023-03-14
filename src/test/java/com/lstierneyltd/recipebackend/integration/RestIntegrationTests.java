@@ -49,7 +49,7 @@ public class RestIntegrationTests {
 
     @Test
     @Order(2)
-    void testGetUnits() throws Exception {
+    void testGetUnits() {
         // When
         ResponseEntity<Unit[]> response = testRestTemplate.getForEntity("/units", Unit[].class);
 
@@ -105,6 +105,10 @@ public class RestIntegrationTests {
         verifyMethodStep(recipe.getMethodSteps().get(0), 1, "Finely chop the onion and garlic");
         verifyMethodStep(recipe.getMethodSteps().get(1), 2, "Add to small pot with a little olive oil");
 
+        // Tags
+        assertThat(recipe.getTags().size(), equalTo(2));
+        verifyTag(recipe.getTags().get(0), "one-pot", "Gotta keep that washing down");
+        verifyTag(recipe.getTags().get(1), "old-school", "Just like wot you remember");
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, int quantity, Unit unit) {
@@ -118,9 +122,14 @@ public class RestIntegrationTests {
         assertThat(methodStep.getDescription(), equalTo(description));
     }
 
+    private void verifyTag(Tag tag, String name, String description) {
+        assertThat(tag.getName(), equalTo(name));
+        assertThat(tag.getDescription(), equalTo(description));
+    }
+
     @Test
     @Order(4)
-    public void testGetAllRecipes() throws Exception {
+    public void testGetAllRecipes() {
         ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/recipes", Recipe[].class);
 
         // Good status?
@@ -136,7 +145,7 @@ public class RestIntegrationTests {
 
     @Test
     @Order(5)
-    public void testGetRecipeById() throws Exception {
+    public void testGetRecipeById() {
         ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/recipes/1", Recipe.class);
 
         // Good status?
@@ -147,46 +156,40 @@ public class RestIntegrationTests {
 
     @Test
     @Order(20)
-    public void testPostTag() throws Exception {
+    public void testPostTag() {
         final Tag tag = getTag();
         final ResponseEntity<Tag> response = testRestTemplate.postForEntity("/api/tags", tag, Tag.class);
 
         verifyStatusOk(response.getStatusCode());
         final Tag returnedTag = response.getBody();
 
-        verifyTag(returnedTag);
-    }
-
-    private void verifyTag(final Tag tag) {
-        assertThat(tag.getDescription(), equalTo(TAG_DESCRIPTION));
-        assertThat(tag.getName(), equalTo(TAG_NAME));
+        verifyTag(returnedTag, TAG_NAME, TAG_DESCRIPTION);
     }
 
     @Test
     @Order(21)
-    public void testGetAllTags() throws Exception {
+    public void testGetAllTags() {
         final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
 
         verifyStatusOk(response.getStatusCode());
         final Tag[] returnedTags = response.getBody();
 
-        assertThat(returnedTags.length, equalTo(1));
-        verifyTag(returnedTags[0]);
+        assertThat(returnedTags.length, equalTo(7));
+        verifyTag(returnedTags[0], "easy", "Simple to make");
     }
 
     @Test
     @Order(22)
-    public void testGetTagById() throws Exception {
-        final Tag tag = getTag();
-        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/1", Tag.class);
+    public void testGetTagById() {
+        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/5", Tag.class);
 
         verifyStatusOk(response.getStatusCode());
-        verifyTag(response.getBody());
+        verifyTag(response.getBody(), "one-pot", "Gotta keep that washing down");
     }
 
     @Test
     @Order(23)
-    public void testUpdateTag() throws Exception {
+    public void testUpdateTag() {
         final Tag tag = getTag();
         String newName = "new name";
         String newDescription = "new description";
@@ -205,14 +208,14 @@ public class RestIntegrationTests {
 
     @Test
     @Order(24)
-    public void testDeleteTag() throws Exception {
+    public void testDeleteTag() {
         testRestTemplate.delete("/api/tags/1");
 
         final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
         final Tag[] tags = response.getBody();
 
         verifyStatusOk(response.getStatusCode());
-        assertThat(tags.length, equalTo(0));
+        assertThat(tags.length, equalTo(6));
     }
 
 

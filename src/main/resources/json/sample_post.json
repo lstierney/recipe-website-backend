@@ -30,5 +30,17 @@
       "description": "Cloves of Garlic",
       "quantity": 2
     }
+  ],
+  "tags": [
+    {
+      "id": 5,
+      "name": "one-pot",
+      "description": "Gotta keep that washing down"
+    },
+    {
+      "id": 4,
+      "name": "old-school",
+      "description": "Just like wot you remember"
+    }
   ]
 }
