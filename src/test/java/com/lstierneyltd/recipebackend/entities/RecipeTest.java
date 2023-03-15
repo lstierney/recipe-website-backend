@@ -44,6 +44,12 @@ public class RecipeTest {
     }
 
     @Test
+    public void testGetSetImageFileName() {
+        recipe.setImageFileName(RECIPE_1_IMAGE_FILENAME);
+        assertThat(recipe.getImageFileName(), equalTo(RECIPE_1_IMAGE_FILENAME));
+    }
+
+    @Test
     public void testGetSetIngredients() {
         List<Ingredient> ingredients = List.of(getIngredient());
         recipe.setIngredients(ingredients);

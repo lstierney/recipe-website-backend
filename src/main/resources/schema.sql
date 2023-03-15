@@ -9,10 +9,11 @@ drop table if exists tag;
 
 create table recipe
 (
-    id           int auto_increment primary key,
-    name         varchar(100) not null,
-    description  text         not null,
-    cooking_time int          not null,
+    id             int auto_increment primary key,
+    name           varchar(100) not null,
+    description    text         not null,
+    cooking_time   int          not null,
+    image_filename varchar(100),
     constraint recipes_name_uk
         unique (name)
 );

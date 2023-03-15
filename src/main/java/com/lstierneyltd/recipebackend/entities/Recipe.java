@@ -24,6 +24,9 @@ public class Recipe implements java.io.Serializable {
     @Column(name = "description", nullable = false, length = 65535)
     private String description;
 
+    @Column(name = "image_filename", length = 100)
+    private String imageFileName;
+
     @Column(name = "cooking_time", nullable = false)
     private int cookingTime;
 
@@ -103,6 +106,14 @@ public class Recipe implements java.io.Serializable {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public String getImageFileName() {
+        return this.imageFileName;
+    }
+
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     @Override
