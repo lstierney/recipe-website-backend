@@ -1,5 +1,12 @@
 use recipes;
 
+drop table method_step;
+drop table ingredient;
+drop table recipe_tag;
+drop table unit;
+drop table recipe;
+drop table tag;
+
 create table recipe
 (
     id           int auto_increment primary key,
