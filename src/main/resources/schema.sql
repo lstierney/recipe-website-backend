@@ -1,11 +1,11 @@
 use recipes;
 
-drop table method_step;
-drop table ingredient;
-drop table recipe_tag;
-drop table unit;
-drop table recipe;
-drop table tag;
+drop table if exists method_step;
+drop table if exists ingredient;
+drop table if exists recipe_tag;
+drop table if exists unit;
+drop table if exists recipe;
+drop table if exists tag;
 
 create table recipe
 (
