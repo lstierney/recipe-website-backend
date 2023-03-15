@@ -19,7 +19,6 @@
         <pitest.version>1.11.4</pitest.version>
         <mysql-connector-j.version>8.0.32</mysql-connector-j.version>
         <spring-boot-test-autoconfigure.version>3.0.3</spring-boot-test-autoconfigure.version>
-        <h2.version>2.1.214</h2.version>
         <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
         <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
@@ -51,12 +50,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

@@ -33,15 +33,12 @@ public class Recipe implements java.io.Serializable {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>();
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "recipe_tag",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags = new ArrayList<>();
 
     public Recipe() {
@@ -63,7 +60,6 @@ public class Recipe implements java.io.Serializable {
         this.name = name;
     }
 
-
     public String getDescription() {
         return this.description;
     }
@@ -72,7 +68,6 @@ public class Recipe implements java.io.Serializable {
         this.description = description;
     }
 
-
     public int getCookingTime() {
         return this.cookingTime;
     }
@@ -80,7 +75,6 @@ public class Recipe implements java.io.Serializable {
     public void setCookingTime(int cookingTime) {
         this.cookingTime = cookingTime;
     }
-
 
     @JsonManagedReference
     public List<MethodStep> getMethodSteps() {
