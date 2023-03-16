@@ -3,8 +3,9 @@ package com.lstierneyltd.recipebackend.utils;
 public final class TestConstants {
     public static final int ID = 123;
     public static final String RECIPE_1_NAME = "Spaghetti Bolognaise";
-
     public static final String RECIPE_1_DESCRIPTION = "The all time favourite";
+    public static final String RECIPE_1_IMAGE_FILENAME = "picture.jpeg";
+
     public static final int UNIT_ID = 4;
     public static final String NAME = "name";
     public static final String ABBREVIATION = "abbreviation";
