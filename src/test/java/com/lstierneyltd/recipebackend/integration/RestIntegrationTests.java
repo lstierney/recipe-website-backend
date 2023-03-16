@@ -1,8 +1,8 @@
 package com.lstierneyltd.recipebackend.integration;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lstierneyltd.recipebackend.entities.*;
+import com.lstierneyltd.recipebackend.utils.FileUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
@@ -74,19 +75,25 @@ public class RestIntegrationTests {
     @Test
     @Order(3)
     public void postRecipe() throws Exception {
-        final Recipe recipeFromJson = getRecipeFromJsonFile("json/sample_post.json");
-        final ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/recipes", recipeFromJson, Recipe.class);
+        String json = FileUtils.getFileAsString("json/sample_post.json");
+        ClassPathResource classPathResource = new ClassPathResource("/images/bolognese_test.jpg");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("imageFile", classPathResource);
+        body.add("recipe", json);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/recipes", requestEntity, Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         // Good recipe?
         verifyRecipe(requireNonNull(response.getBody()));
-    }
-
-    private Recipe getRecipeFromJsonFile(String fileName) throws Exception {
-        JsonNode jsonNode = objectMapper.readTree(new ClassPathResource(fileName).getFile());
-        return objectMapper.treeToValue(jsonNode, Recipe.class);
     }
 
     private void verifyRecipe(final Recipe recipe) {
