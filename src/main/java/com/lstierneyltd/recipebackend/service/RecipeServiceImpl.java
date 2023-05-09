@@ -10,6 +10,7 @@ import com.lstierneyltd.recipebackend.repository.UnitRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
     private final FileService fileService;
     private final ObjectMapperService objectMapperService;
     private final RecipeRepository recipeRepository;
+
+    @Value("${githubAction:false}")
+    private boolean isGitHubAction;
 
     public RecipeServiceImpl(UnitRepository unitRepository, TagRepository tagRepository, FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository) {
         this.unitRepository = unitRepository;
@@ -73,7 +77,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
-        fileService.saveMultiPartFile(imageFile);
+        logger.info("isGitHubCi: " + isGitHubAction);
+
+        if (!isGitHubAction) {
+            fileService.saveMultiPartFile(imageFile);
+        }
+
         recipe.setImageFileName(imageFile.getOriginalFilename());
     }
 }
