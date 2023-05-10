@@ -28,8 +28,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final ObjectMapperService objectMapperService;
     private final RecipeRepository recipeRepository;
 
-    @Value("${githubAction:false}")
-    private boolean isGitHubAction;
+    @Value("${isgithub:false}")
+    private boolean isGitHub;
 
     public RecipeServiceImpl(UnitRepository unitRepository, TagRepository tagRepository, FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository) {
         this.unitRepository = unitRepository;
@@ -77,9 +77,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
-        logger.info("isGitHubCi: " + isGitHubAction);
+        logger.info("isGitHub: " + isGitHub);
 
-        if (!isGitHubAction) {
+        if (!isGitHub) {
             fileService.saveMultiPartFile(imageFile);
         }
 

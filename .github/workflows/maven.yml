@@ -28,7 +28,5 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Build with Maven
-      env:
-        githubAction: 'true'
-      run: mvn -B package --file pom.xml
+      run: mvn -B -Pgithub package --file pom.xml
       
