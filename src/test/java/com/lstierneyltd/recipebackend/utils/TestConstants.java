@@ -18,6 +18,10 @@ public final class TestConstants {
     public static final String TAG_NAME = "onepot";
     public static final String TAG_DESCRIPTION = "A recipe that only uses one pot. Hurrah!";
 
+    public static final String USER_NAME = "lawrence";
+    public static final String PASSWORD = "password";
+
+
     private TestConstants() {
     }
 }
