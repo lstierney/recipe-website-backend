@@ -31,3 +31,6 @@ insert into tag(name, description)
 values ('one-pot', 'Gotta keep that washing down');
 insert into tag(name, description)
 values ('rice-cooker', 'Cook in the wonder gadget');
+
+insert into authorised_user(username, password)
+values ('lawrence', 'lawrence')
