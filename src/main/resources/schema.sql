@@ -6,6 +6,7 @@ drop table if exists recipe_tag;
 drop table if exists unit;
 drop table if exists recipe;
 drop table if exists tag;
+drop table if exists authorised_user;
 
 create table recipe
 (
@@ -69,5 +70,14 @@ create table ingredient
         foreign key (unit_id) references unit (id),
     constraint ingredient_recipe_fk
         foreign key (recipe_id) references recipe (id)
+);
+
+create table authorised_user
+(
+    id       int auto_increment primary key,
+    username varchar(20) not null,
+    password varchar(20) not null,
+    constraint username_uk
+        unique (username)
 );
 
