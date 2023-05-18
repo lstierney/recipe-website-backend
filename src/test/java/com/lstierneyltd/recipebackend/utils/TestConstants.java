@@ -20,6 +20,7 @@ public final class TestConstants {
 
     public static final String USER_NAME = "lawrence";
     public static final String PASSWORD = "password";
+    public static final String TOKEN = "auth_token";
 
 
     private TestConstants() {
