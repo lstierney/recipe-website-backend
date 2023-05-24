@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+import java.util.Date;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String secret;
@@ -31,9 +31,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = extractJwtToken(request);
-            if (jwt != null && validateJwtToken(jwt)) {
+            if (jwt != null && tokenIsValid(jwt)) {
                 Authentication authentication = getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                // TODO - this can be done better
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         } catch (JwtException e) {
             throw new RuntimeException("Exception whilst extracting/validating JWT Token: " + e.getMessage());
@@ -50,9 +53,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean validateJwtToken(String jwt) {
-        // TODO - implement this
-        return true; // Return true if the token is valid, false otherwise
+    private boolean tokenIsValid(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expirationDate = claims.getExpiration();
+            Date currentDate = new Date();
+
+            return expirationDate.after(currentDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Invalid token or unable to validate
+        }
     }
 
     private Authentication getAuthentication(String jwt) {

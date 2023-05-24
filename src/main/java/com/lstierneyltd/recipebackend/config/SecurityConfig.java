@@ -28,9 +28,9 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .addFilterAfter(new JwtAuthenticationFilter(secret, customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated()
-                )
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().authenticated()
+//                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
