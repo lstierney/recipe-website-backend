@@ -1,6 +1,10 @@
 package com.lstierneyltd.recipebackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -21,6 +25,11 @@ public class Tag implements java.io.Serializable {
 
     @Column(name = "description", length = 100)
     private String description;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tags")
+    private List<Recipe> recipes = new ArrayList<>();
+
 
     public Tag() {
     }
@@ -47,5 +56,13 @@ public class Tag implements java.io.Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 }

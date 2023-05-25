@@ -27,6 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
+                .headers(headers -> headers.frameOptions().disable()) // to allow H2 console to work with Spring Security
                 .addFilterAfter(new JwtAuthenticationFilter(secret, customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
 //                .authorizeHttpRequests(auth -> auth
 //                        .anyRequest().authenticated()
