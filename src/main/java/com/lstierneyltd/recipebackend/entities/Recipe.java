@@ -37,7 +37,7 @@ public class Recipe implements java.io.Serializable {
     private List<Ingredient> ingredients = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "recipe_tag",
             joinColumns = @JoinColumn(name = "recipe_id"),
