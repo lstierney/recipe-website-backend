@@ -2,7 +2,7 @@ package com.lstierneyltd.recipebackend.controller;
 
 import com.lstierneyltd.recipebackend.entities.User;
 import com.lstierneyltd.recipebackend.service.CustomUserDetailsService;
-import com.lstierneyltd.recipebackend.util.JwtUtil;
+import com.lstierneyltd.recipebackend.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/authenticate")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class AuthenticationRestControllerImpl {
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
     private final CustomUserDetailsService userDetailsService;
 
     private final AuthenticationConfiguration authenticationConfiguration;
 
-    public AuthenticationRestControllerImpl(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
-        this.jwtUtil = jwtUtil;
+    public AuthenticationRestControllerImpl(JwtService jwtService, CustomUserDetailsService userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
+        this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
     }
@@ -42,7 +42,7 @@ public class AuthenticationRestControllerImpl {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(user.getUsername());
 
-        final String jwt = jwtUtil.generateToken(userDetails);
+        final String jwt = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(jwt);
     }

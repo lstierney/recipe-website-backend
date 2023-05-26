@@ -1,9 +1,8 @@
 package com.lstierneyltd.recipebackend.config;
 
 import com.lstierneyltd.recipebackend.service.CustomUserDetailsService;
-import io.jsonwebtoken.Claims;
+import com.lstierneyltd.recipebackend.service.JwtService;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,23 +14,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Date;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final String secret;
-
     private final CustomUserDetailsService customUserDetailsService;
 
-    public JwtAuthenticationFilter(String secret, CustomUserDetailsService customUserDetailsService) {
-        this.secret = secret;
+    private final JwtService jwtService;
+
+    public JwtAuthenticationFilter(CustomUserDetailsService customUserDetailsService, JwtService jwtService) {
         this.customUserDetailsService = customUserDetailsService;
+        this.jwtService = jwtService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = extractJwtToken(request);
-            if (jwt != null && tokenIsValid(jwt)) {
+            if (jwt != null && !jwtService.isTokenExpired(jwt)) {
                 Authentication authentication = getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
@@ -39,9 +37,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         } catch (JwtException e) {
-            throw new RuntimeException("Exception whilst extracting/validating JWT Token: " + e.getMessage());
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -53,26 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private boolean tokenIsValid(String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            Date expirationDate = claims.getExpiration();
-            Date currentDate = new Date();
-
-            return expirationDate.after(currentDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false; // Invalid token or unable to validate
-        }
-    }
-
     private Authentication getAuthentication(String jwt) {
-        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
-        String username = claims.getSubject();
+        String username = jwtService.extractUsername(jwt);
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

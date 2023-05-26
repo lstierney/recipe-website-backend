@@ -1,8 +1,7 @@
 package com.lstierneyltd.recipebackend.config;
 
 import com.lstierneyltd.recipebackend.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.lstierneyltd.recipebackend.service.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,12 +14,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${jwt.secret}")
-    private String secret;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    // TODO - constrcuvtor
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private final JwtService jwtService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtService jwtService) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.jwtService = jwtService;
+    }
 
     @Bean
     @Profile("!test")
@@ -28,7 +29,7 @@ public class SecurityConfig {
         return http
                 .csrf().disable()
                 .headers(headers -> headers.frameOptions().disable()) // to allow H2 console to work with Spring Security
-                .addFilterAfter(new JwtAuthenticationFilter(secret, customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthenticationFilter(customUserDetailsService, jwtService), UsernamePasswordAuthenticationFilter.class)
 //                .authorizeHttpRequests(auth -> auth
 //                        .anyRequest().authenticated()
 //                )
@@ -36,7 +37,6 @@ public class SecurityConfig {
                 .build();
     }
 
-    // TODO - fix deprecation
     @Bean
     @Profile("test")
     public SecurityFilterChain testSecurityFilterChain(HttpSecurity http) throws Exception {
