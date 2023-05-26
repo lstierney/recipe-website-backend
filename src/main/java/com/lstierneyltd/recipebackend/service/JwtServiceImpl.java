@@ -1,19 +1,19 @@
-package com.lstierneyltd.recipebackend.util;
+package com.lstierneyltd.recipebackend.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Component
-public class JwtUtil {
+@Service
+public class JwtServiceImpl implements JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -21,14 +21,17 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private int expiration;
 
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public Date extractExpirationDate(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -38,11 +41,13 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    private boolean isTokenExpired(String token) {
+    @Override
+    public boolean isTokenExpired(String token) {
         final Date expirationDate = extractExpirationDate(token);
         return expirationDate.before(new Date());
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
@@ -61,7 +66,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    @Override
+    public boolean isValidToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
