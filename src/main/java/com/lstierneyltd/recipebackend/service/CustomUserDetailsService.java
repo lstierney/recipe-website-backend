@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    protected static final String USER_NOT_FOUND_WITH_USERNAME = "User not found with username: ";
     private final UserRepository userRepository;
 
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -22,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            throw new UsernameNotFoundException(USER_NOT_FOUND_WITH_USERNAME + username);
         }
         // TODO fix {noop}
         return new org.springframework.security.core.userdetails.User(user.getUsername(), "{noop}" + user.getPassword(),
