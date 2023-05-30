@@ -2,6 +2,7 @@ package com.lstierneyltd.recipebackend.controller;
 
 import com.lstierneyltd.recipebackend.entities.Unit;
 import com.lstierneyltd.recipebackend.repository.UnitRepository;
+import com.lstierneyltd.recipebackend.service.UnitService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +14,15 @@ import java.util.List;
 @RequestMapping("/api/units")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class UnitRestControllerImpl implements UnitRestController {
-    private final UnitRepository unitRepository;
+    private final UnitService unitService;
 
-    public UnitRestControllerImpl(UnitRepository unitRepository) {
-        this.unitRepository = unitRepository;
+    public UnitRestControllerImpl(UnitService unitService) {
+        this.unitService = unitService;
     }
 
     @Override
     @GetMapping
     public List<Unit> getAllUnits() {
-        return unitRepository.findAll();
+        return unitService.getAllUnits();
     }
 }

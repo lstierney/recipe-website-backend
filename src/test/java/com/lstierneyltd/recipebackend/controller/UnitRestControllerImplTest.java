@@ -1,28 +1,28 @@
 package com.lstierneyltd.recipebackend.controller;
 
-import com.lstierneyltd.recipebackend.repository.UnitRepository;
+import com.lstierneyltd.recipebackend.service.UnitService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 
 @ExtendWith(MockitoExtension.class)
 public class UnitRestControllerImplTest {
     @Mock
-    private UnitRepository unitRepository;
+    private UnitService unitService;
 
     @InjectMocks
     private UnitRestControllerImpl unitRestController;
 
     @AfterEach
     void after() {
-        Mockito.verifyNoMoreInteractions(unitRepository);
+        verifyNoMoreInteractions(unitService);
     }
 
     @Test
@@ -31,6 +31,6 @@ public class UnitRestControllerImplTest {
         unitRestController.getAllUnits();
 
         // then
-        then(unitRepository).should().findAll();
+        then(unitService).should().getAllUnits();
     }
 }
