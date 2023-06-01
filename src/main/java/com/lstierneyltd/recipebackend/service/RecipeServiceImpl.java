@@ -29,7 +29,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
 
     @Value("${isgithub:false}")
-    private boolean isGitHub;
+    private String isGitHub;
 
     public RecipeServiceImpl(UnitRepository unitRepository, TagRepository tagRepository, FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository) {
         this.unitRepository = unitRepository;
@@ -79,7 +79,7 @@ public class RecipeServiceImpl implements RecipeService {
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
         logger.info("isGitHub: " + isGitHub);
 
-        if (!isGitHub) {
+        if (!Boolean.parseBoolean(isGitHub)) {
             fileService.saveMultiPartFile(imageFile);
         }
 
