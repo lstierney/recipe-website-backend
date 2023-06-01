@@ -16,7 +16,6 @@ on:
 
 env:
   JWT_SECRET: ssshitssecret
-  IS_GIT_HUB: true
 
 jobs:
   build:
