@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/recipes")
+@RequestMapping("/api/recipes")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class RecipeRestControllerImpl implements RecipeRestController {
     static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";

@@ -1,10 +1,12 @@
 package com.lstierneyltd.recipebackend.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lstierneyltd.recipebackend.entities.Tag;
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +27,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Yes I'm ordering the tests. Makes it easier for lazy old me! Shoot me!
+ * Yes I'm ordering the tests. Shoot me!
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -52,10 +54,9 @@ public class RestIntegrationTests {
     // TODO - why broken?
     @Test
     @Order(2)
-    @Disabled
     void testGetUnits() {
         // When
-        ResponseEntity<Unit[]> response = testRestTemplate.getForEntity("/units", Unit[].class);
+        ResponseEntity<Unit[]> response = testRestTemplate.getForEntity("/api/units", Unit[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -89,7 +90,7 @@ public class RestIntegrationTests {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/recipes", requestEntity, Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/api/recipes", requestEntity, Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -140,7 +141,7 @@ public class RestIntegrationTests {
     @Test
     @Order(4)
     public void testGetAllRecipes() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/recipes", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -156,7 +157,7 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/recipes/1", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/1", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -231,7 +232,7 @@ public class RestIntegrationTests {
     @Test
     @Order(25)
     public void testGetRecipeByTagName() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/recipes?tagName=one-pot", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagName=one-pot", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -243,9 +244,4 @@ public class RestIntegrationTests {
         // Just one just now
         verifyRecipe(recipes[0]);
     }
-
-//    @TestConfiguration
-//    private class TestSecurityConfig() extends WebSecurityConfigur
-//
-//    }
 }
