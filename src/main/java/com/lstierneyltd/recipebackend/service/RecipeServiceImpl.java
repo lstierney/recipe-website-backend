@@ -73,15 +73,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
-        //if (imageFile.getSize() > 0) {
-            logger.info("size: " + imageFile.getSize());
-        logger.info("name: " + imageFile.getOriginalFilename());
-        logger.info("isEmpty: " + imageFile.isEmpty());
-        logger.info("imageFile: " + imageFile);
-        //imageFile.
-
-            fileService.saveMultiPartFile(imageFile);
-            recipe.setImageFileName(imageFile.getOriginalFilename());
-        //}
+        fileService.saveMultiPartFile(imageFile);
+        recipe.setImageFileName(imageFile.getOriginalFilename());
     }
 }
