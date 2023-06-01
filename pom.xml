@@ -14,15 +14,6 @@
     <name>recipe-backend</name>
     <description>Spring Boot back end for Recipe website</description>
 
-    <profiles>
-        <profile>
-            <id>github</id>
-            <properties>
-                <isgithub>true</isgithub>
-            </properties>
-        </profile>
-    </profiles>
-
     <properties>
         <java.version>17</java.version>
         <jjwt.version>0.9.1</jjwt.version>
