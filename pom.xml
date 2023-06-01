@@ -19,6 +19,7 @@
             <id>github</id>
             <properties>
                 <isgithub>true</isgithub>
+                <jwt.secret>onlyforuseongithub!</jwt.secret>
             </properties>
         </profile>
     </profiles>
