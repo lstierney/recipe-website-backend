@@ -16,6 +16,7 @@ on:
     
 env:
   JWT_SECRET: ssshitssecret
+  isgithub: true
 
 jobs:
   build:
