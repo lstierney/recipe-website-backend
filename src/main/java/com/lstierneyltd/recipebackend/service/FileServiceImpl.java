@@ -1,8 +1,6 @@
 package com.lstierneyltd.recipebackend.service;
 
 import com.lstierneyltd.recipebackend.exception.RecipeBackendException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +11,6 @@ import java.nio.file.Paths;
 
 @Service
 public class FileServiceImpl implements FileService {
-    private final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
     @Value("${file.upload.directory}")
     private String fileUploadDirectory;
 
@@ -25,9 +22,8 @@ public class FileServiceImpl implements FileService {
             Path path = Paths.get(fileUploadDirectory + "images/" + multipartFile.getOriginalFilename());
             Files.write(path, bytes);
         } catch (Exception e) {
-            String message = "Could not save uploaded file: " + e.getMessage();
-            logger.error(message);
-            throw new RecipeBackendException(message);
+            e.printStackTrace();
+            throw new RecipeBackendException("Could not save uploaded file: " + e.getMessage());
         }
     }
 }
