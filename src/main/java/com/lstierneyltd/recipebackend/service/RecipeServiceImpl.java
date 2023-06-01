@@ -28,7 +28,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final ObjectMapperService objectMapperService;
     private final RecipeRepository recipeRepository;
 
-    @Value("${isgithub:false}")
+    @Value("#{environment.IS_GIT_HUB")
     private String isGitHub;
 
     public RecipeServiceImpl(UnitRepository unitRepository, TagRepository tagRepository, FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository) {
