@@ -11,7 +11,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -74,11 +73,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
-        String originalFilename = imageFile.getOriginalFilename(); // if no file is uploaded this is empty
-
-        if (StringUtils.hasText(originalFilename)) {
+        if (!imageFile.isEmpty()) {
             fileService.saveMultiPartFile(imageFile);
-            recipe.setImageFileName(originalFilename);
+            recipe.setImageFileName(imageFile.getOriginalFilename());
         }
     }
 }
