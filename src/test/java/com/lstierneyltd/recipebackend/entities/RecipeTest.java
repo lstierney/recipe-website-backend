@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.*;
@@ -71,7 +72,7 @@ public class RecipeTest {
 
     @Test
     public void testGetSetTags() {
-        List<Tag> tags = List.of(getTag());
+        Set<Tag> tags = Set.of(getTag());
         recipe.setTags(tags);
         assertThat(recipe.getTags(), equalTo(tags));
     }
