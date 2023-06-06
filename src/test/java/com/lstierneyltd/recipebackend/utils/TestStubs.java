@@ -3,6 +3,7 @@ package com.lstierneyltd.recipebackend.utils;
 import com.lstierneyltd.recipebackend.entities.*;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 
@@ -29,7 +30,7 @@ public final class TestStubs {
         methodStep.setRecipe(recipe);
         recipe.setMethodSteps(List.of(methodStep));
 
-        recipe.setTags(List.of(getTag()));
+        recipe.setTags(Set.of(getTag()));
 
         return recipe;
     }

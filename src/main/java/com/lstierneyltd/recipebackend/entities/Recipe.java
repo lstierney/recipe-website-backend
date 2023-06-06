@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -42,7 +44,7 @@ public class Recipe implements java.io.Serializable {
             name = "recipe_tag",
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
     public Recipe() {
     }
@@ -99,12 +101,11 @@ public class Recipe implements java.io.Serializable {
         ingredients.forEach(ingredient -> ingredient.setRecipe(this));
     }
 
-    //@JsonManagedReference(value="tagsList")
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return this.tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

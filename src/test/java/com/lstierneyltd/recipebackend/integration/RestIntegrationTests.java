@@ -18,6 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Set;
+
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
@@ -118,8 +120,8 @@ public class RestIntegrationTests {
 
         // Tags
         assertThat(recipe.getTags().size(), equalTo(2));
-        verifyTag(recipe.getTags().get(0), "one-pot", "Gotta keep that washing down");
-        verifyTag(recipe.getTags().get(1), "old-school", "Just like wot you remember");
+        verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
+        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, int quantity, Unit unit) {
@@ -133,9 +135,11 @@ public class RestIntegrationTests {
         assertThat(methodStep.getDescription(), equalTo(description));
     }
 
-    private void verifyTag(Tag tag, String name, String description) {
-        assertThat(tag.getName(), equalTo(name));
-        assertThat(tag.getDescription(), equalTo(description));
+    private void verifyTag(String name, String description, Tag... tags) {
+        Tag tag = new Tag();
+        tag.setName(name);
+        tag.setDescription(description);
+        assertThat(Set.of(tags), hasItem(tag));
     }
 
     @Test
@@ -174,7 +178,7 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
         final Tag returnedTag = requireNonNull(response.getBody());
 
-        verifyTag(returnedTag, TAG_NAME, TAG_DESCRIPTION);
+        verifyTag(TAG_NAME, TAG_DESCRIPTION, returnedTag);
     }
 
     @Test
@@ -186,7 +190,7 @@ public class RestIntegrationTests {
         final Tag[] returnedTags = requireNonNull(response.getBody());
 
         assertThat(returnedTags.length, equalTo(7));
-        verifyTag(returnedTags[0], "easy", "Simple to make");
+        verifyTag("easy", "Simple to make", returnedTags[0]);
     }
 
     @Test
@@ -195,7 +199,7 @@ public class RestIntegrationTests {
         final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/5", Tag.class);
 
         verifyStatusOk(response.getStatusCode());
-        verifyTag(requireNonNull(response.getBody()), "one-pot", "Gotta keep that washing down");
+        verifyTag("one-pot", "Gotta keep that washing down", requireNonNull(response.getBody()));
     }
 
     @Test

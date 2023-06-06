@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -64,7 +64,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void populateTags(Recipe recipe) {
-        final List<Tag> managedTags = new ArrayList<>();
+        final Set<Tag> managedTags = new HashSet<>();
         for (final Tag tag : recipe.getTags()) {
             final int tagId = tag.getId();
             managedTags.add(tagRepository.findById(tagId).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_TAG_WITH_ID + tagId)));
