@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class Tag implements java.io.Serializable {
         this.recipes = recipes;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +77,7 @@ public class Tag implements java.io.Serializable {
         return name.equals(tag.name);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(name);
