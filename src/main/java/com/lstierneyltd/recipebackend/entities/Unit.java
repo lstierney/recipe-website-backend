@@ -1,5 +1,6 @@
 package com.lstierneyltd.recipebackend.entities;
 
+import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Immutable;
 
@@ -58,6 +59,7 @@ public class Unit implements java.io.Serializable {
         this.abbreviation = abbreviation;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,6 +68,7 @@ public class Unit implements java.io.Serializable {
         return id == unit.id;
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(id);
