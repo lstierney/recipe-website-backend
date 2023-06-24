@@ -15,6 +15,7 @@
     <description>Spring Boot back end for Recipe website</description>
 
     <properties>
+        <hsqldb.version>2.7.1</hsqldb.version>
         <java.version>17</java.version>
         <jjwt.version>0.9.1</jjwt.version>
         <pitest.version>1.11.4</pitest.version>
@@ -29,11 +30,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -90,6 +86,12 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

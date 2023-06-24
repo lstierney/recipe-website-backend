@@ -120,8 +120,8 @@ public class RestIntegrationTests {
 
         // Tags
         assertThat(recipe.getTags().size(), equalTo(2));
+        verifyTag("rice-cooker", "Cook in the wonder gadget", recipe.getTags().toArray(new Tag[0]));
         verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
-        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, int quantity, Unit unit) {
@@ -161,7 +161,7 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/1", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/0", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -196,7 +196,7 @@ public class RestIntegrationTests {
     @Test
     @Order(22)
     public void testGetTagById() {
-        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/5", Tag.class);
+        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/4", Tag.class);
 
         verifyStatusOk(response.getStatusCode());
         verifyTag("one-pot", "Gotta keep that washing down", requireNonNull(response.getBody()));
