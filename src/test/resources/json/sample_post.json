@@ -15,7 +15,7 @@
   "ingredients": [
     {
       "unit": {
-        "id": 8,
+        "id": 9,
         "name": "400g can",
         "abbreviation": "can"
       },
@@ -33,12 +33,12 @@
   ],
   "tags": [
     {
-      "id": 5,
+      "id": 4,
       "name": "one-pot",
       "description": "Gotta keep that washing down"
     },
     {
-      "id": 4,
+      "id": 3,
       "name": "old-school",
       "description": "Just like wot you remember"
     }

@@ -109,7 +109,7 @@ public class RestIntegrationTests {
 
         // Ingredients
         assertThat(recipe.getIngredients().size(), equalTo(3));
-        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", 1, new Unit(8, "400g can", "can"));
+        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", 1, new Unit(9, "400g can", "can"));
         verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", 1, null);
         verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", 2, null);
 
@@ -120,7 +120,7 @@ public class RestIntegrationTests {
 
         // Tags
         assertThat(recipe.getTags().size(), equalTo(2));
-        verifyTag("rice-cooker", "Cook in the wonder gadget", recipe.getTags().toArray(new Tag[0]));
+        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
         verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
     }
 

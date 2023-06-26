@@ -17,6 +17,7 @@ public class Ingredient implements java.io.Serializable {
 
     public Ingredient() {
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)

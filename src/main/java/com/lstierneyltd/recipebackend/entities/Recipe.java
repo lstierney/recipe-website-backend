@@ -15,40 +15,21 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(columnNames = "name")
 )
 public class Recipe implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     private int id;
-
-    @Column(name = "name", unique = true, nullable = false, length = 100)
     private String name;
-
-    @Column(name = "description", nullable = false, length = 65535)
     private String description;
-
-    @Column(name = "image_filename", length = 100)
     private String imageFileName;
-
-    @Column(name = "cooking_time", nullable = false)
     private int cookingTime;
-
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<MethodStep> methodSteps = new ArrayList<>();
-
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     private List<Ingredient> ingredients = new ArrayList<>();
-
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(
-            name = "recipe_tag",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
     public Recipe() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public int getId() {
         return this.id;
     }
@@ -57,6 +38,7 @@ public class Recipe implements java.io.Serializable {
         this.id = id;
     }
 
+    @Column(name = "name", unique = true, nullable = false, length = 100)
     public String getName() {
         return this.name;
     }
@@ -65,6 +47,7 @@ public class Recipe implements java.io.Serializable {
         this.name = name;
     }
 
+    @Column(name = "description", nullable = false, length = 500)
     public String getDescription() {
         return this.description;
     }
@@ -73,6 +56,7 @@ public class Recipe implements java.io.Serializable {
         this.description = description;
     }
 
+    @Column(name = "cooking_time", nullable = false)
     public int getCookingTime() {
         return this.cookingTime;
     }
@@ -81,6 +65,7 @@ public class Recipe implements java.io.Serializable {
         this.cookingTime = cookingTime;
     }
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     @JsonManagedReference
     public List<MethodStep> getMethodSteps() {
         return this.methodSteps;
@@ -91,6 +76,7 @@ public class Recipe implements java.io.Serializable {
         methodSteps.forEach(methodStep -> methodStep.setRecipe(this));
     }
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
     @JsonManagedReference
     public List<Ingredient> getIngredients() {
         return this.ingredients;
@@ -101,6 +87,12 @@ public class Recipe implements java.io.Serializable {
         ingredients.forEach(ingredient -> ingredient.setRecipe(this));
     }
 
+    @ManyToMany()
+    @JoinTable(
+            name = "recipe_tag",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @OrderBy("id ASC")
     public Set<Tag> getTags() {
         return this.tags;
     }
@@ -109,6 +101,7 @@ public class Recipe implements java.io.Serializable {
         this.tags = tags;
     }
 
+    @Column(name = "image_filename", length = 100)
     public String getImageFileName() {
         return this.imageFileName;
     }
