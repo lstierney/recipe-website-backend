@@ -2,15 +2,25 @@ package com.lstierneyltd.recipebackend.service;
 
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
+import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -54,4 +64,58 @@ public class RecipeServiceImplTest {
         then(recipeRepository).should().save(recipe);
         then(fileService).should().saveMultiPartFile(multipartFile);
     }
+
+    @Test
+    public void findById() {
+        // Given
+        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.of(getRecipe()));
+
+        // when
+        recipeService.findById(ID);
+
+        // then
+        then(recipeRepository).should().findById(ID);
+    }
+
+    @Test
+    public void findById_recipeNotFound() {
+        // Given
+        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findById(TestConstants.ID));
+
+        // Then
+        then(recipeRepository).should().findById(TestConstants.ID);
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + TestConstants.ID));
+    }
+
+    @Test
+    public void findByTagName() {
+        // when
+        recipeService.findByTagName(TAG_NAME);
+
+        // then
+        then(recipeRepository).should().findByTagName(TAG_NAME);
+    }
+
+    @Test
+    public void findAll() {
+        // when
+        recipeService.findAll();
+
+        // then
+        then(recipeRepository).should().findAll();
+    }
+
+    @Test
+    public void findAllRecipeIdAndNameBy() {
+        // when
+        recipeService.findAllRecipeIdAndNameBy();
+
+        // then
+        then(recipeRepository).should().findAllRecipeIdAndNameBy();
+    }
+
+
 }
