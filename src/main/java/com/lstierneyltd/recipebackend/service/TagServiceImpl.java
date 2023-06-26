@@ -3,7 +3,7 @@ package com.lstierneyltd.recipebackend.service;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.entities.Tag;
 import com.lstierneyltd.recipebackend.repository.TagRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag getTagById(Integer id) {
-        return tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_TAG_WITH_ID + id));
+        return tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_TAG_WITH_ID + id));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag updateTag(Integer id, Tag tag) {
-        final Tag existingTag = tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(TagServiceImpl.COULD_NOT_FIND_TAG_WITH_ID + id));
+        final Tag existingTag = tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(TagServiceImpl.COULD_NOT_FIND_TAG_WITH_ID + id));
         existingTag.setName(tag.getName());
         existingTag.setDescription(tag.getDescription());
         return tagRepository.save(existingTag);
@@ -43,7 +43,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void deleteTag(Integer id) {
-        Tag tag = tagRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(TagServiceImpl.COULD_NOT_FIND_TAG_WITH_ID + id));
+        Tag tag = tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(TagServiceImpl.COULD_NOT_FIND_TAG_WITH_ID + id));
 
         for (Recipe recipe : tag.getRecipes()) {
             recipe.getTags().remove(tag);

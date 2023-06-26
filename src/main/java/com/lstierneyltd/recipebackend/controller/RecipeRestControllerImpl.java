@@ -3,7 +3,7 @@ package com.lstierneyltd.recipebackend.controller;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.service.RecipeService;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +27,7 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     @Override
     @GetMapping("/{id}")
     public Recipe getRecipeById(@PathVariable Integer id) {
-        return recipeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
     }
 
     @Override
