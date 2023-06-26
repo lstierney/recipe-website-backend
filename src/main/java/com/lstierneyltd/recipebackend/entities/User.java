@@ -11,20 +11,16 @@ import jakarta.persistence.*;
         }
 )
 public class User implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     private int id;
-
-    @Column(name = "username", unique = true, nullable = false, length = 20)
     private String username;
-
-    @Column(name = "password", nullable = false, length = 20)
     private String password;
 
     public User() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public int getId() {
         return this.id;
     }
@@ -33,6 +29,7 @@ public class User implements java.io.Serializable {
         this.id = id;
     }
 
+    @Column(name = "username", unique = true, nullable = false, length = 20)
     public String getUsername() {
         return this.username;
     }
@@ -41,6 +38,7 @@ public class User implements java.io.Serializable {
         this.username = username;
     }
 
+    @Column(name = "password", nullable = false, length = 20)
     public String getPassword() {
         return this.password;
     }

@@ -17,25 +17,17 @@ import java.util.Objects;
         }
 )
 public class Tag implements java.io.Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     private int id;
-
-    @Column(name = "name", unique = true, nullable = false, length = 10)
     private String name;
-
-    @Column(name = "description", length = 100)
     private String description;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "tags")
     private List<Recipe> recipes = new ArrayList<>();
-
 
     public Tag() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public int getId() {
         return this.id;
     }
@@ -44,6 +36,7 @@ public class Tag implements java.io.Serializable {
         this.id = id;
     }
 
+    @Column(name = "name", unique = true, nullable = false, length = 10)
     public String getName() {
         return this.name;
     }
@@ -52,6 +45,7 @@ public class Tag implements java.io.Serializable {
         this.name = name;
     }
 
+    @Column(name = "description", length = 100)
     public String getDescription() {
         return this.description;
     }
@@ -60,6 +54,8 @@ public class Tag implements java.io.Serializable {
         this.description = description;
     }
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tags")
     public List<Recipe> getRecipes() {
         return recipes;
     }
