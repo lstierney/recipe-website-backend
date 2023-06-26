@@ -3,7 +3,6 @@ package com.lstierneyltd.recipebackend.controller;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.service.RecipeService;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,38 +13,36 @@ import java.util.List;
 @RequestMapping("/api/recipes")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class RecipeRestControllerImpl implements RecipeRestController {
-    static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";
 
-    private final RecipeRepository recipeRepository;
+
     private final RecipeService recipeService;
 
-    public RecipeRestControllerImpl(RecipeRepository recipeRepository, RecipeService recipeService) {
-        this.recipeRepository = recipeRepository;
+    public RecipeRestControllerImpl(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
 
     @Override
     @GetMapping("/{id}")
     public Recipe getRecipeById(@PathVariable Integer id) {
-        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        return recipeService.findById(id);
     }
 
     @Override
     @GetMapping(params = "tagName")
     public List<Recipe> getRecipesByTagName(@RequestParam("tagName") String tagName) {
-        return recipeRepository.findByTagName(tagName);
+        return recipeService.findByTagName(tagName);
     }
 
     @Override
     @GetMapping
     public List<Recipe> getAllRecipes() {
-        return recipeRepository.findAll();
+        return recipeService.findAll();
     }
 
     @Override
     @GetMapping("/list")
     public List<RecipeRepository.RecipeIdAndName> getRecipesList() {
-        return recipeRepository.findAllRecipeIdAndNameBy();
+        return recipeService.findAllRecipeIdAndNameBy();
     }
 
     @Override

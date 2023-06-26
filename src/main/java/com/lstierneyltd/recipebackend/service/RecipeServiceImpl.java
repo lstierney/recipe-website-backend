@@ -4,13 +4,15 @@ import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 public class RecipeServiceImpl implements RecipeService {
-    static final String COULD_NOT_FIND_UNIT_WITH_ID = "Could not find UNIT with id: ";
-    static final String COULD_NOT_FIND_TAG_WITH_ID = "Could not find TAG with id: ";
+    public static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";
     private final Logger logger = LoggerFactory.getLogger(RecipeServiceImpl.class);
     private final FileService fileService;
     private final ObjectMapperService objectMapperService;
@@ -40,5 +42,25 @@ public class RecipeServiceImpl implements RecipeService {
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
         fileService.saveMultiPartFile(imageFile);
         recipe.setImageFileName(imageFile.getOriginalFilename());
+    }
+
+    @Override
+    public Recipe findById(int id) {
+        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+    }
+
+    @Override
+    public List<Recipe> findByTagName(String tagName) {
+        return recipeRepository.findByTagName(tagName);
+    }
+
+    @Override
+    public List<Recipe> findAll() {
+        return recipeRepository.findAll();
+    }
+
+    @Override
+    public List<RecipeRepository.RecipeIdAndName> findAllRecipeIdAndNameBy() {
+        return recipeRepository.findAllRecipeIdAndNameBy();
     }
 }

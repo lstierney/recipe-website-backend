@@ -9,17 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-
-import static com.lstierneyltd.recipebackend.controller.RecipeRestControllerImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
-import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -44,28 +35,13 @@ public class RecipeRestControllerImplTest {
     }
 
     @Test
-    public void testGetRecipeById_recipeFound() {
-        // Given
-        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.of(getRecipe()));
+    public void testGetRecipeById() {
 
         // When
         recipeRestController.getRecipeById(TestConstants.ID);
 
         // Then
-        then(recipeRepository).should().findById(TestConstants.ID);
-    }
-
-    @Test
-    public void testGetRecipeById_recipeNotFound() {
-        // Given
-        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.empty());
-
-        // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeRestController.getRecipeById(TestConstants.ID));
-
-        // Then
-        then(recipeRepository).should().findById(TestConstants.ID);
-        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + TestConstants.ID));
+        then(recipeService).should().findById(TestConstants.ID);
     }
 
     @Test
@@ -74,7 +50,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getAllRecipes();
 
         // then
-        then(recipeRepository).should().findAll();
+        then(recipeService).should().findAll();
     }
 
     @Test
@@ -83,7 +59,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getRecipesList();
 
         // then
-        then(recipeRepository).should().findAllRecipeIdAndNameBy();
+        then(recipeService).should().findAllRecipeIdAndNameBy();
     }
 
     @Test
@@ -103,6 +79,6 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getRecipesByTagName(tagName);
 
         // then
-        then(recipeRepository).should().findByTagName(tagName);
+        then(recipeService).should().findByTagName(tagName);
     }
 }
