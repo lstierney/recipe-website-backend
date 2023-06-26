@@ -4,13 +4,13 @@ import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.repository.TagRepository;
 import com.lstierneyltd.recipebackend.repository.UnitRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -90,10 +90,7 @@ public class RecipeServiceImplTest {
         given(unitRepository.findById(UNIT_ID)).willReturn(Optional.empty());
 
         // when
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            recipeService.addRecipe(multipartFile, json);
-        });
-
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.addRecipe(multipartFile, json));
 
         // then
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
@@ -112,9 +109,7 @@ public class RecipeServiceImplTest {
         given(tagRepository.findById(TAG_ID)).willReturn(Optional.empty());
 
         // when
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            recipeService.addRecipe(multipartFile, json);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.addRecipe(multipartFile, json));
 
         // then
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);

@@ -7,9 +7,9 @@ import com.lstierneyltd.recipebackend.entities.Unit;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.repository.TagRepository;
 import com.lstierneyltd.recipebackend.repository.UnitRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,7 +57,7 @@ public class RecipeServiceImpl implements RecipeService {
         for (final Ingredient ingredient : recipe.getIngredients()) {
             if (ingredient.getUnit() != null) {
                 final int unitId = ingredient.getUnit().getId();
-                final Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_UNIT_WITH_ID + unitId));
+                final Unit unit = unitRepository.findById(unitId).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_UNIT_WITH_ID + unitId));
                 ingredient.setUnit(unit);
             }
         }
@@ -67,7 +67,7 @@ public class RecipeServiceImpl implements RecipeService {
         final Set<Tag> managedTags = new HashSet<>();
         for (final Tag tag : recipe.getTags()) {
             final int tagId = tag.getId();
-            managedTags.add(tagRepository.findById(tagId).orElseThrow(() -> new EntityNotFoundException(COULD_NOT_FIND_TAG_WITH_ID + tagId)));
+            managedTags.add(tagRepository.findById(tagId).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_TAG_WITH_ID + tagId)));
         }
         recipe.setTags(managedTags);
     }

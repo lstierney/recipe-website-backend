@@ -2,7 +2,6 @@ package com.lstierneyltd.recipebackend.service;
 
 import com.lstierneyltd.recipebackend.entities.Tag;
 import com.lstierneyltd.recipebackend.repository.TagRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +10,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.Optional;
 
@@ -58,9 +58,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            tagService.getTagById(ID);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.getTagById(ID));
 
         // Then
         then(tagRepository).should().findById(ID);
@@ -107,9 +105,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            tagService.deleteTag(ID);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.deleteTag(ID));
 
         // Then
         then(tagRepository).should().findById(ID);
@@ -148,9 +144,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            tagService.updateTag(ID, getNewTag());
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.updateTag(ID, getNewTag()));
 
         // Then
         then(tagRepository).should().findById(ID);

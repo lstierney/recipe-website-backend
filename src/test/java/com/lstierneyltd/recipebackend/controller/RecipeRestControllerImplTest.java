@@ -3,13 +3,13 @@ package com.lstierneyltd.recipebackend.controller;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.service.RecipeService;
 import com.lstierneyltd.recipebackend.utils.TestConstants;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -61,9 +61,7 @@ public class RecipeRestControllerImplTest {
         given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            recipeRestController.getRecipeById(TestConstants.ID);
-        });
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeRestController.getRecipeById(TestConstants.ID));
 
         // Then
         then(recipeRepository).should().findById(TestConstants.ID);
