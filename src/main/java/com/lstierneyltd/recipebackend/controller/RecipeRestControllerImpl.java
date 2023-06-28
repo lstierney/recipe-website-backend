@@ -13,8 +13,6 @@ import java.util.List;
 @RequestMapping("/api/recipes")
 @CrossOrigin(origins = "${cross.origin.allowed.host}")
 public class RecipeRestControllerImpl implements RecipeRestController {
-
-
     private final RecipeService recipeService;
 
     public RecipeRestControllerImpl(RecipeService recipeService) {
@@ -48,6 +46,12 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     @Override
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Recipe addRecipe(@RequestParam(value = "imageFile") MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
+        return recipeService.addRecipe(imageFile, recipeString);
+    }
+
+    @Override
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Recipe updateRecipe(@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
         return recipeService.addRecipe(imageFile, recipeString);
     }
 }

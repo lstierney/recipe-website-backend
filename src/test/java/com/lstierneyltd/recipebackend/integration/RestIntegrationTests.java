@@ -161,7 +161,7 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/0", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/1", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -196,7 +196,7 @@ public class RestIntegrationTests {
     @Test
     @Order(22)
     public void testGetTagById() {
-        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/4", Tag.class);
+        final ResponseEntity<Tag> response = testRestTemplate.getForEntity("/api/tags/5", Tag.class);
 
         verifyStatusOk(response.getStatusCode());
         verifyTag("one-pot", "Gotta keep that washing down", requireNonNull(response.getBody()));
