@@ -13,6 +13,8 @@ public interface RecipeRestController {
 
     Recipe addRecipe(MultipartFile imageFile, String recipe);
 
+    Recipe updateRecipe(MultipartFile imageFile, String recipe);
+
     List<RecipeRepository.RecipeIdAndName> getRecipesList();
 
     List<Recipe> getRecipesByTagName(String tagName);

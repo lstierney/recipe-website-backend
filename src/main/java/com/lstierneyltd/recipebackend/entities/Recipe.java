@@ -76,7 +76,7 @@ public class Recipe implements java.io.Serializable {
         methodSteps.forEach(methodStep -> methodStep.setRecipe(this));
     }
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     public List<Ingredient> getIngredients() {
         return this.ingredients;

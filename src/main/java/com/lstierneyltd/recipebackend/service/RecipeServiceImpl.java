@@ -30,7 +30,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         logger.info("Adding new recipe: " + recipe);
 
-        handleUploadedFile(imageFile, recipe);
+        if (imageFile != null) {
+            handleUploadedFile(imageFile, recipe);
+        }
 
         final Recipe newRecipe = recipeRepository.save(recipe);
 
