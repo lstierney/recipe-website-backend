@@ -50,4 +50,10 @@ public class IngredientTest {
         ingredient.setQuantity(QUANTITY);
         assertThat(ingredient.getQuantity(), equalTo(QUANTITY));
     }
+
+    @Test
+    public void testSetGetOrdering() {
+        ingredient.setOrdering(ORDERING);
+        assertThat(ingredient.getOrdering(), equalTo(ORDERING));
+    }
 }

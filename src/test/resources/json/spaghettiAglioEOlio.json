@@ -7,32 +7,37 @@
       "quantity": 1,
       "unit": {
         "id": 1
-      }
+      },
+      "ordering": 1
     },
     {
       "description": "cloves of garlic (finely chopped)",
-      "quantity": 4
+      "quantity": 4,
+      "ordering": 2
     },
     {
       "description": "fresh parsley (chopped)",
       "quantity": 1,
       "unit": {
         "id": 7
-      }
+      },
+      "ordering": 3
     },
     {
       "description": "olive oil",
       "quantity": 4,
       "unit": {
         "id": 2
-      }
+      },
+      "ordering": 4
     },
     {
       "description": "spaghetti",
       "quantity": 12,
       "unit": {
         "id": 6
-      }
+      },
+      "ordering": 5
     }
   ],
   "methodSteps": [

@@ -20,15 +20,18 @@
         "abbreviation": "can"
       },
       "description": "Chopped Tomatoes",
-      "quantity": 1
+      "quantity": 1,
+      "ordering": 1
     },
     {
       "description": "Onion (small)",
-      "quantity": 1
+      "quantity": 1,
+      "ordering": 2
     },
     {
       "description": "Cloves of Garlic",
-      "quantity": 2
+      "quantity": 2,
+      "ordering": 3
     }
   ],
   "tags": [
