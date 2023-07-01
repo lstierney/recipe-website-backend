@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,12 +9,13 @@ import jakarta.persistence.*;
         name = "ingredient",
         catalog = "recipes"
 )
-public class Ingredient implements java.io.Serializable {
+public class Ingredient implements java.io.Serializable, Orderable {
     private int id;
     private Recipe recipe;
     private Unit unit;
     private String description;
     private int quantity;
+    private int ordering;
 
     public Ingredient() {
     }
@@ -68,6 +70,16 @@ public class Ingredient implements java.io.Serializable {
         this.quantity = quantity;
     }
 
+    @Column(name = "ordering", nullable = false)
+    public int getOrdering() {
+        return this.ordering;
+    }
+
+    public void setOrdering(int ordering) {
+        this.ordering = ordering;
+    }
+
+    @Generated
     @Override
     public String toString() {
         return "Ingredient{" +

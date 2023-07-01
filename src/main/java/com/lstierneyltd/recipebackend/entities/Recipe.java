@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -65,8 +66,9 @@ public class Recipe implements java.io.Serializable {
         this.cookingTime = cookingTime;
     }
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @OrderBy("ordering ASC")
     public List<MethodStep> getMethodSteps() {
         return this.methodSteps;
     }
@@ -78,6 +80,7 @@ public class Recipe implements java.io.Serializable {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @OrderBy("ordering ASC")
     public List<Ingredient> getIngredients() {
         return this.ingredients;
     }
@@ -110,6 +113,7 @@ public class Recipe implements java.io.Serializable {
         this.imageFileName = imageFileName;
     }
 
+    @Generated
     @Override
     public String toString() {
         return "Recipe{" +

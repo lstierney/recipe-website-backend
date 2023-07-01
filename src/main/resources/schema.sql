@@ -80,3 +80,6 @@ create table authorised_user
         unique (username)
 );
 
+alter table ingredient
+    add ordering int not null;
+

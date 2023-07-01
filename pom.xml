@@ -18,14 +18,14 @@
         <hsqldb.version>2.7.1</hsqldb.version>
         <java.version>17</java.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <pitest.version>1.11.4</pitest.version>
+        <pitest.version>1.14.2</pitest.version>
         <mysql-connector-j.version>8.0.32</mysql-connector-j.version>
         <spring-boot-test-autoconfigure.version>3.0.3</spring-boot-test-autoconfigure.version>
         <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
-        <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+        <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
-        <pitest-junit5-plugin.version>1.1.2</pitest-junit5-plugin.version>
+        <pitest-junit5-plugin.version>1.2.0</pitest-junit5-plugin.version>
         <isgithub>false</isgithub>
     </properties>
 

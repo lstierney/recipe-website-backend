@@ -66,6 +66,24 @@ public class RecipeServiceImplTest {
     }
 
     @Test
+    public void addRecipe_noImage() {
+        String json = "JSON String";
+        Recipe recipe = getRecipe();
+
+        // given
+        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(recipe);
+        given(recipeRepository.save(recipe)).willReturn(recipe);
+
+        // when
+        recipeService.addRecipe(null, json);
+
+        // then
+        then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
+        then(recipeRepository).should().save(recipe);
+        then(fileService).shouldHaveNoInteractions();
+    }
+
+    @Test
     public void findById() {
         // Given
         given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.of(getRecipe()));
@@ -116,6 +134,5 @@ public class RecipeServiceImplTest {
         // then
         then(recipeRepository).should().findAllRecipeIdAndNameBy();
     }
-
 
 }

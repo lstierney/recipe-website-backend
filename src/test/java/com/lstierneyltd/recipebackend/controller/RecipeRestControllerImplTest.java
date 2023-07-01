@@ -81,4 +81,14 @@ public class RecipeRestControllerImplTest {
         // then
         then(recipeService).should().findByTagName(tagName);
     }
+
+    @Test
+    public void testUpdateRecipe() {
+        // when
+        String jsonString = "JSON String";
+        recipeRestController.updateRecipe(multipartFile, jsonString);
+
+        // then
+        then(recipeService).should().addRecipe(multipartFile, jsonString);
+    }
 }

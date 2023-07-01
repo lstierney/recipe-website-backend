@@ -53,7 +53,6 @@ public class RestIntegrationTests {
         System.out.println("############ LOCAL_SERVER_PORT: " + localServerPort + " #############");
     }
 
-    // TODO - why broken?
     @Test
     @Order(2)
     void testGetUnits() {
