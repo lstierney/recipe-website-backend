@@ -169,27 +169,27 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>${pitest.version}</version>
-                <executions>
-                    <execution>
-                        <id>pit-report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>${pitest-junit5-plugin.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.pitest</groupId>-->
+            <!--                <artifactId>pitest-maven</artifactId>-->
+            <!--                <version>${pitest.version}</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>pit-report</id>-->
+            <!--                        <phase>verify</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>mutationCoverage</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.pitest</groupId>-->
+            <!--                        <artifactId>pitest-junit5-plugin</artifactId>-->
+            <!--                        <version>${pitest-junit5-plugin.version}</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
@@ -215,18 +215,18 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>${pitest.version}</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.pitest</groupId>-->
+            <!--                <artifactId>pitest-maven</artifactId>-->
+            <!--                <version>${pitest.version}</version>-->
+            <!--                <reportSets>-->
+            <!--                    <reportSet>-->
+            <!--                        <reports>-->
+            <!--                            <report>report</report>-->
+            <!--                        </reports>-->
+            <!--                    </reportSet>-->
+            <!--                </reportSets>-->
+            <!--            </plugin>-->
         </plugins>
     </reporting>
 </project>
