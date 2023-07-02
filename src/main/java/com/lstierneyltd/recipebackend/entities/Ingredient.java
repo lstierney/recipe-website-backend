@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(
         name = "ingredient",
@@ -14,7 +16,7 @@ public class Ingredient implements java.io.Serializable, Orderable {
     private Recipe recipe;
     private Unit unit;
     private String description;
-    private int quantity;
+    private BigDecimal quantity;
     private int ordering;
 
     public Ingredient() {
@@ -62,11 +64,11 @@ public class Ingredient implements java.io.Serializable, Orderable {
     }
 
     @Column(name = "quantity", nullable = false, precision = 10, scale = 0)
-    public int getQuantity() {
+    public BigDecimal getQuantity() {
         return this.quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 

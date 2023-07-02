@@ -73,6 +73,16 @@ public class Unit implements java.io.Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Generated
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", abbreviation='" + abbreviation + '\'' +
+                '}';
+    }
 }
 
 
