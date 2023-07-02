@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
@@ -72,8 +73,8 @@ public class RestIntegrationTests {
         assertThat(unit.getAbbreviation(), equalTo("tsp"));
 
         unit = units[4];
-        assertThat(unit.getName(), equalTo("gram"));
-        assertThat(unit.getAbbreviation(), equalTo("g"));
+        assertThat(unit.getName(), equalTo("pound"));
+        assertThat(unit.getAbbreviation(), equalTo("lb"));
     }
 
     @Test
@@ -108,9 +109,9 @@ public class RestIntegrationTests {
 
         // Ingredients
         assertThat(recipe.getIngredients().size(), equalTo(3));
-        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", 1, new Unit(9, "400g can", "can"));
-        verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", 1, null);
-        verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", 2, null);
+        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", BigDecimal.valueOf(1.00), new Unit(8, "400g can", "can"));
+        verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", BigDecimal.valueOf(0.50), null);
+        verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", BigDecimal.valueOf(2.00), null);
 
         // Method steps
         assertThat(recipe.getMethodSteps().size(), equalTo(2));
@@ -128,9 +129,9 @@ public class RestIntegrationTests {
         verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
     }
 
-    private void verifyIngredient(Ingredient ingredient1, String description, int quantity, Unit unit) {
+    private void verifyIngredient(Ingredient ingredient1, String description, BigDecimal quantity, Unit unit) {
         assertThat(ingredient1.getDescription(), equalTo(description));
-        assertThat(ingredient1.getQuantity(), equalTo(quantity));
+        assertThat(ingredient1.getQuantity(), comparesEqualTo(quantity));
         assertThat(ingredient1.getUnit(), equalTo(unit));
     }
 
