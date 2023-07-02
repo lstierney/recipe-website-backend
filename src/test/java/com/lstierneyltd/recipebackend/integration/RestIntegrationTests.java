@@ -121,6 +121,11 @@ public class RestIntegrationTests {
         assertThat(recipe.getTags().size(), equalTo(2));
         verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
         verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
+
+        // Notes
+        assertThat(recipe.getNotes().size(), equalTo(2));
+        verifyNote(recipe.getNotes().get(0), 1, "This is the first note");
+        verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, int quantity, Unit unit) {
@@ -139,6 +144,11 @@ public class RestIntegrationTests {
         tag.setName(name);
         tag.setDescription(description);
         assertThat(Set.of(tags), hasItem(tag));
+    }
+
+    private void verifyNote(Note note, int ordering, String description) {
+        assertThat(note.getOrdering(), equalTo(ordering));
+        assertThat(note.getDescription(), equalTo(description));
     }
 
     @Test

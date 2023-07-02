@@ -61,6 +61,20 @@ public final class TestStubs {
         return methodStep;
     }
 
+    private static Note getNoteNoRecipe() {
+        final Note note = new Note();
+        note.setId(ID);
+        note.setOrdering(ORDERING);
+        note.setDescription(DESCRIPTION);
+        return note;
+    }
+
+    public static Note getNote() {
+        final Note note = getNoteNoRecipe();
+        note.setRecipe(getRecipe());
+        return note;
+    }
+
     public static MethodStep getMethodStep() {
         final MethodStep methodStep = getMethodStepNoRecipe();
         methodStep.setRecipe(getRecipe());

@@ -71,6 +71,16 @@ public class RecipeTest {
     }
 
     @Test
+    public void testGetSetNotes() {
+        List<Note> notes = List.of(getNote());
+        recipe.setNotes(notes);
+        assertThat(recipe.getNotes(), equalTo(notes));
+
+        // Check to see that the recipe was set in the MethodStep too
+        assertThat(recipe.getNotes().get(0).getRecipe(), sameInstance(recipe));
+    }
+
+    @Test
     public void testGetSetTags() {
         Set<Tag> tags = Set.of(getTag());
         recipe.setTags(tags);
