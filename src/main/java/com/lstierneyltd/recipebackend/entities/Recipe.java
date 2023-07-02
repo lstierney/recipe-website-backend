@@ -23,6 +23,7 @@ public class Recipe implements java.io.Serializable {
     private int cookingTime;
     private List<MethodStep> methodSteps = new ArrayList<>();
     private List<Ingredient> ingredients = new ArrayList<>();
+    private List<Note> notes = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
 
     public Recipe() {
@@ -81,6 +82,18 @@ public class Recipe implements java.io.Serializable {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @OrderBy("ordering ASC")
+    public List<Note> getNotes() {
+        return this.notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+        notes.forEach(note -> note.setRecipe(this));
+    }
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @OrderBy("ordering ASC")
     public List<Ingredient> getIngredients() {
         return this.ingredients;
     }
@@ -123,6 +136,7 @@ public class Recipe implements java.io.Serializable {
                 ", cookingTime=" + cookingTime +
                 ", methodSteps=" + methodSteps +
                 ", ingredients=" + ingredients +
+                ", notes=" + notes +
                 '}';
     }
 }
