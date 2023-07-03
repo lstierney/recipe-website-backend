@@ -14,6 +14,8 @@ insert into unit(name, abbreviation)
 values ('cup', 'cup');
 insert into unit(name, abbreviation)
 values ('400g can', 'can');
+insert into unit(name, abbreviation)
+values ('millilitre', 'ml');
 
 insert into tag(name, description)
 values ('easy', 'Simple to make');
