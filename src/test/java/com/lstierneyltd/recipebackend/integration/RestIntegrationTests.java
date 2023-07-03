@@ -66,7 +66,7 @@ public class RestIntegrationTests {
         // Units - no point checking all of them...
         final Unit[] units = response.getBody();
         assertThat(units, is(notNullValue()));
-        assertThat(units.length, is(greaterThanOrEqualTo(8)));
+        assertThat(units.length, equalTo(9));
 
         Unit unit = units[0];
         assertThat(unit.getName(), equalTo("teaspoon"));
