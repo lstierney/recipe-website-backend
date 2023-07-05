@@ -32,6 +32,12 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
+    @GetMapping("/latest")
+    public Recipe getLatestRecipe() {
+        return recipeService.findLatest();
+    }
+
+    @Override
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.findAll();

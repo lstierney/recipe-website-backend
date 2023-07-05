@@ -258,4 +258,15 @@ public class RestIntegrationTests {
         // Just one just now
         verifyRecipe(recipes[0]);
     }
+
+    @Test
+    @Order(26)
+    public void testGetLatestRecipe() {
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/latest", Recipe.class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        verifyRecipe(requireNonNull(response.getBody()));
+    }
 }
