@@ -18,4 +18,6 @@ public interface RecipeRestController {
     List<RecipeRepository.RecipeIdAndName> getRecipesList();
 
     List<Recipe> getRecipesByTagName(String tagName);
+
+    Recipe getLatestRecipe();
 }

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_LATEST_RECIPE;
 import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
@@ -135,4 +136,30 @@ public class RecipeServiceImplTest {
         then(recipeRepository).should().findAllRecipeIdAndNameBy();
     }
 
+    @Test
+    public void findLatest() {
+        // Given
+        Recipe recipe = getRecipe();
+        given(recipeRepository.findTop1ByOrderByIdDesc()).willReturn(Optional.of(recipe));
+
+        // when
+        Recipe latest = recipeService.findLatest();
+
+        // then
+        then(recipeRepository).should().findTop1ByOrderByIdDesc();
+        assertThat(latest, equalTo(recipe));
+    }
+
+    @Test
+    public void findLatest_notFound() {
+        // Given
+        given(recipeRepository.findTop1ByOrderByIdDesc()).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findLatest());
+
+        // Then
+        then(recipeRepository).should().findTop1ByOrderByIdDesc();
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_LATEST_RECIPE));
+    }
 }

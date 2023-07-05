@@ -1,6 +1,5 @@
 package com.lstierneyltd.recipebackend.controller;
 
-import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.service.RecipeService;
 import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.AfterEach;
@@ -18,9 +17,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @ExtendWith(MockitoExtension.class)
 public class RecipeRestControllerImplTest {
     @Mock
-    private RecipeRepository recipeRepository;
-
-    @Mock
     private RecipeService recipeService;
 
     @Mock
@@ -31,7 +27,7 @@ public class RecipeRestControllerImplTest {
 
     @AfterEach
     void after() {
-        verifyNoMoreInteractions(recipeRepository, recipeService);
+        verifyNoMoreInteractions(recipeService);
     }
 
     @Test
@@ -90,5 +86,14 @@ public class RecipeRestControllerImplTest {
 
         // then
         then(recipeService).should().addRecipe(multipartFile, jsonString);
+    }
+
+    @Test
+    public void testUpdateGetLatestRecipe() {
+        // when
+        recipeRestController.getLatestRecipe();
+
+        // then
+        then(recipeService).should().findLatest();
     }
 }
