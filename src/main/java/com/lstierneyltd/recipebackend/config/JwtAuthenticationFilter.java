@@ -7,6 +7,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     private final CustomUserDetailsService customUserDetailsService;
 
     private final JwtService jwtService;
@@ -33,14 +37,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                // TODO - this can be done better
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                setResponseAsUnauthorised(response, request);
+                return;
             }
         } catch (JwtException e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            setResponseAsUnauthorised(response, request);
+            return;
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void setResponseAsUnauthorised(HttpServletResponse response, HttpServletRequest request) {
+        StringBuffer requestUrl = request.getRequestURL();
+        logger.info("Returning 401 Unauthorised for request URL: " + requestUrl);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("{ ");
+        sb.append("\"error\": \"Unauthorized\",");
+        sb.append("\"message\": \"Invalid Token.\",");
+        sb.append("\"path\": \"")
+                .append(requestUrl)
+                .append("\"");
+        sb.append("} ");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        try {
+            response.getWriter().write(sb.toString());
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     private String extractJwtToken(HttpServletRequest request) {

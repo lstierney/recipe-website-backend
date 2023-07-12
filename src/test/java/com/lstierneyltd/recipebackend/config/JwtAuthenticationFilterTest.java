@@ -14,19 +14,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtAuthenticationFilterTest {
@@ -90,14 +92,14 @@ public class JwtAuthenticationFilterTest {
         String jwtToken = "expiredToken";
         given(request.getHeader(AUTHORIZATION)).willReturn(BEARER + jwtToken);
         given(jwtService.isTokenExpired(jwtToken)).willReturn(true);
+        given(response.getWriter()).willReturn(new PrintWriter(System.out));
 
         // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Then
+        verifyUnauthorisedResponse();
         then(jwtService).should().isTokenExpired(jwtToken);
-        then(response).should().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        then(filterChain).should().doFilter(request, response);
 
         Authentication resultAuthentication = SecurityContextHolder.getContext().getAuthentication();
         assertThat(resultAuthentication, is(nullValue()));
@@ -109,14 +111,14 @@ public class JwtAuthenticationFilterTest {
         String jwtToken = "invalidToken";
         given(request.getHeader(AUTHORIZATION)).willReturn(BEARER + jwtToken);
         given(jwtService.isTokenExpired(jwtToken)).willThrow(JwtException.class);
+        given(response.getWriter()).willReturn(new PrintWriter(System.out));
 
         // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Then
+        verifyUnauthorisedResponse();
         then(jwtService).should().isTokenExpired(jwtToken);
-        then(response).should().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        then(filterChain).should().doFilter(request, response);
 
         Authentication resultAuthentication = SecurityContextHolder.getContext().getAuthentication();
         assertThat(resultAuthentication, is(nullValue()));
@@ -126,17 +128,25 @@ public class JwtAuthenticationFilterTest {
     public void testDoFilterInternalWithNoJwtToken() throws ServletException, IOException {
         // Given
         given(request.getHeader(AUTHORIZATION)).willReturn(null);
+        given(response.getWriter()).willReturn(new PrintWriter(System.out));
+        given(response.getWriter()).willReturn(new PrintWriter(System.out));
 
         // When
         jwtAuthenticationFilter.doFilterInternal(request, response, filterChain);
 
         // Then
-        then(response).should().setStatus(HttpServletResponse.SC_FORBIDDEN);
-        then(filterChain).should().doFilter(request, response);
+        verifyUnauthorisedResponse();
         verifyNoInteractions(jwtService, customUserDetailsService);
 
         Authentication resultAuthentication = SecurityContextHolder.getContext().getAuthentication();
         assertThat(resultAuthentication, is(nullValue()));
+    }
+
+    private void verifyUnauthorisedResponse() throws IOException {
+        then(response).should().setContentType(MediaType.APPLICATION_JSON_VALUE);
+        then(response).should().setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        then(response).should().getWriter();
+        then(request).should().getRequestURL();
     }
 
     @Test
