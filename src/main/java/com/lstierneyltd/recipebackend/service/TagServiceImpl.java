@@ -20,7 +20,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getAllTags() {
-        return tagRepository.findAll();
+        return tagRepository.findAllByOrderByIdDesc();
     }
 
     @Override
