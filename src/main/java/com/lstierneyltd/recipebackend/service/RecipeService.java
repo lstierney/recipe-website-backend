@@ -15,7 +15,7 @@ public interface RecipeService {
 
     List<Recipe> findAll();
 
-    List<RecipeRepository.RecipeIdAndName> findAllRecipeIdAndNameBy();
+    List<RecipeRepository.RecipePreview> findAllRecipePreviewBy();
 
     Recipe findLatest();
 }

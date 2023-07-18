@@ -128,12 +128,12 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void findAllRecipeIdAndNameBy() {
+    public void findAllRecipePreviewBy() {
         // when
-        recipeService.findAllRecipeIdAndNameBy();
+        recipeService.findAllRecipePreviewBy();
 
         // then
-        then(recipeRepository).should().findAllRecipeIdAndNameBy();
+        then(recipeRepository).should().findAllRecipePreviewBy();
     }
 
     @Test

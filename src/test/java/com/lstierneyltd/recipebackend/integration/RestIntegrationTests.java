@@ -160,7 +160,7 @@ public class RestIntegrationTests {
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        // Recipes
+        // Recipe
         final Recipe[] recipes = requireNonNull(response.getBody());
         assertThat(recipes.length, equalTo(1));
 

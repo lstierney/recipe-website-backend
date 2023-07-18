@@ -8,16 +8,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
-    List<RecipeIdAndName> findAllRecipeIdAndNameBy();
+    List<RecipePreview> findAllRecipePreviewBy();
 
     @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = ?1")
     List<Recipe> findByTagName(String name);
 
     Optional<Recipe> findTop1ByOrderByIdDesc();
 
-    interface RecipeIdAndName {
+    interface RecipePreview {
         int getId();
 
         String getName();
+
+        String getImageFileName();
+
+        String getDescription();
     }
 }
