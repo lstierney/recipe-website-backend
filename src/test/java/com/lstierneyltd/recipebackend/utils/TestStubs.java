@@ -35,6 +35,15 @@ public final class TestStubs {
         return recipe;
     }
 
+    public static RecipePreviewImpl getRecipePreview() {
+        RecipePreviewImpl recipePreview = new RecipePreviewImpl();
+        recipePreview.setId(ID);
+        recipePreview.setDescription(DESCRIPTION);
+        recipePreview.setName(NAME);
+        recipePreview.setImageFileName(RECIPE_1_IMAGE_FILENAME);
+        return recipePreview;
+    }
+
     private static Recipe getRecipeNoIngredient() {
         final Recipe recipe = new Recipe();
         recipe.setId(ID);

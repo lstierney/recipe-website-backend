@@ -89,11 +89,20 @@ public class RecipeRestControllerImplTest {
     }
 
     @Test
-    public void testUpdateGetLatestRecipe() {
+    public void testGetLatestRecipe() {
         // when
         recipeRestController.getLatestRecipe();
 
         // then
         then(recipeService).should().findLatest();
+    }
+
+    @Test
+    public void testGetRandomRecipe() {
+        // when
+        recipeRestController.getRandomRecipe();
+
+        // then
+        then(recipeService).should().findRandom();
     }
 }

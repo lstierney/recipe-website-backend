@@ -2,6 +2,7 @@ package com.lstierneyltd.recipebackend.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lstierneyltd.recipebackend.entities.*;
+import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -259,14 +260,34 @@ public class RestIntegrationTests {
         verifyRecipe(recipes[0]);
     }
 
+    private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
+        assertThat(preview.getId(), is(1));
+        assertThat(preview.getName(), is("Spaghetti Bolognaise"));
+        assertThat(preview.getDescription(), is("The all time favourite"));
+        assertThat(preview.getImageFileName(), is("bolognese_test.jpg"));
+    }
+
     @Test
     @Order(26)
     public void testGetLatestRecipe() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/latest", Recipe.class);
+        ResponseEntity<RecipePreviewImpl> response = testRestTemplate.getForEntity("/api/recipes/latest", RecipePreviewImpl.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        verifyRecipe(requireNonNull(response.getBody()));
+        RecipeRepository.RecipePreview preview = requireNonNull(response.getBody());
+        verifyRecipePreview(preview);
+    }
+
+    @Test
+    @Order(26)
+    public void testGetRandomRecipe() {
+        ResponseEntity<RecipePreviewImpl> response = testRestTemplate.getForEntity("/api/recipes/random", RecipePreviewImpl.class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        RecipeRepository.RecipePreview preview = requireNonNull(response.getBody());
+        verifyRecipePreview(preview);
     }
 }

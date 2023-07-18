@@ -14,6 +14,7 @@ import java.util.List;
 public class RecipeServiceImpl implements RecipeService {
     public static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";
     public static final String COULD_NOT_FIND_LATEST_RECIPE = "Could not find latest recipe";
+    public static final String COULD_NOT_FIND_RANDOM_RECIPE = "Could not find random recipe";
     private final Logger logger = LoggerFactory.getLogger(RecipeServiceImpl.class);
     private final FileService fileService;
     private final ObjectMapperService objectMapperService;
@@ -68,8 +69,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe findLatest() {
-        return recipeRepository.findTop1ByOrderByIdDesc().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_LATEST_RECIPE));
+    public RecipeRepository.RecipePreview findLatest() {
+        return recipeRepository.findTop1RecipePreviewByOrderByIdDesc().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_LATEST_RECIPE));
+    }
+
+    @Override
+    public RecipeRepository.RecipePreview findRandom() {
+        return recipeRepository.findRecipePreviewOrderByRand().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RANDOM_RECIPE));
     }
 }
 
