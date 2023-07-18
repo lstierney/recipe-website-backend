@@ -71,7 +71,7 @@ public class TagServiceImplTest {
         tagService.getAllTags();
 
         // then
-        then(tagRepository).should().findAll();
+        then(tagRepository).should().findAllByOrderByIdDesc();
     }
 
     @Test

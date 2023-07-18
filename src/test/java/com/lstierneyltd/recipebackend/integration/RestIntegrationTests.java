@@ -201,7 +201,8 @@ public class RestIntegrationTests {
         final Tag[] returnedTags = requireNonNull(response.getBody());
 
         assertThat(returnedTags.length, equalTo(7));
-        verifyTag("easy", "Simple to make", returnedTags[0]);
+
+        verifyTag("onepot", "A recipe that only uses one pot. Hurrah!", returnedTags[0]);
     }
 
     @Test

@@ -3,6 +3,8 @@ package com.lstierneyltd.recipebackend.repository;
 import com.lstierneyltd.recipebackend.entities.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TagRepository extends JpaRepository<Tag, Integer> {
+import java.util.List;
 
+public interface TagRepository extends JpaRepository<Tag, Integer> {
+    List<Tag> findAllByOrderByIdDesc();
 }
