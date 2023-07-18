@@ -63,8 +63,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeRepository.RecipeIdAndName> findAllRecipeIdAndNameBy() {
-        return recipeRepository.findAllRecipeIdAndNameBy();
+    public List<RecipeRepository.RecipePreview> findAllRecipePreviewBy() {
+        return recipeRepository.findAllRecipePreviewBy();
     }
 
     @Override

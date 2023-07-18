@@ -15,7 +15,7 @@ public interface RecipeRestController {
 
     Recipe updateRecipe(MultipartFile imageFile, String recipe);
 
-    List<RecipeRepository.RecipeIdAndName> getRecipesList();
+    List<RecipeRepository.RecipePreview> getRecipesPreviewList();
 
     List<Recipe> getRecipesByTagName(String tagName);
 

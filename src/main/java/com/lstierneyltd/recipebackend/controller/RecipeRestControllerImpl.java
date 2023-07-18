@@ -45,8 +45,8 @@ public class RecipeRestControllerImpl implements RecipeRestController {
 
     @Override
     @GetMapping("/list")
-    public List<RecipeRepository.RecipeIdAndName> getRecipesList() {
-        return recipeService.findAllRecipeIdAndNameBy();
+    public List<RecipeRepository.RecipePreview> getRecipesPreviewList() {
+        return recipeService.findAllRecipePreviewBy();
     }
 
     @Override

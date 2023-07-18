@@ -52,10 +52,10 @@ public class RecipeRestControllerImplTest {
     @Test
     public void testGetRecipesList() {
         // When
-        recipeRestController.getRecipesList();
+        recipeRestController.getRecipesPreviewList();
 
         // then
-        then(recipeService).should().findAllRecipeIdAndNameBy();
+        then(recipeService).should().findAllRecipePreviewBy();
     }
 
     @Test
