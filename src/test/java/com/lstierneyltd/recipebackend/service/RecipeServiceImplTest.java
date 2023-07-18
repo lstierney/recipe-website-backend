@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.service;
 
 import com.lstierneyltd.recipebackend.entities.Recipe;
+import com.lstierneyltd.recipebackend.entities.RecipePreviewImpl;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.AfterEach;
@@ -14,11 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_LATEST_RECIPE;
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.*;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipePreview;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -139,27 +140,54 @@ public class RecipeServiceImplTest {
     @Test
     public void findLatest() {
         // Given
-        Recipe recipe = getRecipe();
-        given(recipeRepository.findTop1ByOrderByIdDesc()).willReturn(Optional.of(recipe));
+        RecipePreviewImpl recipePreview = getRecipePreview();
+        given(recipeRepository.findTop1RecipePreviewByOrderByIdDesc()).willReturn(Optional.of(recipePreview));
 
         // when
-        Recipe latest = recipeService.findLatest();
+        RecipeRepository.RecipePreview latest = recipeService.findLatest();
 
         // then
-        then(recipeRepository).should().findTop1ByOrderByIdDesc();
-        assertThat(latest, equalTo(recipe));
+        then(recipeRepository).should().findTop1RecipePreviewByOrderByIdDesc();
+        assertThat(latest, equalTo(recipePreview));
     }
 
     @Test
     public void findLatest_notFound() {
         // Given
-        given(recipeRepository.findTop1ByOrderByIdDesc()).willReturn(Optional.empty());
+        given(recipeRepository.findTop1RecipePreviewByOrderByIdDesc()).willReturn(Optional.empty());
 
         // When
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findLatest());
 
         // Then
-        then(recipeRepository).should().findTop1ByOrderByIdDesc();
+        then(recipeRepository).should().findTop1RecipePreviewByOrderByIdDesc();
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_LATEST_RECIPE));
+    }
+
+    @Test
+    public void findRandom() {
+        // Given
+        RecipePreviewImpl recipePreview = getRecipePreview();
+        given(recipeRepository.findRecipePreviewOrderByRand()).willReturn(Optional.of(recipePreview));
+
+        // when
+        RecipeRepository.RecipePreview random = recipeService.findRandom();
+
+        // then
+        then(recipeRepository).should().findRecipePreviewOrderByRand();
+        assertThat(random, equalTo(recipePreview));
+    }
+
+    @Test
+    public void findRandom_notFound() {
+        // Given
+        given(recipeRepository.findRecipePreviewOrderByRand()).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findRandom());
+
+        // Then
+        then(recipeRepository).should().findRecipePreviewOrderByRand();
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RANDOM_RECIPE));
     }
 }

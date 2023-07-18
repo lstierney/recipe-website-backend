@@ -17,5 +17,8 @@ public interface RecipeService {
 
     List<RecipeRepository.RecipePreview> findAllRecipePreviewBy();
 
-    Recipe findLatest();
+    RecipeRepository.RecipePreview findLatest();
+
+    RecipeRepository.RecipePreview findRandom();
 }
+

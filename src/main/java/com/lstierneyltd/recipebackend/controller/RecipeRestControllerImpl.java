@@ -33,8 +33,14 @@ public class RecipeRestControllerImpl implements RecipeRestController {
 
     @Override
     @GetMapping("/latest")
-    public Recipe getLatestRecipe() {
+    public RecipeRepository.RecipePreview getLatestRecipe() {
         return recipeService.findLatest();
+    }
+
+    @Override
+    @GetMapping("/random")
+    public RecipeRepository.RecipePreview getRandomRecipe() {
+        return recipeService.findRandom();
     }
 
     @Override

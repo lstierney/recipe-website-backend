@@ -13,7 +13,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = ?1")
     List<Recipe> findByTagName(String name);
 
-    Optional<Recipe> findTop1ByOrderByIdDesc();
+    @Query("SELECT r FROM Recipe r ORDER BY RAND() LIMIT 1")
+    Optional<RecipePreview> findRecipePreviewOrderByRand();
+
+    Optional<RecipePreview> findTop1RecipePreviewByOrderByIdDesc();
 
     interface RecipePreview {
         int getId();
