@@ -13,9 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.*;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RANDOM_RECIPE;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
@@ -141,27 +143,14 @@ public class RecipeServiceImplTest {
     public void findLatest() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findTop1RecipePreviewByOrderByIdDesc()).willReturn(Optional.of(recipePreview));
+        given(recipeRepository.findTop3RecipePreviewByOrderByIdDesc()).willReturn(List.of(recipePreview));
 
         // when
-        RecipeRepository.RecipePreview latest = recipeService.findLatest();
+        List<RecipeRepository.RecipePreview> latest = recipeService.findLatest();
 
         // then
-        then(recipeRepository).should().findTop1RecipePreviewByOrderByIdDesc();
-        assertThat(latest, equalTo(recipePreview));
-    }
-
-    @Test
-    public void findLatest_notFound() {
-        // Given
-        given(recipeRepository.findTop1RecipePreviewByOrderByIdDesc()).willReturn(Optional.empty());
-
-        // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findLatest());
-
-        // Then
-        then(recipeRepository).should().findTop1RecipePreviewByOrderByIdDesc();
-        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_LATEST_RECIPE));
+        then(recipeRepository).should().findTop3RecipePreviewByOrderByIdDesc();
+        assertThat(latest.get(0), equalTo(recipePreview));
     }
 
     @Test

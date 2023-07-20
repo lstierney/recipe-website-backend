@@ -19,7 +19,7 @@ public interface RecipeRestController {
 
     List<Recipe> getRecipesByTagName(String tagName);
 
-    RecipeRepository.RecipePreview getLatestRecipe();
+    List<RecipeRepository.RecipePreview> getLatestRecipes();
 
     RecipeRepository.RecipePreview getRandomRecipe();
 }

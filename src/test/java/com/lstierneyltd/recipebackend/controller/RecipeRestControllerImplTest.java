@@ -91,7 +91,7 @@ public class RecipeRestControllerImplTest {
     @Test
     public void testGetLatestRecipe() {
         // when
-        recipeRestController.getLatestRecipe();
+        recipeRestController.getLatestRecipes();
 
         // then
         then(recipeService).should().findLatest();
