@@ -271,13 +271,13 @@ public class RestIntegrationTests {
     @Test
     @Order(26)
     public void testGetLatestRecipe() {
-        ResponseEntity<RecipePreviewImpl> response = testRestTemplate.getForEntity("/api/recipes/latest", RecipePreviewImpl.class);
+        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity("/api/recipes/latest", RecipePreviewImpl[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        RecipeRepository.RecipePreview preview = requireNonNull(response.getBody());
-        verifyRecipePreview(preview);
+        RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
+        verifyRecipePreview(previews[0]);
     }
 
     @Test

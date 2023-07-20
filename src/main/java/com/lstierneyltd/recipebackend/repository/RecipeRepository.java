@@ -16,7 +16,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     @Query("SELECT r FROM Recipe r ORDER BY RAND() LIMIT 1")
     Optional<RecipePreview> findRecipePreviewOrderByRand();
 
-    Optional<RecipePreview> findTop1RecipePreviewByOrderByIdDesc();
+    List<RecipePreview> findTop3RecipePreviewByOrderByIdDesc();
 
     interface RecipePreview {
         int getId();

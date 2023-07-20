@@ -69,8 +69,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeRepository.RecipePreview findLatest() {
-        return recipeRepository.findTop1RecipePreviewByOrderByIdDesc().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_LATEST_RECIPE));
+    public List<RecipeRepository.RecipePreview> findLatest() {
+        return recipeRepository.findTop3RecipePreviewByOrderByIdDesc();
     }
 
     @Override
