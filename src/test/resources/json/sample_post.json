@@ -2,6 +2,7 @@
   "name": "Spaghetti Bolognaise",
   "description": "The all time favourite",
   "cookingTime": 30,
+  "basedOn": "This recipe was based on this one",
   "methodSteps": [
     {
       "ordering": 1,

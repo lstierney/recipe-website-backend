@@ -15,6 +15,7 @@ public final class TestConstants {
     public static final int ORDERING = 420;
     public static final BigDecimal QUANTITY = BigDecimal.valueOf(69);
     public static final int COOKING_TIME = 90;
+    public static final String BASED_ON = "This recipe was based on another";
 
     public static final int TAG_ID = 12346;
     public static final String TAG_NAME = "onepot";

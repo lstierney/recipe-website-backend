@@ -21,6 +21,7 @@ public class Recipe implements java.io.Serializable {
     private String description;
     private String imageFileName;
     private int cookingTime;
+    private String basedOn;
     private List<MethodStep> methodSteps = new ArrayList<>();
     private List<Ingredient> ingredients = new ArrayList<>();
     private List<Note> notes = new ArrayList<>();
@@ -126,6 +127,15 @@ public class Recipe implements java.io.Serializable {
         this.imageFileName = imageFileName;
     }
 
+    @Column(name = "based_on", length = 250)
+    public String getBasedOn() {
+        return this.basedOn;
+    }
+
+    public void setBasedOn(String basedOn) {
+        this.basedOn = basedOn;
+    }
+
     @Generated
     @Override
     public String toString() {
@@ -134,6 +144,7 @@ public class Recipe implements java.io.Serializable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cookingTime=" + cookingTime +
+                ", basedOn=" + basedOn +
                 ", methodSteps=" + methodSteps +
                 ", ingredients=" + ingredients +
                 ", notes=" + notes +
