@@ -51,6 +51,12 @@ public class RecipeTest {
     }
 
     @Test
+    public void testGetSetBasedOn() {
+        recipe.setBasedOn(BASED_ON);
+        assertThat(recipe.getBasedOn(), equalTo(BASED_ON));
+    }
+
+    @Test
     public void testGetSetIngredients() {
         List<Ingredient> ingredients = List.of(getIngredient());
         recipe.setIngredients(ingredients);

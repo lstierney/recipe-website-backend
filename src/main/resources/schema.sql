@@ -13,6 +13,7 @@ create table recipe
     name           varchar(100) not null,
     description    varchar(500) not null,
     cooking_time   int          not null,
+    based_on varchar(250),
     image_filename varchar(100),
     constraint recipes_name_uk
         unique (name)

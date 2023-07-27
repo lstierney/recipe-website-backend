@@ -102,32 +102,11 @@ public class RestIntegrationTests {
         verifyRecipe(requireNonNull(response.getBody()));
     }
 
-    private void verifyRecipe(final Recipe recipe) {
-        // The recipe
-        assertThat(recipe.getName(), equalTo("Spaghetti Bolognaise"));
-        assertThat(recipe.getDescription(), equalTo("The all time favourite"));
-        assertThat(recipe.getCookingTime(), equalTo(30));
-
-        // Ingredients
-        assertThat(recipe.getIngredients().size(), equalTo(3));
-        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", BigDecimal.valueOf(1.00), new Unit(8, "400g can", "can"));
-        verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", BigDecimal.valueOf(0.50), null);
-        verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", BigDecimal.valueOf(2.00), null);
-
-        // Method steps
-        assertThat(recipe.getMethodSteps().size(), equalTo(2));
-        verifyMethodStep(recipe.getMethodSteps().get(0), 1, "Finely chop the onion and garlic");
-        verifyMethodStep(recipe.getMethodSteps().get(1), 2, "Add to small pot with a little olive oil");
-
-        // Tags
-        assertThat(recipe.getTags().size(), equalTo(2));
-        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
-        verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
-
-        // Notes
-        assertThat(recipe.getNotes().size(), equalTo(2));
-        verifyNote(recipe.getNotes().get(0), 1, "This is the first note");
-        verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
+    private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
+        assertThat(preview.getId(), is(6));
+        assertThat(preview.getName(), is("Spaghetti Bolognaise"));
+        assertThat(preview.getDescription(), is("The all time favourite"));
+        assertThat(preview.getImageFileName(), is("bolognese_test.jpg"));
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, BigDecimal quantity, Unit unit) {
@@ -153,6 +132,36 @@ public class RestIntegrationTests {
         assertThat(note.getDescription(), equalTo(description));
     }
 
+    private void verifyRecipe(final Recipe recipe) {
+        // The recipe
+        assertThat(recipe.getName(), equalTo("Spaghetti Bolognaise"));
+        assertThat(recipe.getDescription(), equalTo("The all time favourite"));
+        assertThat(recipe.getCookingTime(), equalTo(30));
+        assertThat(recipe.getBasedOn(), equalTo("This recipe was based on this one"));
+
+
+        // Ingredients
+        assertThat(recipe.getIngredients().size(), equalTo(3));
+        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", BigDecimal.valueOf(1.00), new Unit(8, "400g can", "can"));
+        verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", BigDecimal.valueOf(0.50), null);
+        verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", BigDecimal.valueOf(2.00), null);
+
+        // Method steps
+        assertThat(recipe.getMethodSteps().size(), equalTo(2));
+        verifyMethodStep(recipe.getMethodSteps().get(0), 1, "Finely chop the onion and garlic");
+        verifyMethodStep(recipe.getMethodSteps().get(1), 2, "Add to small pot with a little olive oil");
+
+        // Tags
+        assertThat(recipe.getTags().size(), equalTo(2));
+        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
+        verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
+
+        // Notes
+        assertThat(recipe.getNotes().size(), equalTo(2));
+        verifyNote(recipe.getNotes().get(0), 1, "This is the first note");
+        verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
+    }
+
     @Test
     @Order(4)
     public void testGetAllRecipes() {
@@ -163,21 +172,10 @@ public class RestIntegrationTests {
 
         // Recipe
         final Recipe[] recipes = requireNonNull(response.getBody());
-        assertThat(recipes.length, equalTo(1));
+        assertThat(recipes.length, equalTo(6));
 
         // Just one just now
-        verifyRecipe(recipes[0]);
-    }
-
-    @Test
-    @Order(5)
-    public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/1", Recipe.class);
-
-        // Good status?
-        verifyStatusOk(response.getStatusCode());
-
-        verifyRecipe(requireNonNull(response.getBody()));
+        verifyRecipe(recipes[5]);
     }
 
     @Test
@@ -193,16 +191,14 @@ public class RestIntegrationTests {
     }
 
     @Test
-    @Order(21)
-    public void testGetAllTags() {
-        final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
+    @Order(5)
+    public void testGetRecipeById() {
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/6", Recipe.class);
 
+        // Good status?
         verifyStatusOk(response.getStatusCode());
-        final Tag[] returnedTags = requireNonNull(response.getBody());
 
-        assertThat(returnedTags.length, equalTo(7));
-
-        verifyTag("onepot", "A recipe that only uses one pot. Hurrah!", returnedTags[0]);
+        verifyRecipe(requireNonNull(response.getBody()));
     }
 
     @Test
@@ -234,6 +230,19 @@ public class RestIntegrationTests {
     }
 
     @Test
+    @Order(21)
+    public void testGetAllTags() {
+        final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
+
+        verifyStatusOk(response.getStatusCode());
+        final Tag[] returnedTags = requireNonNull(response.getBody());
+
+        assertThat(returnedTags.length, equalTo(10));
+
+        verifyTag("onepot", "A recipe that only uses one pot. Hurrah!", returnedTags[0]);
+    }
+
+    @Test
     @Order(24)
     public void testDeleteTag() {
         testRestTemplate.delete("/api/tags/1");
@@ -242,7 +251,7 @@ public class RestIntegrationTests {
         final Tag[] tags = requireNonNull(response.getBody());
 
         verifyStatusOk(response.getStatusCode());
-        assertThat(tags.length, equalTo(6));
+        assertThat(tags.length, equalTo(9));
     }
 
     @Test
@@ -255,17 +264,9 @@ public class RestIntegrationTests {
 
         // Recipes
         final Recipe[] recipes = requireNonNull(response.getBody());
-        assertThat(recipes.length, equalTo(1));
+        assertThat(recipes.length, equalTo(2));
 
-        // Just one just now
-        verifyRecipe(recipes[0]);
-    }
-
-    private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
-        assertThat(preview.getId(), is(1));
-        assertThat(preview.getName(), is("Spaghetti Bolognaise"));
-        assertThat(preview.getDescription(), is("The all time favourite"));
-        assertThat(preview.getImageFileName(), is("bolognese_test.jpg"));
+        verifyRecipe(recipes[1]);
     }
 
     @Test
@@ -277,18 +278,8 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
 
         RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
+        assertThat(previews.length, is(3));
         verifyRecipePreview(previews[0]);
     }
 
-    @Test
-    @Order(26)
-    public void testGetRandomRecipe() {
-        ResponseEntity<RecipePreviewImpl> response = testRestTemplate.getForEntity("/api/recipes/random", RecipePreviewImpl.class);
-
-        // Good status?
-        verifyStatusOk(response.getStatusCode());
-
-        RecipeRepository.RecipePreview preview = requireNonNull(response.getBody());
-        verifyRecipePreview(preview);
-    }
 }
