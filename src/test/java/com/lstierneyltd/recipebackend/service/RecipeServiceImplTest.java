@@ -143,13 +143,13 @@ public class RecipeServiceImplTest {
     public void findLatest() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findTop3RecipePreviewByOrderByIdDesc()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findTop6RecipePreviewByOrderByIdDesc()).willReturn(List.of(recipePreview));
 
         // when
         List<RecipeRepository.RecipePreview> latest = recipeService.findLatest();
 
         // then
-        then(recipeRepository).should().findTop3RecipePreviewByOrderByIdDesc();
+        then(recipeRepository).should().findTop6RecipePreviewByOrderByIdDesc();
         assertThat(latest.get(0), equalTo(recipePreview));
     }
 
