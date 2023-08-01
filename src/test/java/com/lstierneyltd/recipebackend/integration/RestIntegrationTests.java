@@ -278,7 +278,7 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
 
         RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
-        assertThat(previews.length, is(3));
+        assertThat(previews.length, is(6));
         verifyRecipePreview(previews[0]);
     }
 

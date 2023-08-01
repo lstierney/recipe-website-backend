@@ -70,7 +70,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeRepository.RecipePreview> findLatest() {
-        return recipeRepository.findTop3RecipePreviewByOrderByIdDesc();
+        return recipeRepository.findTop6RecipePreviewByOrderByIdDesc();
     }
 
     @Override

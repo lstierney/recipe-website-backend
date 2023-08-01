@@ -41,7 +41,7 @@ VALUES (9, 'big-fancy', 'Not your everyday dinner');
 
 INSERT INTO recipe
 VALUES (1, 'Moroccan Vegetable Stew with Cous Cous', 'Mildly spicy, slowish cooked veg with cous cous.', 60,
-        '<a href="https://www.food.com/recipe/moroccan-vegetable-stew-with-couscous-274742">This recipe</a> from food.com',
+        'https://www.food.com/recipe/moroccan-vegetable-stew-with-couscous-274742',
         'Cous_cous.jpg');
 INSERT INTO recipe
 VALUES (2, 'Spaghetti Bolognese', 'Everybody has their own version of this recipe; this is mine', 30, NULL,
