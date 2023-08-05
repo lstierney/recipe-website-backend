@@ -18,6 +18,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     List<RecipePreview> findTop6RecipePreviewByOrderByIdDesc();
 
+    /**
+     * This is a "Projection"
+     * <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections">...</a>
+     */
     interface RecipePreview {
         int getId();
 
