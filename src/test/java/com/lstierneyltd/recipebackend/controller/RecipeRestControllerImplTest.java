@@ -1,7 +1,6 @@
 package com.lstierneyltd.recipebackend.controller;
 
 import com.lstierneyltd.recipebackend.service.RecipeService;
-import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.NAME;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -34,10 +35,20 @@ public class RecipeRestControllerImplTest {
     public void testGetRecipeById() {
 
         // When
-        recipeRestController.getRecipeById(TestConstants.ID);
+        recipeRestController.getRecipeById(ID);
 
         // Then
-        then(recipeService).should().findById(TestConstants.ID);
+        then(recipeService).should().findById(ID);
+    }
+
+    @Test
+    public void testGetRecipeByName() {
+
+        // When
+        recipeRestController.getRecipeByName(NAME);
+
+        // Then
+        then(recipeService).should().findByName(NAME);
     }
 
     @Test

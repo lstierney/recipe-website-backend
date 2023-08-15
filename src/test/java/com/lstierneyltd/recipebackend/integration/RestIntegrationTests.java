@@ -1,6 +1,6 @@
 package com.lstierneyltd.recipebackend.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
@@ -40,7 +40,7 @@ import static org.hamcrest.core.Is.is;
 public class RestIntegrationTests {
     @LocalServerPort
     private int localServerPort;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    //private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -193,7 +193,7 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/6", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/id/6", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -282,4 +282,15 @@ public class RestIntegrationTests {
         verifyRecipePreview(previews[0]);
     }
 
+    @Test
+    @Order(30)
+    public void testGetRecipeByName() {
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/spaghetti-bolognaise", Recipe.class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        Recipe recipe = requireNonNull(response.getBody());
+        verifyRecipe(recipe);
+    }
 }
