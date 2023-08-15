@@ -3,7 +3,6 @@ package com.lstierneyltd.recipebackend.service;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.entities.RecipePreviewImpl;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
-import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RANDOM_RECIPE;
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
-import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
-import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.*;
+import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipePreview;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,7 +87,7 @@ public class RecipeServiceImplTest {
     @Test
     public void findById() {
         // Given
-        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(getRecipe()));
 
         // when
         recipeService.findById(ID);
@@ -102,14 +99,78 @@ public class RecipeServiceImplTest {
     @Test
     public void findById_recipeNotFound() {
         // Given
-        given(recipeRepository.findById(TestConstants.ID)).willReturn(Optional.empty());
+        given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findById(TestConstants.ID));
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findById(ID));
 
         // Then
-        then(recipeRepository).should().findById(TestConstants.ID);
-        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + TestConstants.ID));
+        then(recipeRepository).should().findById(ID);
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
+    }
+
+    @Test
+    public void findByName() {
+        // Given
+        given(recipeRepository.findByName(NAME)).willReturn(Optional.of(getRecipe()));
+
+        // when
+        recipeService.findByName(NAME);
+
+        // then
+        then(recipeRepository).should().findByName(NAME);
+    }
+
+    @Test
+    public void findByName_nameWithMixedCase() {
+        // Given
+        String name = "Mixed Case";
+        given(recipeRepository.findByName("mixed case")).willReturn(Optional.of(getRecipe()));
+
+        // when
+        recipeService.findByName(name);
+
+        // then
+        then(recipeRepository).should().findByName("mixed case");
+    }
+
+    @Test
+    public void findByName_nameWithHyphens() {
+        // Given
+        String name = "name-with-hyphens";
+        given(recipeRepository.findByName("name with hyphens")).willReturn(Optional.of(getRecipe()));
+
+        // when
+        recipeService.findByName(name);
+
+        // then
+        then(recipeRepository).should().findByName("name with hyphens");
+    }
+
+    @Test
+    public void findByName_nameWithMixedCaseANDHyphens() {
+        // Given
+        String name = "NAme-With-mixed-CASE-and-hyphens";
+        given(recipeRepository.findByName("name with mixed case and hyphens")).willReturn(Optional.of(getRecipe()));
+
+        // when
+        recipeService.findByName(name);
+
+        // then
+        then(recipeRepository).should().findByName("name with mixed case and hyphens");
+    }
+
+    @Test
+    public void findByName_recipeNotFound() {
+        // Given
+        given(recipeRepository.findByName(NAME)).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findByName(NAME));
+
+        // Then
+        then(recipeRepository).should().findByName(NAME);
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_NAME + NAME));
     }
 
     @Test

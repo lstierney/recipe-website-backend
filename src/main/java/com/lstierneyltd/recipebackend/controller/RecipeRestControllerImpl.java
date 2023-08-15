@@ -20,9 +20,15 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public Recipe getRecipeById(@PathVariable Integer id) {
         return recipeService.findById(id);
+    }
+
+    @Override
+    @GetMapping("/{name}")
+    public Recipe getRecipeByName(@PathVariable String name) {
+        return recipeService.findByName(name);
     }
 
     @Override

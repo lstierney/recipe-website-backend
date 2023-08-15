@@ -18,6 +18,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     List<RecipePreview> findTop6RecipePreviewByOrderByIdDesc();
 
+    @Query("SELECT r FROM Recipe r WHERE lower(r.name) = ?1")
+    Optional<Recipe> findByName(String name);
+
     /**
      * This is a "Projection"
      * <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections">...</a>

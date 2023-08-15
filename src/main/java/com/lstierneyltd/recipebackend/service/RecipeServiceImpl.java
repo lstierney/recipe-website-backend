@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class RecipeServiceImpl implements RecipeService {
     public static final String COULD_NOT_FIND_RECIPE_WITH_ID = "Could not find RECIPE with id: ";
-    public static final String COULD_NOT_FIND_LATEST_RECIPE = "Could not find latest recipe";
+    public static final String COULD_NOT_FIND_RECIPE_WITH_NAME = "Could not find RECIPE with name: ";
     public static final String COULD_NOT_FIND_RANDOM_RECIPE = "Could not find random recipe";
     private final Logger logger = LoggerFactory.getLogger(RecipeServiceImpl.class);
     private final FileService fileService;
@@ -51,6 +51,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(int id) {
         return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+    }
+
+    @Override
+    public Recipe findByName(String name) {
+        String formattedName = getFormattedRecipeName(name);
+        return recipeRepository.findByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName));
+    }
+
+    private String getFormattedRecipeName(String name) {
+        return name.replace('-', ' ').toLowerCase();
     }
 
     @Override

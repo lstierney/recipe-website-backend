@@ -11,6 +11,8 @@ public interface RecipeService {
 
     Recipe findById(int id);
 
+    Recipe findByName(String name);
+
     List<Recipe> findByTagName(String tagName);
 
     List<Recipe> findAll();
@@ -20,5 +22,7 @@ public interface RecipeService {
     List<RecipeRepository.RecipePreview> findLatest();
 
     RecipeRepository.RecipePreview findRandom();
+
+
 }
 

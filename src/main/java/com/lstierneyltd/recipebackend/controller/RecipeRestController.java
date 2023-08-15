@@ -9,6 +9,8 @@ import java.util.List;
 public interface RecipeRestController {
     Recipe getRecipeById(Integer id);
 
+    Recipe getRecipeByName(String name);
+
     List<Recipe> getAllRecipes();
 
     Recipe addRecipe(MultipartFile imageFile, String recipe);
