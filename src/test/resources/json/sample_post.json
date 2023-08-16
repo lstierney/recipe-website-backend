@@ -56,5 +56,12 @@
       "ordering": 2,
       "description": "This is the second note"
     }
-  ]
+  ],
+  "servedOn": {
+    "heated": true,
+    "crockery": {
+      "id": 1,
+      "description": "White Plates"
+    }
+  }
 }

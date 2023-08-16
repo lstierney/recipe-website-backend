@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.integration;
 
 //import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +41,8 @@ import static org.hamcrest.core.Is.is;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
 public class RestIntegrationTests {
+    private final Logger logger = LoggerFactory.getLogger(RestIntegrationTests.class);
+
     @LocalServerPort
     private int localServerPort;
     //private final ObjectMapper objectMapper = new ObjectMapper();
@@ -133,6 +138,7 @@ public class RestIntegrationTests {
     }
 
     private void verifyRecipe(final Recipe recipe) {
+        logger.info("Verifying Recipe: " + recipe);
         // The recipe
         assertThat(recipe.getName(), equalTo("Spaghetti Bolognaise"));
         assertThat(recipe.getDescription(), equalTo("The all time favourite"));
@@ -160,6 +166,11 @@ public class RestIntegrationTests {
         assertThat(recipe.getNotes().size(), equalTo(2));
         verifyNote(recipe.getNotes().get(0), 1, "This is the first note");
         verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
+
+        // ServedOn
+        assertThat(recipe.getServedOn().isHeated(), is(true));
+        assertThat(recipe.getServedOn().getCrockery().getDescription(), is("White Plates"));
+
     }
 
     @Test
@@ -292,5 +303,28 @@ public class RestIntegrationTests {
 
         Recipe recipe = requireNonNull(response.getBody());
         verifyRecipe(recipe);
+    }
+
+    @Test
+    @Order(40)
+    void testGetCrockery() {
+        // When
+        ResponseEntity<Crockery[]> response = testRestTemplate.getForEntity("/api/crockery", Crockery[].class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        // Crockery - no point checking all of them...
+        final Crockery[] allCrockery = response.getBody();
+        assertThat(allCrockery, is(notNullValue()));
+        assertThat(allCrockery.length, equalTo(5));
+
+        Crockery crockery = allCrockery[0];
+        assertThat(crockery.getId(), is(1));
+        assertThat(crockery.getDescription(), equalTo("White Plates"));
+
+        crockery = allCrockery[4];
+        assertThat(crockery.getId(), is(5));
+        assertThat(crockery.getDescription(), equalTo("Green Bowls"));
     }
 }
