@@ -26,6 +26,7 @@ public class Recipe implements java.io.Serializable {
     private List<Ingredient> ingredients = new ArrayList<>();
     private List<Note> notes = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
+    private ServedOn servedOn;
 
     public Recipe() {
     }
@@ -136,6 +137,16 @@ public class Recipe implements java.io.Serializable {
         this.basedOn = basedOn;
     }
 
+    @JoinColumn(name = "served_on_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    public ServedOn getServedOn() {
+        return servedOn;
+    }
+
+    public void setServedOn(ServedOn servedOn) {
+        this.servedOn = servedOn;
+    }
+
     @Generated
     @Override
     public String toString() {
@@ -148,6 +159,7 @@ public class Recipe implements java.io.Serializable {
                 ", methodSteps=" + methodSteps +
                 ", ingredients=" + ingredients +
                 ", notes=" + notes +
+                ", servedOn=" + servedOn +
                 '}';
     }
 }

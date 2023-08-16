@@ -57,6 +57,13 @@ public class RecipeTest {
     }
 
     @Test
+    public void testGetSetServedOn() {
+        ServedOn servedOn = new ServedOn();
+        recipe.setServedOn(servedOn);
+        assertThat(recipe.getServedOn(), equalTo(servedOn));
+    }
+
+    @Test
     public void testGetSetIngredients() {
         List<Ingredient> ingredients = List.of(getIngredient());
         recipe.setIngredients(ingredients);

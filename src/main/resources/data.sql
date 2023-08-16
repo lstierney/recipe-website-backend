@@ -20,6 +20,17 @@ VALUES (10, '400g can', 'can');
 INSERT INTO unit
 VALUES (11, 'millilitre', 'ml');
 
+INSERT INTO crockery
+VALUES (1, 'White Plates');
+INSERT INTO crockery
+VALUES (2, 'Green Plates');
+INSERT INTO crockery
+VALUES (3, 'Brown Plates');
+INSERT INTO crockery
+VALUES (4, 'White Bowls');
+INSERT INTO crockery
+VALUES (5, 'Green Bowls');
+
 INSERT INTO tag
 VALUES (1, 'easy', 'Simple to make');
 INSERT INTO tag
@@ -42,19 +53,20 @@ VALUES (9, 'big-fancy', 'Not your everyday dinner');
 INSERT INTO recipe
 VALUES (1, 'Moroccan Vegetable Stew with Cous Cous', 'Mildly spicy, slowish cooked veg with cous cous.', 60,
         'https://www.food.com/recipe/moroccan-vegetable-stew-with-couscous-274742',
+        NULL,
         'Cous_cous.jpg');
 INSERT INTO recipe
 VALUES (2, 'Spaghetti Bolognese', 'Everybody has their own version of this recipe; this is mine', 30, NULL,
-        'bolognese.jpg');
+        NULL, 'bolognese.jpg');
 INSERT INTO recipe
 VALUES (3, 'Sweet Chilli Noodles', 'A change from the usual stir fry, this recipe has a smoother sweeter flavour.', 45,
-        NULL, 'sweet-chilli-noodles.jpg');
+        NULL, NULL, 'sweet-chilli-noodles.jpg');
 INSERT INTO recipe
 VALUES (4, 'Gnocchi Bake', 'A cheesy, tomatoey, slice of heaven. Not for everyday consumption!', 90, NULL,
-        'gnocchi.jpg');
+        NULL, 'gnocchi.jpg');
 INSERT INTO recipe
 VALUES (5, 'Bangers and Mash', 'A stone cold classic with the added twist of some spring onion in the mash', 45, NULL,
-        'Bangers and Mash.jpg');
+        NULL, 'Bangers and Mash.jpg');
 
 INSERT INTO ingredient
 VALUES (1, 'Coriander Seeds', 0.50, 1, 1, 1);
@@ -279,6 +291,11 @@ INSERT INTO recipe_tag
 VALUES (9, 5, 1);
 INSERT INTO recipe_tag
 VALUES (10, 5, 4);
+
+
+
+
+
 
 
 
