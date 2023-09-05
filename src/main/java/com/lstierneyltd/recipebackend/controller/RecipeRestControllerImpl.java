@@ -50,6 +50,12 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
+    @PostMapping("/markascooked/{id}")
+    public Recipe markRecipeAsCooked(@PathVariable Integer id) {
+        return recipeService.markAsCooked(id);
+    }
+
+    @Override
     @GetMapping
     public List<Recipe> getAllRecipes() {
         return recipeService.findAll();

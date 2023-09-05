@@ -140,6 +140,7 @@ public class RestIntegrationTests {
     private void verifyRecipe(final Recipe recipe) {
         logger.info("Verifying Recipe: " + recipe);
         // The recipe
+        assertThat(recipe.getId(), is(6));
         assertThat(recipe.getName(), equalTo("Spaghetti Bolognaise"));
         assertThat(recipe.getDescription(), equalTo("The all time favourite"));
         assertThat(recipe.getCookingTime(), equalTo(30));
@@ -170,6 +171,9 @@ public class RestIntegrationTests {
         // ServedOn
         assertThat(recipe.getServedOn().isHeated(), is(true));
         assertThat(recipe.getServedOn().getCrockery().getDescription(), is("White Plates"));
+
+        // Cooked
+        assertThat(recipe.getCooked(), is(2));
 
     }
 
@@ -326,5 +330,16 @@ public class RestIntegrationTests {
         crockery = allCrockery[4];
         assertThat(crockery.getId(), is(5));
         assertThat(crockery.getDescription(), equalTo("Green Bowls"));
+    }
+
+    @Test
+    @Order(50)
+    void testMarkRecipeAsCooked() {
+        final ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/api/recipes/markascooked/6", null, Recipe.class);
+
+        verifyStatusOk(response.getStatusCode());
+        final Recipe recipe = requireNonNull(response.getBody());
+
+        assertThat(recipe.getCooked(), is(3));
     }
 }

@@ -87,5 +87,12 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeRepository.RecipePreview findRandom() {
         return recipeRepository.findRecipePreviewOrderByRand().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RANDOM_RECIPE));
     }
+
+    @Override
+    public Recipe markAsCooked(Integer id) {
+        Recipe recipe = findById(id);
+        recipe.markedAsCooked();
+        return recipe;
+    }
 }
 

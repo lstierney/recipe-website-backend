@@ -8,6 +8,7 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
     private String name;
     private String description;
     private String imageFileName;
+    private int cooked;
 
     @Override
     public int getId() {
@@ -45,6 +46,15 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
         this.imageFileName = imageFileName;
     }
 
+    @Override
+    public int getCooked() {
+        return cooked;
+    }
+
+    public void setCooked(int cooked) {
+        this.cooked = cooked;
+    }
+
     @Generated
     @Override
     public String toString() {
@@ -53,6 +63,7 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", imageFileName='" + imageFileName + '\'' +
+                ", cooked='" + cooked + '\'' +
                 '}';
     }
 }

@@ -50,6 +50,7 @@ public final class TestStubs {
         recipe.setName(RECIPE_1_NAME);
         recipe.setDescription(RECIPE_1_DESCRIPTION);
         recipe.setCookingTime(COOKING_TIME);
+        recipe.setCooked(COOKED);
         return recipe;
     }
 

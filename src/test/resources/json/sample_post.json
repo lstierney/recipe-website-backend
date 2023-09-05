@@ -57,6 +57,7 @@
       "description": "This is the second note"
     }
   ],
+  "cooked": 2,
   "servedOn": {
     "heated": true,
     "crockery": {

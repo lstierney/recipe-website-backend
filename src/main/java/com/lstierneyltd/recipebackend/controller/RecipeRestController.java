@@ -24,4 +24,6 @@ public interface RecipeRestController {
     List<RecipeRepository.RecipePreview> getLatestRecipes();
 
     RecipeRepository.RecipePreview getRandomRecipe();
+
+    Recipe markRecipeAsCooked(Integer id);
 }

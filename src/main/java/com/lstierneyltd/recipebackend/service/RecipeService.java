@@ -23,6 +23,6 @@ public interface RecipeService {
 
     RecipeRepository.RecipePreview findRandom();
 
-
+    Recipe markAsCooked(Integer id);
 }
 
