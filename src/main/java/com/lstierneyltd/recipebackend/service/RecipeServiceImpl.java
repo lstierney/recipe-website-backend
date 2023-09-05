@@ -92,6 +92,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe markAsCooked(Integer id) {
         Recipe recipe = findById(id);
         recipe.markedAsCooked();
+        recipeRepository.save(recipe);
         return recipe;
     }
 }
