@@ -245,13 +245,16 @@ public class RecipeServiceImplTest {
     @Test
     public void markAsCooked() {
         // Given
-        given(recipeRepository.findById(ID)).willReturn(Optional.of(getRecipe()));
+        Recipe recipe = getRecipe();
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
 
         // when
         Recipe cookedRecipe = recipeService.markAsCooked(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
+        then(recipeRepository).should().save(recipe);
+
         assertThat(cookedRecipe.getCooked(), is(COOKED + 1));
     }
 
