@@ -21,6 +21,7 @@ import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipePreview;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -239,5 +240,31 @@ public class RecipeServiceImplTest {
         // Then
         then(recipeRepository).should().findRecipePreviewOrderByRand();
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RANDOM_RECIPE));
+    }
+
+    @Test
+    public void markAsCooked() {
+        // Given
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(getRecipe()));
+
+        // when
+        Recipe cookedRecipe = recipeService.markAsCooked(ID);
+
+        // then
+        then(recipeRepository).should().findById(ID);
+        assertThat(cookedRecipe.getCooked(), is(COOKED + 1));
+    }
+
+    @Test
+    public void markAsCooked_recipeNotFound() {
+        // Given
+        given(recipeRepository.findById(ID)).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.markAsCooked(ID));
+
+        // Then
+        then(recipeRepository).should().findById(ID);
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
     }
 }

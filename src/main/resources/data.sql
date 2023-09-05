@@ -53,20 +53,20 @@ VALUES (9, 'big-fancy', 'Not your everyday dinner');
 INSERT INTO recipe
 VALUES (1, 'Moroccan Vegetable Stew with Cous Cous', 'Mildly spicy, slowish cooked veg with cous cous.', 60,
         'https://www.food.com/recipe/moroccan-vegetable-stew-with-couscous-274742',
-        NULL,
+        NULL, 0,
         'Cous_cous.jpg');
 INSERT INTO recipe
 VALUES (2, 'Spaghetti Bolognese', 'Everybody has their own version of this recipe; this is mine', 30, NULL,
-        NULL, 'bolognese.jpg');
+        NULL, 1, 'bolognese.jpg');
 INSERT INTO recipe
 VALUES (3, 'Sweet Chilli Noodles', 'A change from the usual stir fry, this recipe has a smoother sweeter flavour.', 45,
-        NULL, NULL, 'sweet-chilli-noodles.jpg');
+        NULL, NULL, 2, 'sweet-chilli-noodles.jpg');
 INSERT INTO recipe
 VALUES (4, 'Gnocchi Bake', 'A cheesy, tomatoey, slice of heaven. Not for everyday consumption!', 90, NULL,
-        NULL, 'gnocchi.jpg');
+        NULL, 3, 'gnocchi.jpg');
 INSERT INTO recipe
 VALUES (5, 'Bangers and Mash', 'A stone cold classic with the added twist of some spring onion in the mash', 45, NULL,
-        NULL, 'Bangers and Mash.jpg');
+        NULL, 4, 'Bangers and Mash.jpg');
 
 INSERT INTO ingredient
 VALUES (1, 'Coriander Seeds', 0.50, 1, 1, 1);

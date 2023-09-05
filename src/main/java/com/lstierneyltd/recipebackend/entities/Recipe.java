@@ -20,6 +20,7 @@ public class Recipe implements java.io.Serializable {
     private String name;
     private String description;
     private String imageFileName;
+    private int cooked;
     private int cookingTime;
     private String basedOn;
     private List<MethodStep> methodSteps = new ArrayList<>();
@@ -67,6 +68,19 @@ public class Recipe implements java.io.Serializable {
 
     public void setCookingTime(int cookingTime) {
         this.cookingTime = cookingTime;
+    }
+
+    @Column(name = "cooked", nullable = false)
+    public int getCooked() {
+        return this.cooked;
+    }
+
+    public void setCooked(int cooked) {
+        this.cooked = cooked;
+    }
+
+    public void markedAsCooked() {
+        this.cooked++;
     }
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)

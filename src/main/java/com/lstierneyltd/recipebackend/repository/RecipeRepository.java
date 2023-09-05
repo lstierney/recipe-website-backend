@@ -33,5 +33,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
         String getImageFileName();
 
         String getDescription();
+
+        int getCooked();
     }
 }

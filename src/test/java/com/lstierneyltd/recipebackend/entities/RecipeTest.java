@@ -99,4 +99,17 @@ public class RecipeTest {
         recipe.setTags(tags);
         assertThat(recipe.getTags(), equalTo(tags));
     }
+
+    @Test
+    public void testGetSetCooked() {
+        recipe.setCooked(COOKED);
+        assertThat(recipe.getCooked(), equalTo(COOKED));
+    }
+
+    @Test
+    public void testMarkAsCooked() {
+        recipe.setCooked(COOKED);
+        recipe.markedAsCooked();
+        assertThat(recipe.getCooked(), equalTo(COOKED + 1));
+    }
 }

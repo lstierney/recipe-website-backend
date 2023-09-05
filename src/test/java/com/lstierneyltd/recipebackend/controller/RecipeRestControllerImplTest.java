@@ -116,4 +116,13 @@ public class RecipeRestControllerImplTest {
         // then
         then(recipeService).should().findRandom();
     }
+
+    @Test
+    public void testMarkRecipeAsCooked() {
+        // when
+        recipeRestController.markRecipeAsCooked(ID);
+
+        // then
+        then(recipeService).should().markAsCooked(ID);
+    }
 }
