@@ -19,7 +19,7 @@ public interface RecipeRestController {
 
     List<RecipeRepository.RecipePreview> getRecipesPreviewList();
 
-    List<Recipe> getRecipesByTagName(String tagName);
+    List<Recipe> getRecipesByTags(List<String> tags);
 
     List<RecipeRepository.RecipePreview> getLatestRecipes();
 

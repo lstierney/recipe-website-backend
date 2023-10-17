@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -177,10 +178,11 @@ public class RecipeServiceImplTest {
     @Test
     public void findByTagName() {
         // when
-        recipeService.findByTagName(TAG_NAME);
+        List<String>tagNames = Arrays.asList(TAG_NAME);
+        recipeService.findByTagNames(tagNames);
 
         // then
-        then(recipeRepository).should().findByTagName(TAG_NAME);
+        then(recipeRepository).should().findByAllTagNames(tagNames, (long) tagNames.size());
     }
 
     @Test

@@ -10,8 +10,12 @@ import java.util.Optional;
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<RecipePreview> findAllRecipePreviewBy();
 
-    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = ?1")
-    List<Recipe> findByTagName(String name);
+//    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = ?1")
+//    List<Recipe> findByTagName(String name);
+    @Query("SELECT r FROM Recipe r " +
+        "WHERE (SELECT COUNT(t) FROM r.tags t WHERE t.name IN :tagNames) = :tagCount")
+    List<Recipe> findByAllTagNames(List<String> tagNames, Long tagCount);
+
 
     @Query("SELECT r FROM Recipe r ORDER BY RAND() LIMIT 1")
     Optional<RecipePreview> findRecipePreviewOrderByRand();

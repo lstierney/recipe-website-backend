@@ -64,8 +64,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<Recipe> findByTagName(String tagName) {
-        return recipeRepository.findByTagName(tagName);
+    public List<Recipe> findByTagNames(List<String> tagNames) {
+        return recipeRepository.findByAllTagNames(tagNames, (long) tagNames.size());
     }
 
     @Override

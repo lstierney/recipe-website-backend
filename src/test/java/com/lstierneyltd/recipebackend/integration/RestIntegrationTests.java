@@ -229,7 +229,7 @@ public class RestIntegrationTests {
     @Order(23)
     public void testUpdateTag() {
         final Tag tag = getTag();
-        String newName = "new name";
+        String newName = "new-name";
         String newDescription = "new description";
         tag.setName(newName);
         tag.setDescription(newDescription);
@@ -261,7 +261,7 @@ public class RestIntegrationTests {
     @Test
     @Order(24)
     public void testDeleteTag() {
-        testRestTemplate.delete("/api/tags/1");
+        testRestTemplate.delete("/api/tags/17");
 
         final ResponseEntity<Tag[]> response = testRestTemplate.getForEntity("/api/tags", Tag[].class);
         final Tag[] tags = requireNonNull(response.getBody());
@@ -272,8 +272,8 @@ public class RestIntegrationTests {
 
     @Test
     @Order(25)
-    public void testGetRecipeByTagName() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagName=one-pot", Recipe[].class);
+    public void testGetRecipesByTagName() {
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=one-pot", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -287,6 +287,31 @@ public class RestIntegrationTests {
 
     @Test
     @Order(26)
+    public void testGetRecipesByTagNames_1tags() {
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=new-name", Recipe[].class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        // Recipes
+        final Recipe[] recipes = requireNonNull(response.getBody());
+        assertThat(recipes.length, equalTo(3));
+    }
+    @Test
+    @Order(27)
+    public void testGetRecipesByTagNames_2tags() {
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=pasta,big-fancy", Recipe[].class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        // Recipes
+        final Recipe[] recipes = requireNonNull(response.getBody());
+        assertThat(recipes.length, equalTo(1));
+    }
+
+    @Test
+    @Order(29)
     public void testGetLatestRecipe() {
         ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity("/api/recipes/latest", RecipePreviewImpl[].class);
 
