@@ -36,19 +36,29 @@ VALUES (1, 'easy', 'Simple to make');
 INSERT INTO tag
 VALUES (2, 'pasta', 'Straight from Italia!');
 INSERT INTO tag
-VALUES (3, 'indian', 'My favourite to cook');
+VALUES (3,'indian', 'My favourite to cook');
 INSERT INTO tag
 VALUES (4, 'old-school', 'Just like wot you remember');
 INSERT INTO tag
 VALUES (5, 'one-pot', 'Gotta keep that washing down');
 INSERT INTO tag
-VALUES (6, 'rice-cooker', 'Cook in the wonder gadget');
+VALUES (7,'rice-night','To be served on \"Rice Night\"');
 INSERT INTO tag
-VALUES (7, 'rice-night', 'To be served on \"Rice Night\"');
+VALUES (8,'noodles','Theyre worms Michael');
 INSERT INTO tag
-VALUES (8, 'Noodles', 'Theyre worms Michael');
+VALUES (9,'big-fancy','Not your everyday dinner');
 INSERT INTO tag
-VALUES (9, 'big-fancy', 'Not your everyday dinner');
+VALUES (10,'bread','Full of carby goodness');
+INSERT INTO tag
+VALUES (11,'side','The opposite of main');
+INSERT INTO tag
+VALUES (12,'potato-night','To be served on \"potato night\"');
+INSERT INTO tag
+VALUES (14,'dinner','Recipes suitable for dinner');
+INSERT INTO tag
+VALUES (15,'lentils','The wonder food!');
+INSERT INTO tag
+VALUES (17,'ingredient','An input ingredient to a recipe');
 
 INSERT INTO recipe
 VALUES (1, 'Moroccan Vegetable Stew with Cous Cous', 'Mildly spicy, slowish cooked veg with cous cous.', 60,

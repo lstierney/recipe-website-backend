@@ -252,7 +252,8 @@ public class RestIntegrationTests {
         verifyStatusOk(response.getStatusCode());
         final Tag[] returnedTags = requireNonNull(response.getBody());
 
-        assertThat(returnedTags.length, equalTo(10));
+        // It's '15' because we POSTed one above
+        assertThat(returnedTags.length, equalTo(15));
 
         verifyTag("onepot", "A recipe that only uses one pot. Hurrah!", returnedTags[0]);
     }
@@ -266,7 +267,7 @@ public class RestIntegrationTests {
         final Tag[] tags = requireNonNull(response.getBody());
 
         verifyStatusOk(response.getStatusCode());
-        assertThat(tags.length, equalTo(9));
+        assertThat(tags.length, equalTo(14));
     }
 
     @Test
