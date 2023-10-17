@@ -13,7 +13,7 @@ public interface RecipeService {
 
     Recipe findByName(String name);
 
-    List<Recipe> findByTagName(String tagName);
+    List<Recipe> findByTagNames(List<String> tagNames);
 
     List<Recipe> findAll();
 

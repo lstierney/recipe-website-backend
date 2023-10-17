@@ -32,9 +32,9 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
-    @GetMapping(params = "tagName")
-    public List<Recipe> getRecipesByTagName(@RequestParam("tagName") String tagName) {
-        return recipeService.findByTagName(tagName);
+    @GetMapping(params = "tagNames")
+    public List<Recipe> getRecipesByTags(@RequestParam("tagNames") List<String> tagNames) {
+        return recipeService.findByTagNames(tagNames);
     }
 
     @Override

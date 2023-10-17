@@ -9,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.NAME;
 import static org.mockito.BDDMockito.then;
@@ -81,12 +84,13 @@ public class RecipeRestControllerImplTest {
 
     @Test
     public void testGetRecipesByTagName() {
-        final String tagName = "pasta";
+        final List<String> tagNames = Arrays.asList("Pasta");
+
         // When
-        recipeRestController.getRecipesByTagName(tagName);
+        recipeRestController.getRecipesByTags(tagNames);
 
         // then
-        then(recipeService).should().findByTagName(tagName);
+        then(recipeService).should().findByTagNames(tagNames);
     }
 
     @Test
