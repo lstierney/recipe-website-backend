@@ -1,0 +1,10 @@
+[Unit]
+Description=Springboot backend for myveggierecipes
+
+[Service]
+User=springboot
+ExecStart=/srv/myveggierecipes/springboot/recipe-backend.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
