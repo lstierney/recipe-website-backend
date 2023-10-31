@@ -368,4 +368,16 @@ public class RestIntegrationTests {
 
         assertThat(recipe.getCooked(), is(3));
     }
+
+    @Test
+    @Order(60)
+    public void testGetRandomRecipes() {
+        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity("/api/recipes/random", RecipePreviewImpl[].class);
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
+        assertThat(previews.length, is(6));
+    }
 }

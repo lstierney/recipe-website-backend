@@ -23,7 +23,7 @@ public interface RecipeRestController {
 
     List<RecipeRepository.RecipePreview> getLatestRecipes();
 
-    RecipeRepository.RecipePreview getRandomRecipe();
+    List<RecipeRepository.RecipePreview> getRandomRecipes();
 
     Recipe markRecipeAsCooked(Integer id);
 }

@@ -221,27 +221,14 @@ public class RecipeServiceImplTest {
     public void findRandom() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findRecipePreviewOrderByRand()).willReturn(Optional.of(recipePreview));
+        given(recipeRepository.findRecipePreviewsOrderByRand()).willReturn(List.of(recipePreview));
 
         // when
-        RecipeRepository.RecipePreview random = recipeService.findRandom();
+        List<RecipeRepository.RecipePreview> random = recipeService.findRandom();
 
         // then
-        then(recipeRepository).should().findRecipePreviewOrderByRand();
-        assertThat(random, equalTo(recipePreview));
-    }
-
-    @Test
-    public void findRandom_notFound() {
-        // Given
-        given(recipeRepository.findRecipePreviewOrderByRand()).willReturn(Optional.empty());
-
-        // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findRandom());
-
-        // Then
-        then(recipeRepository).should().findRecipePreviewOrderByRand();
-        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RANDOM_RECIPE));
+        then(recipeRepository).should().findRecipePreviewsOrderByRand();
+        assertThat(random.get(0), equalTo(recipePreview));
     }
 
     @Test
