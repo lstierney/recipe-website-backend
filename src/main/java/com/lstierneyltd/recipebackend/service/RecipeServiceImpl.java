@@ -84,8 +84,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeRepository.RecipePreview findRandom() {
-        return recipeRepository.findRecipePreviewOrderByRand().orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RANDOM_RECIPE));
+    public List<RecipeRepository.RecipePreview> findRandom() {
+        return recipeRepository.findRecipePreviewsOrderByRand();
     }
 
     @Override

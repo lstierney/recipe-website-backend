@@ -113,9 +113,9 @@ public class RecipeRestControllerImplTest {
     }
 
     @Test
-    public void testGetRandomRecipe() {
+    public void testGetRandomRecipes() {
         // when
-        recipeRestController.getRandomRecipe();
+        recipeRestController.getRandomRecipes();
 
         // then
         then(recipeService).should().findRandom();
