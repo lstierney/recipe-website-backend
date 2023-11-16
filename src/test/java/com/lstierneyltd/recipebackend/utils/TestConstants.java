@@ -1,6 +1,7 @@
 package com.lstierneyltd.recipebackend.utils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public final class TestConstants {
     public static final int ID = 123;
@@ -16,6 +17,7 @@ public final class TestConstants {
     public static final BigDecimal QUANTITY = BigDecimal.valueOf(69);
     public static final int COOKING_TIME = 90;
     public static final int COOKED = 5;
+    public static final LocalDateTime LAST_COOKED = LocalDateTime.now();
 
     public static final String BASED_ON = "This recipe was based on another";
 

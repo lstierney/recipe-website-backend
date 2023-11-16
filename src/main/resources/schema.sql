@@ -16,6 +16,7 @@ create table recipe
     based_on     varchar(250),
     served_on_id int,
     cooked int default 0 not null,
+    last_cooked timestamp,
     image_filename varchar(100),
     constraint recipes_name_uk
         unique (name)
