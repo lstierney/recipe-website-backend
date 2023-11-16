@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Recipe implements java.io.Serializable {
     private String description;
     private String imageFileName;
     private int cooked;
+    private LocalDateTime lastCooked;
     private int cookingTime;
     private String basedOn;
     private List<MethodStep> methodSteps = new ArrayList<>();
@@ -70,6 +72,15 @@ public class Recipe implements java.io.Serializable {
         this.cookingTime = cookingTime;
     }
 
+    @Column(name = "last_cooked")
+    public LocalDateTime getLastCooked() {
+        return this.lastCooked;
+    }
+
+    public void setLastCooked(LocalDateTime lastCooked) {
+        this.lastCooked = lastCooked;
+    }
+
     @Column(name = "cooked", nullable = false)
     public int getCooked() {
         return this.cooked;
@@ -81,6 +92,7 @@ public class Recipe implements java.io.Serializable {
 
     public void markedAsCooked() {
         this.cooked++;
+        this.lastCooked = LocalDateTime.now();
     }
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -169,6 +181,8 @@ public class Recipe implements java.io.Serializable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cookingTime=" + cookingTime +
+                ", cooked=" + cooked +
+                ", lastCooked=" + lastCooked +
                 ", basedOn=" + basedOn +
                 ", methodSteps=" + methodSteps +
                 ", ingredients=" + ingredients +

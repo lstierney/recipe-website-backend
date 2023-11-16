@@ -23,6 +23,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
@@ -41,6 +43,7 @@ import static org.hamcrest.core.Is.is;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc(addFilters = false)
 public class RestIntegrationTests {
+    private static final String API_RECIPE = "/api/recipes";
     private final Logger logger = LoggerFactory.getLogger(RestIntegrationTests.class);
 
     @LocalServerPort
@@ -98,7 +101,7 @@ public class RestIntegrationTests {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/api/recipes", requestEntity, Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.postForEntity(API_RECIPE, requestEntity, Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -180,7 +183,7 @@ public class RestIntegrationTests {
     @Test
     @Order(4)
     public void testGetAllRecipes() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -208,7 +211,7 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/id/6", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity(API_RECIPE + "/id/6", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -273,7 +276,7 @@ public class RestIntegrationTests {
     @Test
     @Order(25)
     public void testGetRecipesByTagName() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=one-pot", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=one-pot", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -288,7 +291,7 @@ public class RestIntegrationTests {
     @Test
     @Order(26)
     public void testGetRecipesByTagNames_1tags() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=new-name", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=new-name", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -300,7 +303,7 @@ public class RestIntegrationTests {
     @Test
     @Order(27)
     public void testGetRecipesByTagNames_2tags() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity("/api/recipes?tagNames=pasta,big-fancy", Recipe[].class);
+        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=pasta,big-fancy", Recipe[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -313,7 +316,7 @@ public class RestIntegrationTests {
     @Test
     @Order(29)
     public void testGetLatestRecipe() {
-        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity("/api/recipes/latest", RecipePreviewImpl[].class);
+        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/latest", RecipePreviewImpl[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -326,7 +329,7 @@ public class RestIntegrationTests {
     @Test
     @Order(30)
     public void testGetRecipeByName() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity("/api/recipes/spaghetti-bolognaise", Recipe.class);
+        ResponseEntity<Recipe> response = testRestTemplate.getForEntity(API_RECIPE + "/spaghetti-bolognaise", Recipe.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
@@ -361,18 +364,21 @@ public class RestIntegrationTests {
     @Test
     @Order(50)
     void testMarkRecipeAsCooked() {
-        final ResponseEntity<Recipe> response = testRestTemplate.postForEntity("/api/recipes/markascooked/6", null, Recipe.class);
+        final ResponseEntity<Recipe> response = testRestTemplate.postForEntity(API_RECIPE + "/markascooked/6", null, Recipe.class);
+        LocalDateTime now = LocalDateTime.now();
 
         verifyStatusOk(response.getStatusCode());
         final Recipe recipe = requireNonNull(response.getBody());
 
+        long secondsBetween = ChronoUnit.SECONDS.between(now, recipe.getLastCooked());
         assertThat(recipe.getCooked(), is(3));
+        assertThat(secondsBetween, lessThanOrEqualTo(5L));
     }
 
     @Test
     @Order(60)
     public void testGetRandomRecipes() {
-        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity("/api/recipes/random", RecipePreviewImpl[].class);
+        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/random", RecipePreviewImpl[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());

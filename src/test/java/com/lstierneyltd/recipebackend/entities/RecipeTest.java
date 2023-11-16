@@ -3,14 +3,15 @@ package com.lstierneyltd.recipebackend.entities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.*;
 
 public class RecipeTest {
     private Recipe recipe;
@@ -107,9 +108,19 @@ public class RecipeTest {
     }
 
     @Test
+    public void testGetSetLastCooked() {
+        recipe.setLastCooked(LAST_COOKED);
+        assertThat(recipe.getLastCooked(), equalTo(LAST_COOKED));
+    }
+
+    @Test
     public void testMarkAsCooked() {
+        LocalDateTime now = LocalDateTime.now();
         recipe.setCooked(COOKED);
+
         recipe.markedAsCooked();
+        long secondsBetween = ChronoUnit.SECONDS.between(now, recipe.getLastCooked());
         assertThat(recipe.getCooked(), equalTo(COOKED + 1));
+        assertThat(secondsBetween, lessThanOrEqualTo(10L));
     }
 }
