@@ -3,12 +3,16 @@ package com.lstierneyltd.recipebackend.entities;
 import com.lstierneyltd.recipebackend.annotation.Generated;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 
+import java.time.LocalDateTime;
+
 public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
     private int id;
     private String name;
     private String description;
     private String imageFileName;
     private int cooked;
+
+    private LocalDateTime lastCooked;
 
     @Override
     public int getId() {
@@ -55,6 +59,15 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
         this.cooked = cooked;
     }
 
+    @Override
+    public LocalDateTime getLastCooked() {
+        return lastCooked;
+    }
+
+    public void setLastCooked(LocalDateTime lastCooked) {
+        this.lastCooked = lastCooked;
+    }
+
     @Generated
     @Override
     public String toString() {
@@ -64,6 +77,7 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
                 ", description='" + description + '\'' +
                 ", imageFileName='" + imageFileName + '\'' +
                 ", cooked='" + cooked + '\'' +
+                ", lastCooked='" + lastCooked + '\'' +
                 '}';
     }
 }
