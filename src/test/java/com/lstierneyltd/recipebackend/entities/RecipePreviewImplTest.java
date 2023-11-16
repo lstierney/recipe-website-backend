@@ -44,4 +44,10 @@ public class RecipePreviewImplTest {
         preview.setCooked(COOKED);
         assertThat(preview.getCooked(), equalTo(COOKED));
     }
+
+    @Test
+    public void testSetGetLastCooked() {
+        preview.setLastCooked(LAST_COOKED);
+        assertThat(preview.getLastCooked(), equalTo(LAST_COOKED));
+    }
 }
