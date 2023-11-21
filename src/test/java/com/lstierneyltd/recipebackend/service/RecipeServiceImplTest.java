@@ -3,27 +3,34 @@ package com.lstierneyltd.recipebackend.service;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.entities.RecipePreviewImpl;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
+import com.lstierneyltd.recipebackend.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.*;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
+import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipePreview;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -42,12 +49,21 @@ public class RecipeServiceImplTest {
     @Mock
     private MultipartFile multipartFile;
 
+    @Mock
+    private static SecurityContext securityContext;
+    @Mock
+    private static Authentication authentication;
+    @Mock
+    private UserService userService;
+    @Captor
+    private ArgumentCaptor<Recipe> recipeArgumentCaptor;
+
     @InjectMocks
     private RecipeServiceImpl recipeService;
 
     @AfterEach
     void after() {
-        verifyNoMoreInteractions(fileService, objectMapperService, recipeRepository);
+        verifyNoMoreInteractions(fileService, objectMapperService, recipeRepository, userService);
     }
 
     @Test
@@ -58,14 +74,16 @@ public class RecipeServiceImplTest {
         // given
         given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(recipe);
         given(recipeRepository.save(recipe)).willReturn(recipe);
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
 
         // when
         recipeService.addRecipe(multipartFile, json);
 
         // then
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
-        then(recipeRepository).should().save(recipe);
+        then(recipeRepository).should().save(recipeArgumentCaptor.capture());
         then(fileService).should().saveMultiPartFile(multipartFile);
+        then(userService).should().getLoggedInUsername();
     }
 
     @Test
@@ -76,6 +94,7 @@ public class RecipeServiceImplTest {
         // given
         given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(recipe);
         given(recipeRepository.save(recipe)).willReturn(recipe);
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
 
         // when
         recipeService.addRecipe(null, json);
@@ -84,6 +103,80 @@ public class RecipeServiceImplTest {
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
         then(recipeRepository).should().save(recipe);
         then(fileService).shouldHaveNoInteractions();
+        then(userService).should().getLoggedInUsername();
+    }
+
+    @Test
+    public void updateRecipe() {
+        String json = "JSON String";
+        Recipe submittedRecipe = getRecipe();
+        String newDescription = "This is the new description";
+        submittedRecipe.setDescription(newDescription);
+        Recipe existingRecipe = getRecipe();
+
+        // given
+        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(submittedRecipe);
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(existingRecipe));
+        given(recipeRepository.save(existingRecipe)).willReturn(existingRecipe);
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+
+        // when
+        recipeService.updateRecipe(multipartFile, json);
+
+        // then
+        then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
+        then(recipeRepository).should().save(recipeArgumentCaptor.capture());
+        then(recipeRepository).should().findById(ID);
+        then(fileService).should().saveMultiPartFile(multipartFile);
+
+        // test properties on the updated recipe
+        Recipe updatedRecipe = recipeArgumentCaptor.getValue();
+        assertThat(updatedRecipe.getDescription(), is(newDescription));
+        assertThat(updatedRecipe.getLastUpdatedBy(), is("lawrence"));
+        assertTrue(TestUtils.areWithinSeconds(updatedRecipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
+    }
+
+    @Test
+    public void updateRecipe_noImage() {
+        String json = "JSON String";
+        Recipe submittedRecipe = getRecipe();
+        String newDescription = "This is the new description";
+        submittedRecipe.setDescription(newDescription);
+        Recipe existingRecipe = getRecipe();
+
+        // given
+        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(submittedRecipe);
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(existingRecipe));
+        given(recipeRepository.save(existingRecipe)).willReturn(existingRecipe);
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+
+        // when
+        recipeService.updateRecipe(null, json);
+
+        // then
+        then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
+        then(recipeRepository).should().findById(ID);
+        then(recipeRepository).should().save(existingRecipe);
+        then(userService).should().getLoggedInUsername();
+    }
+
+    @Test
+    public void updateRecipe_recipeNotFound() {
+        String json = "JSON String";
+        Recipe submittedRecipe = getRecipe();
+
+        // given
+        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(submittedRecipe);
+        given(recipeRepository.findById(ID)).willReturn(Optional.empty());
+
+        // when
+        Recipe updatedRecipe = recipeService.updateRecipe(multipartFile, json);
+
+        // then
+        then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
+        then(recipeRepository).should().findById(ID);
+
+        assertThat(updatedRecipe, is(nullValue()));
     }
 
     @Test

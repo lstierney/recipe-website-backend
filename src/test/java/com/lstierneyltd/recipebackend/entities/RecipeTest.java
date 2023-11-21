@@ -10,8 +10,10 @@ import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.*;
+import static com.lstierneyltd.recipebackend.utils.TestUtils.areWithinSeconds;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RecipeTest {
     private Recipe recipe;
@@ -122,5 +124,45 @@ public class RecipeTest {
         long secondsBetween = ChronoUnit.SECONDS.between(now, recipe.getLastCooked());
         assertThat(recipe.getCooked(), equalTo(COOKED + 1));
         assertThat(secondsBetween, lessThanOrEqualTo(10L));
+    }
+
+    @Test
+    public void testGetSetCreatedBy() {
+        recipe.setCreatedBy(CREATED_BY);
+        assertThat(recipe.getCreatedBy(), equalTo(CREATED_BY));
+    }
+
+    @Test
+    public void testGetSetLastUpdatedBy() {
+        recipe.setLastUpdatedBy(LAST_UPDATED_BY);
+        assertThat(recipe.getLastUpdatedBy(), equalTo(LAST_UPDATED_BY));
+    }
+
+    @Test
+    public void testGetSetLastUpdatedDate() {
+        recipe.setLastUpdatedDate(LAST_UPDATED_DATE);
+        assertThat(recipe.getLastUpdatedDate(), equalTo(LAST_UPDATED_DATE));
+    }
+
+    @Test
+    public void testGetSetCreatedDate() {
+        recipe.setCreatedDate(CREATED_DATE);
+        assertThat(recipe.getCreatedDate(), equalTo(CREATED_DATE));
+    }
+
+    @Test
+    public void testMarkAsCreated() {
+        recipe.markAsCreated(CREATED_BY);
+
+        assertThat(recipe.getCreatedBy(), is(CREATED_BY));
+        assertTrue(areWithinSeconds(recipe.getCreatedDate(), LocalDateTime.now(), 10));
+    }
+
+    @Test
+    public void testMarkAsUpdated() {
+        recipe.markAsUpdated(LAST_UPDATED_BY);
+
+        assertThat(recipe.getLastUpdatedBy(), is(LAST_UPDATED_BY));
+        assertTrue(areWithinSeconds(recipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
     }
 }

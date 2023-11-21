@@ -9,6 +9,8 @@ import java.util.List;
 public interface RecipeService {
     Recipe addRecipe(MultipartFile imageFile, String recipeString);
 
+    Recipe updateRecipe(MultipartFile imageFile, String recipeString);
+
     Recipe findById(int id);
 
     Recipe findByName(String name);

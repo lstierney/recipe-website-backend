@@ -100,7 +100,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.updateRecipe(multipartFile, jsonString);
 
         // then
-        then(recipeService).should().addRecipe(multipartFile, jsonString);
+        then(recipeService).should().updateRecipe(multipartFile, jsonString);
     }
 
     @Test
