@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -18,16 +19,19 @@ public class RecipeServiceImpl implements RecipeService {
     private final FileService fileService;
     private final ObjectMapperService objectMapperService;
     private final RecipeRepository recipeRepository;
+    private final UserService userService;
 
-    public RecipeServiceImpl(FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository, UserService userService) {
         this.fileService = fileService;
         this.objectMapperService = objectMapperService;
         this.recipeRepository = recipeRepository;
+        this.userService = userService;
     }
 
     @Override
     public Recipe addRecipe(MultipartFile imageFile, String recipeString) {
         final Recipe recipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
+        recipe.markAsCreated(userService.getLoggedInUsername());
 
         logger.info("Adding new recipe: " + recipe);
 
@@ -40,6 +44,73 @@ public class RecipeServiceImpl implements RecipeService {
         logger.info("New recipe added. Id: " + newRecipe.getId());
 
         return newRecipe;
+    }
+
+    /*
+    Recipe{" +
+              private int id;
+    private String name;
+    private String description;
+    private String imageFileName;
+    private int cooked;
+    private LocalDateTime lastCooked;
+    private int cookingTime;
+    private String basedOn;
+    private List<MethodStep> methodSteps = new ArrayList<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
+    private List<Note> notes = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
+    private ServedOn servedOn;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastUpdatedDate;
+    private String createdBy;
+    private String lastUpdatedBy;
+     */
+    @Override
+    public Recipe updateRecipe(MultipartFile imageFile, String recipeString) {
+        final Recipe submittedRecipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
+
+        logger.info("Updating Recipe: " + submittedRecipe.getId() + ": " + submittedRecipe.getName());
+
+        final Optional<Recipe> existingRecipeOptional = recipeRepository.findById(submittedRecipe.getId());
+        if (existingRecipeOptional.isPresent()) {
+            Recipe existingRecipe = existingRecipeOptional.get();
+            existingRecipe.markAsUpdated(userService.getLoggedInUsername()); // We do this manually as @PreUpdate doesn't work for nested collections
+            existingRecipe.setName(submittedRecipe.getName());
+            existingRecipe.setDescription(submittedRecipe.getDescription());
+            existingRecipe.setImageFileName(submittedRecipe.getImageFileName());
+            existingRecipe.setCooked(submittedRecipe.getCooked());
+            existingRecipe.setLastCooked(submittedRecipe.getLastCooked());
+            existingRecipe.setCookingTime(submittedRecipe.getCookingTime());
+            existingRecipe.setBasedOn(submittedRecipe.getBasedOn());
+
+            existingRecipe.getMethodSteps().clear();
+            existingRecipe.getMethodSteps().addAll(submittedRecipe.getMethodSteps());
+
+            existingRecipe.getIngredients().clear();
+            existingRecipe.getIngredients().addAll(submittedRecipe.getIngredients());
+
+            existingRecipe.getNotes().clear();
+            existingRecipe.getNotes().addAll(submittedRecipe.getNotes());
+
+            existingRecipe.getTags().clear();
+            existingRecipe.getTags().addAll(submittedRecipe.getTags());
+
+            existingRecipe.setServedOn(submittedRecipe.getServedOn());
+
+            if (imageFile != null) {
+                handleUploadedFile(imageFile, submittedRecipe);
+            }
+
+            recipeRepository.save(existingRecipe);
+
+            logger.info("Successfully updated Recipe: " + existingRecipe.getId() + ": " + existingRecipe.getName());
+
+            return existingRecipe;
+        } else {
+            logger.warn("Could not find Recipe with Id: " + submittedRecipe.getId() + " to update");
+            return null;
+        }
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {

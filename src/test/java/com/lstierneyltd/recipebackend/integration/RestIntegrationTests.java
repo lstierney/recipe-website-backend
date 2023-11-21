@@ -30,10 +30,12 @@ import java.util.Set;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
+import static com.lstierneyltd.recipebackend.utils.TestUtils.areWithinSeconds;
 import static java.util.Objects.requireNonNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Yes I'm ordering the tests. Shoot me!
@@ -178,6 +180,9 @@ public class RestIntegrationTests {
         // Cooked
         assertThat(recipe.getCooked(), is(2));
 
+        // CreatedDate
+        assertTrue(areWithinSeconds(recipe.getCreatedDate(), LocalDateTime.now(), 10));
+        assertThat(recipe.getCreatedBy(), is("anonymousUser")); // because we are not logged in
     }
 
     @Test

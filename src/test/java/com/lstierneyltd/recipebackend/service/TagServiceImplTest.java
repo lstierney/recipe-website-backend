@@ -1,5 +1,6 @@
 package com.lstierneyltd.recipebackend.service;
 
+import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.entities.Tag;
 import com.lstierneyltd.recipebackend.repository.TagRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -12,10 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
-import java.util.Optional;
+import java.util.*;
 
 import static com.lstierneyltd.recipebackend.service.TagServiceImpl.COULD_NOT_FIND_TAG_WITH_ID;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.ID;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -28,10 +30,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class TagServiceImplTest {
     private static final String NEW_DESCRIPTION = "new description";
     private static final String NEW_NAME = "new name";
+
     @Mock
     private TagRepository tagRepository;
+
     @InjectMocks
     private TagServiceImpl tagService;
+
     @Captor
     private ArgumentCaptor<Tag> tagCaptor;
 
@@ -89,7 +94,12 @@ public class TagServiceImplTest {
     @Test
     public void testDelete_tagFound() {
         // Given
-        given(tagRepository.findById(ID)).willReturn(Optional.of(getTag()));
+        Tag tag = getTag();
+        Recipe recipe = getRecipe();
+        recipe.setTags(new HashSet<>(Set.of(tag)));
+        tag.setRecipes(new ArrayList<>(List.of(recipe)));
+
+        given(tagRepository.findById(ID)).willReturn(Optional.of(tag));
 
         // When
         tagService.deleteTag(ID);

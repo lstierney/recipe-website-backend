@@ -2,6 +2,8 @@ package com.lstierneyltd.recipebackend.utils;
 
 import com.lstierneyltd.recipebackend.entities.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,12 +27,12 @@ public final class TestStubs {
         final MethodStep methodStep = getMethodStepNoRecipe();
 
         ingredient.setRecipe(recipe);
-        recipe.setIngredients(List.of(ingredient));
+        recipe.setIngredients(new ArrayList<>(List.of(ingredient)));
 
         methodStep.setRecipe(recipe);
-        recipe.setMethodSteps(List.of(methodStep));
+        recipe.setMethodSteps(new ArrayList<>(List.of(methodStep)));
 
-        recipe.setTags(Set.of(getTag()));
+        recipe.setTags(new HashSet<>(Set.of(getTag())));
 
         return recipe;
     }

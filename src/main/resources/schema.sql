@@ -18,6 +18,10 @@ create table recipe
     cooked int default 0 not null,
     last_cooked timestamp,
     image_filename varchar(100),
+    created_date      timestamp,
+    last_updated_date timestamp,
+    created_by        varchar(100),
+    last_updated_by   varchar(100),
     constraint recipes_name_uk
         unique (name)
 );

@@ -76,6 +76,6 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     @Override
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Recipe updateRecipe(@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
-        return recipeService.addRecipe(imageFile, recipeString);
+        return recipeService.updateRecipe(imageFile, recipeString);
     }
 }

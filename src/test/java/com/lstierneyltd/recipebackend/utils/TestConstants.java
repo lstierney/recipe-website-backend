@@ -18,6 +18,10 @@ public final class TestConstants {
     public static final int COOKING_TIME = 90;
     public static final int COOKED = 5;
     public static final LocalDateTime LAST_COOKED = LocalDateTime.now();
+    public static final LocalDateTime LAST_UPDATED_DATE = LocalDateTime.now();
+    public static final LocalDateTime CREATED_DATE = LocalDateTime.now();
+    public static final String LAST_UPDATED_BY = "lawrence";
+    public static final String CREATED_BY = "lawrence";
 
     public static final String BASED_ON = "This recipe was based on another";
 
