@@ -46,26 +46,6 @@ public class RecipeServiceImpl implements RecipeService {
         return newRecipe;
     }
 
-    /*
-    Recipe{" +
-              private int id;
-    private String name;
-    private String description;
-    private String imageFileName;
-    private int cooked;
-    private LocalDateTime lastCooked;
-    private int cookingTime;
-    private String basedOn;
-    private List<MethodStep> methodSteps = new ArrayList<>();
-    private List<Ingredient> ingredients = new ArrayList<>();
-    private List<Note> notes = new ArrayList<>();
-    private Set<Tag> tags = new HashSet<>();
-    private ServedOn servedOn;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastUpdatedDate;
-    private String createdBy;
-    private String lastUpdatedBy;
-     */
     @Override
     public Recipe updateRecipe(MultipartFile imageFile, String recipeString) {
         final Recipe submittedRecipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
@@ -79,8 +59,6 @@ public class RecipeServiceImpl implements RecipeService {
             existingRecipe.setName(submittedRecipe.getName());
             existingRecipe.setDescription(submittedRecipe.getDescription());
             existingRecipe.setImageFileName(submittedRecipe.getImageFileName());
-            existingRecipe.setCooked(submittedRecipe.getCooked());
-            existingRecipe.setLastCooked(submittedRecipe.getLastCooked());
             existingRecipe.setCookingTime(submittedRecipe.getCookingTime());
             existingRecipe.setBasedOn(submittedRecipe.getBasedOn());
 
