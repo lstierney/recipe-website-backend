@@ -1,0 +1,225 @@
+{
+  "name": "Chana Masala",
+  "description": "Chick peas in a smooth, rich sauce",
+  "imageFileName": "chana_masala.jpg",
+  "cooked": 1,
+  "lastCooked": "2023-11-23T08:47:53",
+  "cookingTime": 90,
+  "basedOn": "https://www.indianhealthyrecipes.com/chana-masala/",
+  "methodSteps": [
+    {
+      "ordering": 1,
+      "description": "Fry the bay leaf, cloves, cinnamon and cardamom until fragrant"
+    },
+    {
+      "ordering": 2,
+      "description": "Add onion. Continue to cook until light golden"
+    },
+    {
+      "ordering": 3,
+      "description": "Add the garlic/ginger paste and cook until raw smell goes away (a couple of mins)"
+    },
+    {
+      "ordering": 4,
+      "description": "Add the tomatoes and salt a cook for a few more mins (until heated through and bubbling)"
+    },
+    {
+      "ordering": 5,
+      "description": "Add the red chilli powder, turmeric, garam masala, coriander powder, asafoetida and cumin powder. Cook until aromatic (about 5 mins)"
+    },
+    {
+      "ordering": 7,
+      "description": "Remove the bay leaf and cinnamon and blend this mixture until smooth."
+    },
+    {
+      "ordering": 8,
+      "description": "Add the chick peas and some chick pea stock/water and cook for a while (doesn't really matter)"
+    },
+    {
+      "ordering": 9,
+      "description": "Just before serving stir in the fenugreek leaves and mango powder"
+    }
+  ],
+  "ingredients": [
+    {
+      "unit": {
+        "id": 9,
+        "name": "cup",
+        "abbreviation": "cup"
+      },
+      "description": "Chick Peas (pre-cooked)",
+      "quantity": 1,
+      "ordering": 1
+    },
+    {
+      "unit": null,
+      "description": "bay leaf",
+      "quantity": 1,
+      "ordering": 2
+    },
+    {
+      "unit": null,
+      "description": "inch of cinnamon",
+      "quantity": 1,
+      "ordering": 3
+    },
+    {
+      "unit": null,
+      "description": "cloves",
+      "quantity": 2,
+      "ordering": 4
+    },
+    {
+      "unit": null,
+      "description": "green cardamoms",
+      "quantity": 2,
+      "ordering": 5
+    },
+    {
+      "unit": null,
+      "description": "onions (finely chopped)",
+      "quantity": 2,
+      "ordering": 6
+    },
+    {
+      "unit": null,
+      "description": "green chilli (chopped)",
+      "quantity": 1,
+      "ordering": 7
+    },
+    {
+      "unit": {
+        "id": 4,
+        "name": "tablespoon",
+        "abbreviation": "tbsp"
+      },
+      "description": "garlic/ginger paste",
+      "quantity": 1,
+      "ordering": 8
+    },
+    {
+      "unit": {
+        "id": 10,
+        "name": "400g can",
+        "abbreviation": "can"
+      },
+      "description": "chopped tomatoes",
+      "quantity": 1,
+      "ordering": 9
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "salt",
+      "quantity": 1,
+      "ordering": 10
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "turmeric",
+      "quantity": 0.25,
+      "ordering": 11
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "kashmiri red chilli powder",
+      "quantity": 1,
+      "ordering": 12
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "garam masala",
+      "quantity": 1,
+      "ordering": 13
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "coriander powder",
+      "quantity": 2,
+      "ordering": 14
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "cumin powder",
+      "quantity": 0.5,
+      "ordering": 15
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "asafoetida",
+      "quantity": 0.25,
+      "ordering": 16
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "dried fenugreek leaves",
+      "quantity": 1,
+      "ordering": 17
+    },
+    {
+      "unit": {
+        "id": 1,
+        "name": "teaspoon",
+        "abbreviation": "tsp"
+      },
+      "description": "mango powder",
+      "quantity": 0.25,
+      "ordering": 18
+    }
+  ],
+  "notes": [
+    {
+      "ordering": 1,
+      "description": "Pre-cook the [r]chick-peas-(chana)[/r]"
+    },
+    {
+      "ordering": 3,
+      "description": "Serve with [r]basmati-rice[/r]"
+    }
+  ],
+  "tags": [
+    {
+      "id": 3,
+      "name": "indian",
+      "description": "My favourite to cook"
+    }
+  ],
+  "servedOn": {
+    "crockery": {
+      "id": 2,
+      "description": "Green Plates"
+    },
+    "heated": true
+  }
+}
