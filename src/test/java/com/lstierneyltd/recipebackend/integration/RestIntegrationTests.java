@@ -1,7 +1,6 @@
 package com.lstierneyltd.recipebackend.integration;
 
-//import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
@@ -22,9 +21,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
@@ -50,7 +51,9 @@ public class RestIntegrationTests {
 
     @LocalServerPort
     private int localServerPort;
-    //private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -90,8 +93,18 @@ public class RestIntegrationTests {
 
     @Test
     @Order(3)
-    public void postRecipe() throws Exception {
-        String json = FileUtils.getFileAsString("json/sample_post.json");
+    public void testPostRecipe() throws Exception {
+        ResponseEntity<Recipe> response = postRecipe("json/sample_post.json");
+
+        // Good status?
+        verifyStatusOk(response.getStatusCode());
+
+        // Good recipe?
+        verifyRecipe(requireNonNull(response.getBody()));
+    }
+
+    private ResponseEntity<Recipe> postRecipe(String pathToRecipeJson) throws IOException {
+        String json = FileUtils.getFileAsString(pathToRecipeJson);
         ClassPathResource classPathResource = new ClassPathResource("/images/bolognese_test.jpg");
 
         HttpHeaders headers = new HttpHeaders();
@@ -103,13 +116,7 @@ public class RestIntegrationTests {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<Recipe> response = testRestTemplate.postForEntity(API_RECIPE, requestEntity, Recipe.class);
-
-        // Good status?
-        verifyStatusOk(response.getStatusCode());
-
-        // Good recipe?
-        verifyRecipe(requireNonNull(response.getBody()));
+        return testRestTemplate.postForEntity(API_RECIPE, requestEntity, Recipe.class);
     }
 
     private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
@@ -390,5 +397,170 @@ public class RestIntegrationTests {
 
         RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
         assertThat(previews.length, is(6));
+    }
+
+    // We'll start the update tests at 200
+    @Test
+    @Order(200)
+    public void testUpdateRecipe() throws Exception {
+        ResponseEntity<Recipe> response = postRecipe("json/chana_masala.json");
+        verifyStatusOk(response.getStatusCode());
+
+        // So at this point we have inserted the nice, new, shiny recipe.
+        // Lets update the recipe, PUT it and test the response
+        Recipe recipe = requireNonNull(response.getBody());
+        recipe.setName("This is modified recipe name");
+        recipe.setDescription("This is the modified description");
+        recipe.setCookingTime(123);
+        recipe.setImageFileName("new_image.jpg");
+        recipe.setBasedOn("http://www.random.com");
+
+        ServedOn servedOn = new ServedOn();
+        Crockery crockery = new Crockery();
+        crockery.setId(1);
+        crockery.setDescription("White Plates");
+        servedOn.setHeated(false);
+        servedOn.setCrockery(crockery);
+        recipe.setServedOn(servedOn);
+
+        // Do the collections
+
+        // Notes
+        List<Note> notes = recipe.getNotes();
+        // Delete an existing Note
+        notes.remove(1);
+        // Modify an existing Note
+        notes.get(0).setDescription("Note 1 modified desc");
+        notes.get(0).setOrdering(69);
+        // Add a new Note
+        Note newNote = new Note();
+        newNote.setDescription("New Note desc");
+        newNote.setOrdering(420);
+        notes.add(newNote);
+        recipe.setNotes(notes);
+
+        // MethodSteps - starts with 8 MethodSteps
+        List<MethodStep> methodSteps = recipe.getMethodSteps();
+        methodSteps.remove(0);
+        methodSteps.remove(0);
+        methodSteps.get(0).setDescription("Method Step modified desc");
+        methodSteps.get(0).setOrdering(2112);
+        MethodStep methodStep = new MethodStep();
+        methodStep.setDescription("Desc for new MethodStep");
+        methodStep.setOrdering(321);
+        methodSteps.add(methodStep);
+        recipe.setMethodSteps(methodSteps);
+
+        // Ingredients - starts with 18 Ingredients
+        List<Ingredient> ingredients = recipe.getIngredients();
+        ingredients.remove(0); // delete the first
+        ingredients.remove(ingredients.size() - 1); // delete the last
+        ingredients.remove(7); // delete one from in the middle
+        ingredients.get(3).setDescription("Modified Ingredient desc");
+        ingredients.get(3).setQuantity(BigDecimal.valueOf(404));
+        ingredients.get(3).setOrdering(999);
+        Unit unit = new Unit();
+        unit.setId(6);
+        ingredients.get(3).setUnit(unit);
+        Ingredient ingredient = new Ingredient();
+        ingredient.setDescription("New Ingredient desc");
+        ingredient.setOrdering(111);
+        ingredient.setQuantity(BigDecimal.valueOf(1001));
+        unit = new Unit();
+        unit.setId(7);
+        ingredient.setUnit(unit);
+
+        ingredients.add(ingredient);
+        recipe.setIngredients(ingredients);
+
+
+        // Tags
+        Set<Tag> tags = recipe.getTags();
+        Tag tag = new Tag();
+        tag.setId(4);
+        tag.setName("old-school");
+        tag.setDescription("Just like wot you remember");
+        tags.add(tag);
+        recipe.setTags(tags);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("recipe", objectMapper.writeValueAsString(recipe));
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        response = testRestTemplate.exchange(API_RECIPE, HttpMethod.PUT, requestEntity, Recipe.class);
+        recipe = requireNonNull(response.getBody());
+
+        // Scalar properties
+        assertThat(recipe.getName(), is("This is modified recipe name"));
+        assertThat(recipe.getDescription(), is("This is the modified description"));
+        assertThat(recipe.getCookingTime(), is(123));
+        assertThat(recipe.getImageFileName(), is("new_image.jpg"));
+        assertThat(recipe.getBasedOn(), is("http://www.random.com"));
+        assertThat(recipe.getLastUpdatedBy(), is("anonymousUser"));
+        assertThat(recipe.getCreatedBy(), is("anonymousUser"));
+        assertTrue(areWithinSeconds(recipe.getCreatedDate(), LocalDateTime.now(), 10));
+        assertTrue(areWithinSeconds(recipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
+
+        // Notes
+        assertThat(recipe.getNotes().size(), is(2));
+        Note noteToCheck = recipe.getNotes().get(0);
+        assertThat(noteToCheck.getDescription(), is("Note 1 modified desc"));
+        assertThat(noteToCheck.getOrdering(), is(69));
+
+        noteToCheck = recipe.getNotes().get(1);
+        assertThat(noteToCheck.getDescription(), is("New Note desc"));
+        assertThat(noteToCheck.getOrdering(), is(420));
+
+        // ServedOn
+        servedOn = recipe.getServedOn();
+        assertThat(servedOn.isHeated(), is(false));
+        assertThat(servedOn.getCrockery().getDescription(), is("White Plates"));
+        assertThat(servedOn.getCrockery().getId(), is(1));
+
+        // Tags
+        tags = recipe.getTags();
+        assertThat(tags.size(), is(2));
+        tag.setDescription("old-school");
+        assertTrue(tags.contains(tag));
+        tag.setDescription("indian");
+        assertTrue(tags.contains(tag));
+
+        // MethodSteps
+        methodSteps = recipe.getMethodSteps();
+        assertThat(methodSteps.size(), is(7));
+        methodStep = methodSteps.get(0);
+        assertThat(methodStep.getDescription(), is("Method Step modified desc"));
+        assertThat(methodStep.getOrdering(), is(2112));
+        methodStep = methodSteps.get(6);
+        assertThat(methodStep.getDescription(), is("Desc for new MethodStep"));
+        assertThat(methodStep.getOrdering(), is(321));
+
+        // Ingredients
+        ingredients = recipe.getIngredients();
+        assertThat(ingredients.size(), is(16));
+
+        // Test the modified Ingredient
+        ingredient = ingredients.get(3);
+        assertThat(ingredient.getDescription(), is("Modified Ingredient desc"));
+        assertThat(ingredient.getQuantity(), is(BigDecimal.valueOf(404)));
+        assertThat(ingredient.getOrdering(), is(999));
+        unit = ingredient.getUnit();
+        assertThat(unit.getId(), is(6));
+        assertThat(unit.getAbbreviation(), is("kg"));
+        assertThat(unit.getName(), is("kilogram"));
+
+        // Test the new ingredient
+        ingredient = ingredients.get(ingredients.size() - 1);
+        assertThat(ingredient.getDescription(), is("New Ingredient desc"));
+        assertThat(ingredient.getQuantity(), is(BigDecimal.valueOf(1001)));
+        assertThat(ingredient.getOrdering(), is(111));
+        unit = ingredient.getUnit();
+        assertThat(unit.getId(), is(7));
+        assertThat(unit.getAbbreviation(), is("lb"));
+        assertThat(unit.getName(), is("pound"));
     }
 }
