@@ -109,13 +109,18 @@ public class RecipeServiceImplTest {
     @Test
     public void updateRecipe() {
         String json = "JSON String";
-        Recipe submittedRecipe = getRecipe();
+
+        final Recipe updateDatedRecipe = getRecipe();
         String newDescription = "This is the new description";
-        submittedRecipe.setDescription(newDescription);
-        Recipe existingRecipe = getRecipe();
+        updateDatedRecipe.setDescription(newDescription);
+        updateDatedRecipe.setCooked(100);
+
+        final Recipe existingRecipe = getRecipe();
+        existingRecipe.setLastCooked(LAST_COOKED);
+        existingRecipe.setCooked(COOKED);
 
         // given
-        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(submittedRecipe);
+        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(updateDatedRecipe);
         given(recipeRepository.findById(ID)).willReturn(Optional.of(existingRecipe));
         given(recipeRepository.save(existingRecipe)).willReturn(existingRecipe);
         given(userService.getLoggedInUsername()).willReturn(USER_NAME);
@@ -134,6 +139,8 @@ public class RecipeServiceImplTest {
         assertThat(updatedRecipe.getDescription(), is(newDescription));
         assertThat(updatedRecipe.getLastUpdatedBy(), is("lawrence"));
         assertTrue(TestUtils.areWithinSeconds(updatedRecipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
+        assertThat(updatedRecipe.getCooked(), is(COOKED));
+        assertThat(updatedRecipe.getLastCooked(), is(LAST_COOKED));
     }
 
     @Test
