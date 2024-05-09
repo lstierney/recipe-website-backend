@@ -389,14 +389,14 @@ public class RestIntegrationTests {
 
     @Test
     @Order(60)
-    public void testGetRandomRecipes() {
-        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/random", RecipePreviewImpl[].class);
+    public void testGetRandomDinners() {
+        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/randomDinners", RecipePreviewImpl[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
-        assertThat(previews.length, is(6));
+        assertThat(previews.length, is(2));
     }
 
     // We'll start the update tests at 200

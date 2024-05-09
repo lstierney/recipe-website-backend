@@ -132,8 +132,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeRepository.RecipePreview> findRandom() {
-        return recipeRepository.findRecipePreviewsOrderByRand();
+    public List<RecipeRepository.RecipePreview> findRandomDinners() {
+        return recipeRepository.findRandomDinners();
+    }
+
+    @Override
+    public RecipeRepository.RecipePreview findRandomDinner() {
+        return recipeRepository.findRandomDinner();
     }
 
     @Override

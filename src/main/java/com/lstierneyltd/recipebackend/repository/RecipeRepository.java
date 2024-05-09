@@ -16,8 +16,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
             "ORDER BY r.lastCooked ASC")
     List<Recipe> findByAllTagNames(List<String> tagNames, Long tagCount);
 
-    @Query("SELECT r FROM Recipe r ORDER BY RAND() LIMIT 6")
-    List<RecipePreview> findRecipePreviewsOrderByRand();
+    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' ORDER BY RAND() LIMIT 6")
+    List<RecipePreview> findRandomDinners();
+
+    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' ORDER BY RAND() LIMIT 1")
+    RecipePreview findRandomDinner();
 
     List<RecipePreview> findTop6RecipePreviewByOrderByIdDesc();
 
