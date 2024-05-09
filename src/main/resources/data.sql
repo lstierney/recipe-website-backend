@@ -301,6 +301,10 @@ INSERT INTO recipe_tag
 VALUES (9, 5, 1);
 INSERT INTO recipe_tag
 VALUES (10, 5, 4);
+INSERT INTO recipe_tag
+VALUES (11, 1, 14);
+INSERT INTO recipe_tag
+VALUES (12, 2, 14);
 
 
 

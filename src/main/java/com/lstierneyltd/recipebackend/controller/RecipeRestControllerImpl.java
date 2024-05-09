@@ -44,9 +44,15 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     }
 
     @Override
-    @GetMapping("/random")
-    public List<RecipeRepository.RecipePreview> getRandomRecipes() {
-        return recipeService.findRandom();
+    @GetMapping("/randomDinners")
+    public List<RecipeRepository.RecipePreview> getRandomDinners() {
+        return recipeService.findRandomDinners();
+    }
+
+    @Override
+    @GetMapping("/randomDinner")
+    public RecipeRepository.RecipePreview getRandomDinner() {
+        return recipeService.findRandomDinner();
     }
 
     @Override

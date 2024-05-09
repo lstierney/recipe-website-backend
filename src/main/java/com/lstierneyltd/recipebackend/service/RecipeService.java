@@ -23,7 +23,9 @@ public interface RecipeService {
 
     List<RecipeRepository.RecipePreview> findLatest();
 
-    List<RecipeRepository.RecipePreview> findRandom();
+    List<RecipeRepository.RecipePreview> findRandomDinners();
+
+    RecipeRepository.RecipePreview findRandomDinner();
 
     Recipe markAsCooked(Integer id);
 }

@@ -113,12 +113,21 @@ public class RecipeRestControllerImplTest {
     }
 
     @Test
-    public void testGetRandomRecipes() {
+    public void testGetRandomDinners() {
         // when
-        recipeRestController.getRandomRecipes();
+        recipeRestController.getRandomDinners();
 
         // then
-        then(recipeService).should().findRandom();
+        then(recipeService).should().findRandomDinners();
+    }
+
+    @Test
+    public void testGetRandomDinner() {
+        // when
+        recipeRestController.getRandomDinner();
+
+        // then
+        then(recipeService).should().findRandomDinner();
     }
 
     @Test

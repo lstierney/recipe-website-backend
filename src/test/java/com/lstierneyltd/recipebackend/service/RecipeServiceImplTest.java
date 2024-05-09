@@ -13,12 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,10 +46,6 @@ public class RecipeServiceImplTest {
     @Mock
     private MultipartFile multipartFile;
 
-    @Mock
-    private static SecurityContext securityContext;
-    @Mock
-    private static Authentication authentication;
     @Mock
     private UserService userService;
     @Captor
@@ -278,7 +271,7 @@ public class RecipeServiceImplTest {
     @Test
     public void findByTagName() {
         // when
-        List<String>tagNames = Arrays.asList(TAG_NAME);
+        List<String> tagNames = List.of(TAG_NAME);
         recipeService.findByTagNames(tagNames);
 
         // then
@@ -318,18 +311,33 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void findRandom() {
+    public void findRandomDinners() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findRecipePreviewsOrderByRand()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findRandomDinners()).willReturn(List.of(recipePreview));
 
         // when
-        List<RecipeRepository.RecipePreview> random = recipeService.findRandom();
+        List<RecipeRepository.RecipePreview> randomDinners = recipeService.findRandomDinners();
 
         // then
-        then(recipeRepository).should().findRecipePreviewsOrderByRand();
-        assertThat(random.get(0), equalTo(recipePreview));
+        then(recipeRepository).should().findRandomDinners();
+        assertThat(randomDinners.get(0), equalTo(recipePreview));
     }
+
+    @Test
+    public void findRandomDinner() {
+        // Given
+        RecipePreviewImpl recipePreview = getRecipePreview();
+        given(recipeRepository.findRandomDinner()).willReturn(recipePreview);
+
+        // when
+        RecipeRepository.RecipePreview randomDinner = recipeService.findRandomDinner();
+
+        // then
+        then(recipeRepository).should().findRandomDinner();
+        assertThat(randomDinner, equalTo(recipePreview));
+    }
+
 
     @Test
     public void markAsCooked() {
