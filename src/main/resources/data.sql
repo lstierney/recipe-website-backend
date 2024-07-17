@@ -1,5 +1,5 @@
 INSERT INTO authorised_user
-VALUES (1, 'lawrence', 'lawrence');
+VALUES (1, 'lawrence', '$2a$10$HeiZSdgUtGjZqS44nCGzwutz3ropo183YRyfUl0KQVrlkeXk9ia0G');
 
 INSERT INTO unit
 VALUES (1, 'teaspoon', 'tsp');
