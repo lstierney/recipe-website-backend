@@ -5,9 +5,8 @@ import com.lstierneyltd.recipebackend.service.CustomUserDetailsService;
 import com.lstierneyltd.recipebackend.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,31 +17,27 @@ public class AuthenticationRestControllerImpl {
 
     private final CustomUserDetailsService userDetailsService;
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
-    public AuthenticationRestControllerImpl(JwtService jwtService, CustomUserDetailsService userDetailsService, AuthenticationConfiguration authenticationConfiguration) {
+    public AuthenticationRestControllerImpl(JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.authenticationConfiguration = authenticationConfiguration;
     }
 
     @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user)
-            throws Exception {
-        try {
-            authenticationConfiguration.getAuthenticationManager().authenticate(
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) throws Exception {
+        String username = user.getUsername();
+        String password = user.getPassword();
 
-                    new UsernamePasswordAuthenticationToken(user.getUsername(),
-                            user.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        String storedHashedPassword = userDetails.getPassword();
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean passwordMatch = passwordEncoder.matches(password, storedHashedPassword); // compare raw password with hashed
+
+        if (!passwordMatch) {
+            throw new BadCredentialsException("Incorrect username or password");
         }
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(user.getUsername());
-
-        final String jwt = jwtService.generateToken(userDetails);
+        String jwt = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(jwt);
     }
