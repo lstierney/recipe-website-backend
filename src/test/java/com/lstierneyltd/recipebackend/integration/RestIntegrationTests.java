@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
+import com.lstierneyltd.recipebackend.utils.TestConstants;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_DESCRIPTION;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.TAG_NAME;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.getIdea;
 import static com.lstierneyltd.recipebackend.utils.TestStubs.getTag;
 import static com.lstierneyltd.recipebackend.utils.TestUtils.areWithinSeconds;
 import static java.util.Objects.requireNonNull;
@@ -562,5 +564,89 @@ public class RestIntegrationTests {
         assertThat(unit.getId(), is(7));
         assertThat(unit.getAbbreviation(), is("lb"));
         assertThat(unit.getName(), is("pound"));
+    }
+
+    // Idea Tests start at 300
+    @Test
+    @Order(300)
+    public void testGetIdeaById() {
+        final ResponseEntity<Idea> response = testRestTemplate.getForEntity("/api/ideas/1", Idea.class);
+
+        verifyStatusOk(response.getStatusCode());
+
+        Idea idea = requireNonNull(response.getBody());
+        assertThat(idea.getName(), is("Fluffy American pancakes recipe"));
+        assertThat(idea.getUrl(), is("https://www.bbc.co.uk/food/recipes/fluffyamericanpancak_74828"));
+        assertThat(idea.getLastUpdatedBy(), is("lawrence"));
+        assertThat(idea.getCreatedBy(), is("lawrence"));
+        assertTrue(areWithinSeconds(idea.getLastUpdatedDate(), LocalDateTime.now(), 60));
+        assertTrue(areWithinSeconds(idea.getCreatedDate(), LocalDateTime.now(), 60));
+    }
+
+    @Test
+    @Order(305)
+    public void testGetAllIdeas() {
+        expectedNumberOfIdeaIs(1);
+    }
+
+    private void expectedNumberOfIdeaIs(int expectedNumberOfIdeas) {
+        final ResponseEntity<Idea[]> response = testRestTemplate.getForEntity("/api/ideas", Idea[].class);
+
+        verifyStatusOk(response.getStatusCode());
+        final Idea[] returnedIdeas = requireNonNull(response.getBody());
+
+        assertThat(returnedIdeas.length, equalTo(expectedNumberOfIdeas));
+    }
+
+    @Test
+    @Order(310)
+    public void testAddIdea() {
+        final Idea idea = getIdea();
+        final ResponseEntity<Idea> response = testRestTemplate.postForEntity("/api/ideas", idea, Idea.class);
+
+        verifyStatusOk(response.getStatusCode());
+
+        final Idea returnedIdea = requireNonNull(response.getBody());
+
+        assertThat(returnedIdea.getId(), is(2));
+        assertThat(returnedIdea.getName(), is(TestConstants.IDEA_NAME));
+        assertThat(returnedIdea.getUrl(), is(TestConstants.IDEA_URL));
+        assertThat(returnedIdea.getLastUpdatedBy(), is(nullValue()));
+        assertThat(returnedIdea.getLastUpdatedDate(), is(nullValue()));
+        assertThat(returnedIdea.getCreatedBy(), is("anonymousUser"));
+        assertTrue(areWithinSeconds(returnedIdea.getCreatedDate(), LocalDateTime.now(), 60));
+
+        expectedNumberOfIdeaIs(2);
+    }
+
+    @Test
+    @Order(315)
+    public void testDeleteIdea() {
+        testRestTemplate.delete("/api/ideas/2");
+        expectedNumberOfIdeaIs(1);
+    }
+
+    @Test
+    @Order(320)
+    public void testUpdateIdea() {
+        final Idea idea = getIdea();
+        String newUrl = "this is the new URL";
+        String newName = "this is the new name";
+        idea.setUrl(newUrl);
+        idea.setName(newName);
+        idea.setId(1); // this should overwrite the record that exists in data.sql
+
+        testRestTemplate.put("/api/ideas", idea);
+
+        final ResponseEntity<Idea> response = testRestTemplate.getForEntity("/api/ideas/1", Idea.class);
+        final Idea updatedIdea = requireNonNull(response.getBody());
+
+        verifyStatusOk(response.getStatusCode());
+        assertThat(updatedIdea.getName(), equalTo(newName));
+        assertThat(updatedIdea.getUrl(), equalTo(newUrl));
+        assertThat(updatedIdea.getLastUpdatedBy(), is("anonymousUser"));
+        assertTrue(areWithinSeconds(updatedIdea.getLastUpdatedDate(), LocalDateTime.now(), 60));
+        assertThat(updatedIdea.getCreatedBy(), is(nullValue()));
+        assertThat(updatedIdea.getCreatedDate(), is(nullValue()));
     }
 }

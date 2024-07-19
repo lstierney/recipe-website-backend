@@ -306,6 +306,10 @@ VALUES (11, 1, 14);
 INSERT INTO recipe_tag
 VALUES (12, 2, 14);
 
+INSERT INTO idea
+VALUES (1, 'Fluffy American pancakes recipe', 'https://www.bbc.co.uk/food/recipes/fluffyamericanpancak_74828',
+        NOW(), NOW(), 'lawrence', 'lawrence');
+
 
 
 

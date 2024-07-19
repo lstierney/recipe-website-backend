@@ -23,6 +23,8 @@ public final class TestConstants {
     public static final String LAST_UPDATED_BY = "lawrence";
     public static final String CREATED_BY = "lawrence";
 
+    public static final String LOGGED_IN_USER = "jimbo";
+
     public static final String BASED_ON = "This recipe was based on another";
 
     public static final int TAG_ID = 12346;
@@ -32,6 +34,11 @@ public final class TestConstants {
     public static final String USER_NAME = "lawrence";
     public static final String PASSWORD = "password";
     public static final String TOKEN = "auth_token";
+
+    public static final int IDEA_ID = 442;
+    public static final String IDEA_NAME = "Idea Name";
+    public static final String IDEA_URL = "https://www.bbcgoodfood.com/?IGNORE_GEO_REDIRECT_GLOBAL=true&v=1083955399";
+
 
 
     private TestConstants() {

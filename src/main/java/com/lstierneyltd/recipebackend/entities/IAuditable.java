@@ -18,4 +18,8 @@ public interface IAuditable {
     String getLastUpdatedBy();
 
     void setLastUpdatedBy(String lastUpdatedBy);
+
+    void markAsCreated(String username);
+
+    void markAsUpdated(String username);
 }
