@@ -16,7 +16,7 @@ import java.util.Set;
         catalog = "recipes",
         uniqueConstraints = @UniqueConstraint(columnNames = "name")
 )
-public class Recipe implements java.io.Serializable, IAuditable {
+public class Recipe extends Auditable implements java.io.Serializable {
     private int id;
     private String name;
     private String description;
@@ -30,10 +30,6 @@ public class Recipe implements java.io.Serializable, IAuditable {
     private List<Note> notes = new ArrayList<>();
     private Set<Tag> tags = new HashSet<>();
     private ServedOn servedOn;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastUpdatedDate;
-    private String createdBy;
-    private String lastUpdatedBy;
 
     public Recipe() {
     }
@@ -177,50 +173,6 @@ public class Recipe implements java.io.Serializable, IAuditable {
         this.servedOn = servedOn;
     }
 
-    @Override
-    @Column(name = "created_date")
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    @Override
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Override
-    @Column(name = "last_updated_date")
-    public LocalDateTime getLastUpdatedDate() {
-        return lastUpdatedDate;
-    }
-
-    @Override
-    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
-    }
-
-    @Override
-    @Column(name = "created_by", length = 100)
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    @Override
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Override
-    @Column(name = "last_updated_by", length = 100)
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    @Override
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
-    }
-
     @Generated
     @Override
     public String toString() {
@@ -235,29 +187,8 @@ public class Recipe implements java.io.Serializable, IAuditable {
                 ", methodSteps=" + methodSteps +
                 ", ingredients=" + ingredients +
                 ", notes=" + notes +
-                ", servedOn=" + servedOn +
-                ", createdBy=" + createdBy +
-                ", createdDate=" + createdDate +
-                ", lastUpdatedBy=" + lastUpdatedBy +
-                ", lastUpdatedDate=" + lastUpdatedDate +
-                '}';
-    }
-
-
-    /*
-     I would like to have used @Prepersist and @Preupdate here but @Preupdate only triggers if properties
-     on the Recipe itself change NOT if values in nested collections e.g. Notes, Ingredients are updated.
-     @Prepersist worked fine (as there was always an INSERT on Recipe) but it seemed incongruous to handle
-     created... and updated... differently.
-     */
-    public void markAsCreated(String username) {
-        createdDate = LocalDateTime.now();
-        createdBy = username;
-    }
-
-    public void markAsUpdated(String username) {
-        lastUpdatedDate = LocalDateTime.now();
-        lastUpdatedBy = username;
+                ", servedOn=" + servedOn + '}' +
+                super.toString();
     }
 }
 

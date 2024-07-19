@@ -110,4 +110,13 @@ public final class TestStubs {
         tag.setDescription(TAG_DESCRIPTION);
         return tag;
     }
+
+    public static Idea getIdea() {
+        final Idea idea = new Idea();
+        idea.setUrl(IDEA_URL);
+        idea.setId(IDEA_ID);
+        idea.setName(IDEA_NAME);
+
+        return idea;
+    }
 }
