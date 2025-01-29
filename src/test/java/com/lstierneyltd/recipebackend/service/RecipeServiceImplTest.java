@@ -367,4 +367,80 @@ public class RecipeServiceImplTest {
         then(recipeRepository).should().findById(ID);
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
     }
+
+    @Test
+    public void markAsDeleted() {
+        // Given
+        Recipe recipe = getRecipe();
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+
+        // when
+        Recipe deletedRecipe = recipeService.markAsDeleted(ID);
+
+        // then
+        then(recipeRepository).should().findById(ID);
+        then(recipeRepository).should().save(recipe);
+        then(userService).should().getLoggedInUsername();
+
+        assertThat(deletedRecipe.isDeleted(), is(true));
+    }
+
+    @Test
+    public void markAsDeleted_recipeNotFound() {
+        // Given
+        given(recipeRepository.findById(ID)).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.markAsDeleted(ID));
+
+        // Then
+        then(recipeRepository).should().findById(ID);
+        then(userService).shouldHaveNoInteractions();
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
+    }
+
+    @Test
+    public void restore() {
+        // Given
+        Recipe recipe = getRecipe();
+        given(recipeRepository.findByIdIgnoreDeleted(ID)).willReturn(Optional.of(recipe));
+        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+
+        // when
+        Recipe restoredRecipe = recipeService.restore(ID);
+
+        // then
+        then(recipeRepository).should().findByIdIgnoreDeleted(ID);
+        then(recipeRepository).should().save(recipe);
+        then(userService).should().getLoggedInUsername();
+
+        assertThat(restoredRecipe.isDeleted(), is(false));
+    }
+
+    @Test
+    public void restore_recipeNotFound() {
+        // Given
+        given(recipeRepository.findByIdIgnoreDeleted(ID)).willReturn(Optional.empty());
+
+        // When
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.restore(ID));
+
+        // Then
+        then(recipeRepository).should().findByIdIgnoreDeleted(ID);
+        then(userService).shouldHaveNoInteractions();
+        assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
+    }
+
+    @Test
+    public void findAllIgnoreDeleted() {
+        // Given
+        given(recipeRepository.findAllIgnoreDeleted()).willReturn(List.of(getRecipe()));
+
+        // When
+        recipeService.findAllIgnoreDeleted();
+
+        // Then
+        then(recipeRepository).should().findAllIgnoreDeleted();
+    }
 }

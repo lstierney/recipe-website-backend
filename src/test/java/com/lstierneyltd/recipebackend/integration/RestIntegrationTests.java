@@ -649,4 +649,53 @@ public class RestIntegrationTests {
         assertThat(updatedIdea.getCreatedBy(), is(nullValue()));
         assertThat(updatedIdea.getCreatedDate(), is(nullValue()));
     }
+
+    @Test
+    @Order(400)
+    public void testMarkRecipeAsDeleted() {
+        ResponseEntity<Recipe[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+
+        // 7 recipes before "deletion"
+        Recipe[] recipes = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipes.length, equalTo(7));
+
+        // "Delete" one
+        HttpEntity<Void> httpEntity = new HttpEntity<>(null); // No body, No headers
+        int idToDelete = recipes[0].getId();
+        ResponseEntity<Recipe> deleteResponse =
+                testRestTemplate.exchange(API_RECIPE + "/markAsDeleted/" + idToDelete,
+                        HttpMethod.PUT,
+                        httpEntity,
+                        Recipe.class);
+        assertThat(deleteResponse.getBody().isDeleted(), is(true));
+
+        // Should only be 6 recipes now
+        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+        recipes = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipes.length, equalTo(6));
+    }
+
+    @Test
+    @Order(410)
+    public void testRestore() {
+        ResponseEntity<Recipe[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+
+        // 6 recipes before "restore"
+        Recipe[] recipes = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipes.length, equalTo(6));
+
+        // Restore
+        HttpEntity<Void> httpEntity = new HttpEntity<>(null); // No body, No headers
+        ResponseEntity<Recipe> restoreResponse =
+                testRestTemplate.exchange(API_RECIPE + "/restore/" + 1,
+                        HttpMethod.PUT,
+                        httpEntity,
+                        Recipe.class);
+        assertThat(restoreResponse.getBody().isDeleted(), is(false));
+
+        // Should be 7 recipes now
+        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+        recipes = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipes.length, equalTo(7));
+    }
 }

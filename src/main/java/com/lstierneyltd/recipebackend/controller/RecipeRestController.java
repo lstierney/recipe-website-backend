@@ -28,4 +28,10 @@ public interface RecipeRestController {
     RecipeRepository.RecipePreview getRandomDinner();
 
     Recipe markRecipeAsCooked(Integer id);
+
+    Recipe markRecipeAsDeleted(Integer id);
+
+    Recipe restore(Integer id);
+
+    List<Recipe> getAllRecipesIgnoreDeleted();
 }

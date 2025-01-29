@@ -165,4 +165,13 @@ public class RecipeTest {
         assertThat(recipe.getLastUpdatedBy(), is(LAST_UPDATED_BY));
         assertTrue(areWithinSeconds(recipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
     }
+
+    @Test
+    public void testGetSetDeleted() {
+        recipe.setDeleted(true);
+        assertThat(recipe.isDeleted(), is(true));
+
+        recipe.setDeleted(false);
+        assertThat(recipe.isDeleted(), is(false));
+    }
 }
