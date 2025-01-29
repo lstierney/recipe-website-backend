@@ -28,10 +28,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     Optional<Recipe> findByName(String name);
 
     // Need to use nativeQuery here because otherwise the @where on the entity will be honoured
-    @Query(value = "SELECT * FROM Recipe r WHERE r.id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM recipe r WHERE r.id = :id", nativeQuery = true)
     Optional<Recipe> findByIdIgnoreDeleted(Integer id);
 
-    @Query(value = "SELECT * FROM Recipe r", nativeQuery = true)
+    @Query(value = "SELECT * FROM recipe r", nativeQuery = true)
     List<Recipe> findAllIgnoreDeleted();
 
     /**
