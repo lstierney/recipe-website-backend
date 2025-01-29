@@ -138,4 +138,31 @@ public class RecipeRestControllerImplTest {
         // then
         then(recipeService).should().markAsCooked(ID);
     }
+
+    @Test
+    public void testMarkAsDeleted() {
+        // when
+        recipeRestController.markRecipeAsDeleted(ID);
+
+        // then
+        then(recipeService).should().markAsDeleted(ID);
+    }
+
+    @Test
+    public void testRestoreRecipe() {
+        // when
+        recipeRestController.restore(ID);
+
+        // then
+        then(recipeService).should().restore(ID);
+    }
+
+    @Test
+    public void testFindAllIgnoreDeleted() {
+        // when
+        recipeRestController.getAllRecipesIgnoreDeleted();
+
+        // then
+        then(recipeService).should().findAllIgnoreDeleted();
+    }
 }

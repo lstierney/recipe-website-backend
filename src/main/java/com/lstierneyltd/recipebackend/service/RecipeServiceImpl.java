@@ -148,5 +148,29 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(recipe);
         return recipe;
     }
+
+    @Override
+    public Recipe markAsDeleted(Integer id) {
+        Recipe recipe = findById(id);
+        recipe.setDeleted(true);
+        recipe.markAsUpdated(userService.getLoggedInUsername());
+        recipeRepository.save(recipe);
+        return recipe;
+    }
+
+    @Override
+    public Recipe restore(Integer id) {
+        Recipe recipe = recipeRepository.findByIdIgnoreDeleted(id)
+                .orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        recipe.setDeleted(false);
+        recipe.markAsUpdated(userService.getLoggedInUsername());
+        recipeRepository.save(recipe);
+        return recipe;
+    }
+
+    @Override
+    public List<Recipe> findAllIgnoreDeleted() {
+        return recipeRepository.findAllIgnoreDeleted();
+    }
 }
 

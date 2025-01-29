@@ -64,19 +64,19 @@ INSERT INTO recipe
 VALUES (1, 'Moroccan Vegetable Stew with Cous Cous', 'Mildly spicy, slowish cooked veg with cous cous.', 60,
         'https://www.food.com/recipe/moroccan-vegetable-stew-with-couscous-274742',
         NULL, 0, NULL,
-        'Cous_cous.jpg', NOW(), NOW(), 'lawrence', 'lawrence');
+        'Cous_cous.jpg', NOW(), NOW(), 'lawrence', 'lawrence', 0);
 INSERT INTO recipe
 VALUES (2, 'Spaghetti Bolognese', 'Everybody has their own version of this recipe; this is mine', 30, NULL,
-        NULL, 1, NULL, 'bolognese.jpg', NULL, NULL, NULL, NULL);
+        NULL, 1, NULL, 'bolognese.jpg', NULL, NULL, NULL, NULL, 0);
 INSERT INTO recipe
 VALUES (3, 'Sweet Chilli Noodles', 'A change from the usual stir fry, this recipe has a smoother sweeter flavour.', 45,
-        NULL, NULL, 2, NULL, 'sweet-chilli-noodles.jpg', NULL, NULL, NULL, NULL);
+        NULL, NULL, 2, NULL, 'sweet-chilli-noodles.jpg', NULL, NULL, NULL, NULL, 0);
 INSERT INTO recipe
 VALUES (4, 'Gnocchi Bake', 'A cheesy, tomatoey, slice of heaven. Not for everyday consumption!', 90, NULL,
-        NULL, 3, NULL, 'gnocchi.jpg', NULL, NULL, NULL, NULL);
+        NULL, 3, NULL, 'gnocchi.jpg', NULL, NULL, NULL, NULL, 0);
 INSERT INTO recipe
 VALUES (5, 'Bangers and Mash', 'A stone cold classic with the added twist of some spring onion in the mash', 45, NULL,
-        NULL, 4, NULL, 'Bangers and Mash.jpg', NULL, NULL, NULL, NULL);
+        NULL, 4, NULL, 'Bangers and Mash.jpg', NULL, NULL, NULL, NULL, 0);
 
 INSERT INTO ingredient
 VALUES (1, 'Coriander Seeds', 0.50, 1, 1, 1);

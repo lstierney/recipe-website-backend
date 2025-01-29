@@ -28,5 +28,11 @@ public interface RecipeService {
     RecipeRepository.RecipePreview findRandomDinner();
 
     Recipe markAsCooked(Integer id);
+
+    Recipe markAsDeleted(Integer id);
+
+    Recipe restore(Integer id);
+
+    List<Recipe> findAllIgnoreDeleted();
 }
 

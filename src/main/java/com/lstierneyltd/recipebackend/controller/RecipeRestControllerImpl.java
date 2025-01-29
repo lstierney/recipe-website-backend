@@ -84,4 +84,22 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     public Recipe updateRecipe(@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
         return recipeService.updateRecipe(imageFile, recipeString);
     }
+
+    @Override
+    @PutMapping("/markAsDeleted/{id}")
+    public Recipe markRecipeAsDeleted(@PathVariable Integer id) {
+        return recipeService.markAsDeleted(id);
+    }
+
+    @Override
+    @PutMapping("/restore/{id}")
+    public Recipe restore(@PathVariable Integer id) {
+        return recipeService.restore(id);
+    }
+
+    @Override
+    @GetMapping("/listIgnoreDeleted")
+    public List<Recipe> getAllRecipesIgnoreDeleted() {
+        return recipeService.findAllIgnoreDeleted();
+    }
 }

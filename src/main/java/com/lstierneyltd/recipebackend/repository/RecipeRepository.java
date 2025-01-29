@@ -27,6 +27,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     @Query("SELECT r FROM Recipe r WHERE lower(r.name) = ?1")
     Optional<Recipe> findByName(String name);
 
+    // Need to use nativeQuery here because otherwise the @where on the entity will be honoured
+    @Query(value = "SELECT * FROM Recipe r WHERE r.id = :id", nativeQuery = true)
+    Optional<Recipe> findByIdIgnoreDeleted(Integer id);
+
+    @Query(value = "SELECT * FROM Recipe r", nativeQuery = true)
+    List<Recipe> findAllIgnoreDeleted();
+
     /**
      * This is a "Projection"
      * <a href="https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#projections">...</a>
