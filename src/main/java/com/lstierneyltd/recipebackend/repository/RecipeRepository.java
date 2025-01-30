@@ -9,30 +9,29 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
-    List<RecipePreview> findAllRecipePreviewBy();
+
+    @Query("SELECT r FROM Recipe r WHERE r.deleted = false")
+    List<RecipePreview> findAllActiveRecipePreviews();
 
     @Query("SELECT r FROM Recipe r " +
-            "WHERE (SELECT COUNT(t) FROM r.tags t WHERE t.name IN :tagNames) = :tagCount " +
+            "WHERE ((SELECT COUNT(t) FROM r.tags t WHERE t.name IN :tagNames) = :tagCount) AND (r.deleted = false) " +
             "ORDER BY r.lastCooked ASC")
-    List<Recipe> findByAllTagNames(List<String> tagNames, Long tagCount);
+    List<Recipe> findByAllActiveRecipesByTagNames(List<String> tagNames, Long tagCount);
 
-    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' ORDER BY RAND() LIMIT 6")
-    List<RecipePreview> findRandomDinners();
+    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' AND r.deleted = false ORDER BY RAND() LIMIT 6")
+    List<RecipePreview> findSixRandomActiveDinners();
 
-    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' ORDER BY RAND() LIMIT 1")
-    RecipePreview findRandomDinner();
+    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' AND r.deleted = false ORDER BY RAND() LIMIT 1")
+    RecipePreview findRandomActiveDinner();
 
-    List<RecipePreview> findTop6RecipePreviewByOrderByIdDesc();
+    @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' AND r.deleted = false ORDER BY r.id desc LIMIT 6")
+    List<RecipePreview> findSixLatestActiveDinnerPreviews();
 
-    @Query("SELECT r FROM Recipe r WHERE lower(r.name) = ?1")
-    Optional<Recipe> findByName(String name);
+    @Query("SELECT r FROM Recipe r WHERE lower(r.name) = ?1 AND r.deleted = false")
+    Optional<Recipe> findActiveByName(String name);
 
-    // Need to use nativeQuery here because otherwise the @where on the entity will be honoured
-    @Query(value = "SELECT * FROM recipe r WHERE r.id = :id", nativeQuery = true)
-    Optional<Recipe> findByIdIgnoreDeleted(Integer id);
-
-    @Query(value = "SELECT * FROM recipe r", nativeQuery = true)
-    List<Recipe> findAllIgnoreDeleted();
+    @Query("SELECT r FROM Recipe r WHERE r.deleted = false")
+    List<Recipe> findActiveRecipes();
 
     /**
      * This is a "Projection"

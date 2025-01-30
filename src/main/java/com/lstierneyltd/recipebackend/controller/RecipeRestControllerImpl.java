@@ -63,14 +63,14 @@ public class RecipeRestControllerImpl implements RecipeRestController {
 
     @Override
     @GetMapping
-    public List<Recipe> getAllRecipes() {
-        return recipeService.findAll();
+    public List<Recipe> getAllActiveRecipes() {
+        return recipeService.findAllActive();
     }
 
     @Override
     @GetMapping("/list")
     public List<RecipeRepository.RecipePreview> getRecipesPreviewList() {
-        return recipeService.findAllRecipePreviewBy();
+        return recipeService.findAllRecipePreview();
     }
 
     @Override
@@ -100,6 +100,6 @@ public class RecipeRestControllerImpl implements RecipeRestController {
     @Override
     @GetMapping("/listIgnoreDeleted")
     public List<Recipe> getAllRecipesIgnoreDeleted() {
-        return recipeService.findAllIgnoreDeleted();
+        return recipeService.findAll();
     }
 }

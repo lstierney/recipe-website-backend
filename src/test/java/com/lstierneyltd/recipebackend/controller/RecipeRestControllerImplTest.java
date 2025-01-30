@@ -57,10 +57,10 @@ public class RecipeRestControllerImplTest {
     @Test
     public void testGetAll() {
         // When
-        recipeRestController.getAllRecipes();
+        recipeRestController.getAllActiveRecipes();
 
         // then
-        then(recipeService).should().findAll();
+        then(recipeService).should().findAllActive();
     }
 
     @Test
@@ -69,7 +69,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getRecipesPreviewList();
 
         // then
-        then(recipeService).should().findAllRecipePreviewBy();
+        then(recipeService).should().findAllRecipePreview();
     }
 
     @Test
@@ -163,6 +163,6 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getAllRecipesIgnoreDeleted();
 
         // then
-        then(recipeService).should().findAllIgnoreDeleted();
+        then(recipeService).should().findAll();
     }
 }

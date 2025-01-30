@@ -17,9 +17,11 @@ public interface RecipeService {
 
     List<Recipe> findByTagNames(List<String> tagNames);
 
+    List<Recipe> findAllActive();
+
     List<Recipe> findAll();
 
-    List<RecipeRepository.RecipePreview> findAllRecipePreviewBy();
+    List<RecipeRepository.RecipePreview> findAllRecipePreview();
 
     List<RecipeRepository.RecipePreview> findLatest();
 
@@ -32,7 +34,5 @@ public interface RecipeService {
     Recipe markAsDeleted(Integer id);
 
     Recipe restore(Integer id);
-
-    List<Recipe> findAllIgnoreDeleted();
 }
 
