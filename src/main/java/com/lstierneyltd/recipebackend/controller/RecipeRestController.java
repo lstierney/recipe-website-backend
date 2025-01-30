@@ -11,7 +11,7 @@ public interface RecipeRestController {
 
     Recipe getRecipeByName(String name);
 
-    List<Recipe> getAllRecipes();
+    List<Recipe> getAllActiveRecipes();
 
     Recipe addRecipe(MultipartFile imageFile, String recipe);
 

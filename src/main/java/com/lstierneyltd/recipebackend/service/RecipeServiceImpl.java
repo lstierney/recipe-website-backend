@@ -104,7 +104,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findByName(String name) {
         String formattedName = getFormattedRecipeName(name);
-        return recipeRepository.findByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName));
+        return recipeRepository.findActiveByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName));
     }
 
     private String getFormattedRecipeName(String name) {
@@ -113,7 +113,12 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> findByTagNames(List<String> tagNames) {
-        return recipeRepository.findByAllTagNames(tagNames, (long) tagNames.size());
+        return recipeRepository.findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size());
+    }
+
+    @Override
+    public List<Recipe> findAllActive() {
+        return recipeRepository.findActiveRecipes();
     }
 
     @Override
@@ -121,24 +126,25 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findAll();
     }
 
+
     @Override
-    public List<RecipeRepository.RecipePreview> findAllRecipePreviewBy() {
-        return recipeRepository.findAllRecipePreviewBy();
+    public List<RecipeRepository.RecipePreview> findAllRecipePreview() {
+        return recipeRepository.findAllActiveRecipePreviews();
     }
 
     @Override
     public List<RecipeRepository.RecipePreview> findLatest() {
-        return recipeRepository.findTop6RecipePreviewByOrderByIdDesc();
+        return recipeRepository.findSixLatestActiveDinnerPreviews();
     }
 
     @Override
     public List<RecipeRepository.RecipePreview> findRandomDinners() {
-        return recipeRepository.findRandomDinners();
+        return recipeRepository.findSixRandomActiveDinners();
     }
 
     @Override
     public RecipeRepository.RecipePreview findRandomDinner() {
-        return recipeRepository.findRandomDinner();
+        return recipeRepository.findRandomActiveDinner();
     }
 
     @Override
@@ -160,17 +166,12 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe restore(Integer id) {
-        Recipe recipe = recipeRepository.findByIdIgnoreDeleted(id)
+        Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.setDeleted(false);
         recipe.markAsUpdated(userService.getLoggedInUsername());
         recipeRepository.save(recipe);
         return recipe;
-    }
-
-    @Override
-    public List<Recipe> findAllIgnoreDeleted() {
-        return recipeRepository.findAllIgnoreDeleted();
     }
 }
 

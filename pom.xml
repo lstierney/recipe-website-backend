@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.3</version>
+        <version>3.1.4</version> <!-- Latest version as of now -->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lstierneyltd</groupId>
@@ -19,7 +19,7 @@
         <java.version>17</java.version>
         <jjwt.version>0.9.1</jjwt.version>
         <pitest.version>1.14.2</pitest.version>
-        <mysql-connector-j.version>8.0.32</mysql-connector-j.version>
+        <mysql-connector-j.version>9.2.0</mysql-connector-j.version>
         <spring-boot-test-autoconfigure.version>3.0.3</spring-boot-test-autoconfigure.version>
         <maven-surefire-plugin.version>3.0.0-M9</maven-surefire-plugin.version>
         <maven-site-plugin.version>3.12.1</maven-site-plugin.version>

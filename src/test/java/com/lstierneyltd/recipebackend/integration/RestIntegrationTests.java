@@ -122,10 +122,10 @@ public class RestIntegrationTests {
     }
 
     private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
-        assertThat(preview.getId(), is(6));
-        assertThat(preview.getName(), is("Spaghetti Bolognaise"));
-        assertThat(preview.getDescription(), is("The all time favourite"));
-        assertThat(preview.getImageFileName(), is("bolognese_test.jpg"));
+        assertThat(preview.getId(), is(2));
+        assertThat(preview.getName(), is("Spaghetti Bolognese"));
+        assertThat(preview.getDescription(), is("Everybody has their own version of this recipe; this is mine"));
+        assertThat(preview.getImageFileName(), is("bolognese.jpg"));
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, BigDecimal quantity, Unit unit) {
@@ -329,14 +329,14 @@ public class RestIntegrationTests {
 
     @Test
     @Order(29)
-    public void testGetLatestRecipe() {
+    public void testGetLatestRecipes() {
         ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/latest", RecipePreviewImpl[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
-        assertThat(previews.length, is(6));
+        assertThat(previews.length, is(2));
         verifyRecipePreview(previews[0]);
     }
 

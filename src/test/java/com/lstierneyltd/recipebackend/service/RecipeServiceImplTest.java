@@ -207,64 +207,64 @@ public class RecipeServiceImplTest {
     @Test
     public void findByName() {
         // Given
-        given(recipeRepository.findByName(NAME)).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName(NAME)).willReturn(Optional.of(getRecipe()));
 
         // when
         recipeService.findByName(NAME);
 
         // then
-        then(recipeRepository).should().findByName(NAME);
+        then(recipeRepository).should().findActiveByName(NAME);
     }
 
     @Test
     public void findByName_nameWithMixedCase() {
         // Given
         String name = "Mixed Case";
-        given(recipeRepository.findByName("mixed case")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("mixed case")).willReturn(Optional.of(getRecipe()));
 
         // when
         recipeService.findByName(name);
 
         // then
-        then(recipeRepository).should().findByName("mixed case");
+        then(recipeRepository).should().findActiveByName("mixed case");
     }
 
     @Test
     public void findByName_nameWithHyphens() {
         // Given
         String name = "name-with-hyphens";
-        given(recipeRepository.findByName("name with hyphens")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("name with hyphens")).willReturn(Optional.of(getRecipe()));
 
         // when
         recipeService.findByName(name);
 
         // then
-        then(recipeRepository).should().findByName("name with hyphens");
+        then(recipeRepository).should().findActiveByName("name with hyphens");
     }
 
     @Test
     public void findByName_nameWithMixedCaseANDHyphens() {
         // Given
         String name = "NAme-With-mixed-CASE-and-hyphens";
-        given(recipeRepository.findByName("name with mixed case and hyphens")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("name with mixed case and hyphens")).willReturn(Optional.of(getRecipe()));
 
         // when
         recipeService.findByName(name);
 
         // then
-        then(recipeRepository).should().findByName("name with mixed case and hyphens");
+        then(recipeRepository).should().findActiveByName("name with mixed case and hyphens");
     }
 
     @Test
     public void findByName_recipeNotFound() {
         // Given
-        given(recipeRepository.findByName(NAME)).willReturn(Optional.empty());
+        given(recipeRepository.findActiveByName(NAME)).willReturn(Optional.empty());
 
         // When
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findByName(NAME));
 
         // Then
-        then(recipeRepository).should().findByName(NAME);
+        then(recipeRepository).should().findActiveByName(NAME);
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_NAME + NAME));
     }
 
@@ -275,7 +275,16 @@ public class RecipeServiceImplTest {
         recipeService.findByTagNames(tagNames);
 
         // then
-        then(recipeRepository).should().findByAllTagNames(tagNames, (long) tagNames.size());
+        then(recipeRepository).should().findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size());
+    }
+
+    @Test
+    public void findAllActive() {
+        // when
+        recipeService.findAllActive();
+
+        // then
+        then(recipeRepository).should().findActiveRecipes();
     }
 
     @Test
@@ -290,23 +299,23 @@ public class RecipeServiceImplTest {
     @Test
     public void findAllRecipePreviewBy() {
         // when
-        recipeService.findAllRecipePreviewBy();
+        recipeService.findAllRecipePreview();
 
         // then
-        then(recipeRepository).should().findAllRecipePreviewBy();
+        then(recipeRepository).should().findAllActiveRecipePreviews();
     }
 
     @Test
     public void findLatest() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findTop6RecipePreviewByOrderByIdDesc()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findSixLatestActiveDinnerPreviews()).willReturn(List.of(recipePreview));
 
         // when
         List<RecipeRepository.RecipePreview> latest = recipeService.findLatest();
 
         // then
-        then(recipeRepository).should().findTop6RecipePreviewByOrderByIdDesc();
+        then(recipeRepository).should().findSixLatestActiveDinnerPreviews();
         assertThat(latest.get(0), equalTo(recipePreview));
     }
 
@@ -314,13 +323,13 @@ public class RecipeServiceImplTest {
     public void findRandomDinners() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findRandomDinners()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findSixRandomActiveDinners()).willReturn(List.of(recipePreview));
 
         // when
         List<RecipeRepository.RecipePreview> randomDinners = recipeService.findRandomDinners();
 
         // then
-        then(recipeRepository).should().findRandomDinners();
+        then(recipeRepository).should().findSixRandomActiveDinners();
         assertThat(randomDinners.get(0), equalTo(recipePreview));
     }
 
@@ -328,13 +337,13 @@ public class RecipeServiceImplTest {
     public void findRandomDinner() {
         // Given
         RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findRandomDinner()).willReturn(recipePreview);
+        given(recipeRepository.findRandomActiveDinner()).willReturn(recipePreview);
 
         // when
         RecipeRepository.RecipePreview randomDinner = recipeService.findRandomDinner();
 
         // then
-        then(recipeRepository).should().findRandomDinner();
+        then(recipeRepository).should().findRandomActiveDinner();
         assertThat(randomDinner, equalTo(recipePreview));
     }
 
@@ -404,14 +413,14 @@ public class RecipeServiceImplTest {
     public void restore() {
         // Given
         Recipe recipe = getRecipe();
-        given(recipeRepository.findByIdIgnoreDeleted(ID)).willReturn(Optional.of(recipe));
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
         given(userService.getLoggedInUsername()).willReturn(USER_NAME);
 
         // when
         Recipe restoredRecipe = recipeService.restore(ID);
 
         // then
-        then(recipeRepository).should().findByIdIgnoreDeleted(ID);
+        then(recipeRepository).should().findById(ID);
         then(recipeRepository).should().save(recipe);
         then(userService).should().getLoggedInUsername();
 
@@ -421,26 +430,14 @@ public class RecipeServiceImplTest {
     @Test
     public void restore_recipeNotFound() {
         // Given
-        given(recipeRepository.findByIdIgnoreDeleted(ID)).willReturn(Optional.empty());
+        given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.restore(ID));
 
         // Then
-        then(recipeRepository).should().findByIdIgnoreDeleted(ID);
+        then(recipeRepository).should().findById(ID);
         then(userService).shouldHaveNoInteractions();
         assertThat(exception.getMessage(), equalTo(COULD_NOT_FIND_RECIPE_WITH_ID + ID));
-    }
-
-    @Test
-    public void findAllIgnoreDeleted() {
-        // Given
-        given(recipeRepository.findAllIgnoreDeleted()).willReturn(List.of(getRecipe()));
-
-        // When
-        recipeService.findAllIgnoreDeleted();
-
-        // Then
-        then(recipeRepository).should().findAllIgnoreDeleted();
     }
 }

@@ -3,7 +3,6 @@ package com.lstierneyltd.recipebackend.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lstierneyltd.recipebackend.annotation.Generated;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.Set;
         catalog = "recipes",
         uniqueConstraints = @UniqueConstraint(columnNames = "name")
 )
-@Where(clause = "deleted != 1")
 public class Recipe extends Auditable implements java.io.Serializable {
     private int id;
     private String name;
