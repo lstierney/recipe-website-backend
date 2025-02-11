@@ -1,7 +1,7 @@
 package com.lstierneyltd.recipebackend.controller;
 
-import com.lstierneyltd.recipebackend.entities.Recipe;
-import com.lstierneyltd.recipebackend.repository.RecipeRepository;
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import com.lstierneyltd.recipebackend.service.RecipeService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,85 +21,85 @@ public class RecipeRestControllerImpl implements RecipeRestController {
 
     @Override
     @GetMapping("/id/{id}")
-    public Recipe getRecipeById(@PathVariable Integer id) {
+    public RecipeDto getRecipeById(@PathVariable Integer id) {
         return recipeService.findById(id);
     }
 
     @Override
     @GetMapping("/{name}")
-    public Recipe getRecipeByName(@PathVariable String name) {
+    public RecipeDto getRecipeByName(@PathVariable String name) {
         return recipeService.findByName(name);
     }
 
     @Override
     @GetMapping(params = "tagNames")
-    public List<Recipe> getRecipesByTags(@RequestParam("tagNames") List<String> tagNames) {
+    public List<RecipeDto> getRecipesByTags(@RequestParam("tagNames") List<String> tagNames) {
         return recipeService.findByTagNames(tagNames);
     }
 
     @Override
     @GetMapping("/latest")
-    public List<RecipeRepository.RecipePreview> getLatestRecipes() {
-        return recipeService.findLatest();
+    public List<RecipePreviewDto> getLatestRecipePreviews() {
+        return recipeService.findLatestPreviews();
     }
 
     @Override
     @GetMapping("/randomDinners")
-    public List<RecipeRepository.RecipePreview> getRandomDinners() {
-        return recipeService.findRandomDinners();
+    public List<RecipePreviewDto> getRandomDinnerPreviews() {
+        return recipeService.findRandomDinnersPreviews();
     }
 
     @Override
     @GetMapping("/randomDinner")
-    public RecipeRepository.RecipePreview getRandomDinner() {
-        return recipeService.findRandomDinner();
+    public RecipePreviewDto getRandomDinnerPreview() {
+        return recipeService.findRandomDinnerPreview();
     }
 
     @Override
     @PostMapping("/markascooked/{id}")
-    public Recipe markRecipeAsCooked(@PathVariable Integer id) {
+    public RecipeDto markRecipeAsCooked(@PathVariable Integer id) {
         return recipeService.markAsCooked(id);
     }
 
     @Override
     @GetMapping
-    public List<Recipe> getAllActiveRecipes() {
-        return recipeService.findAllActive();
+    public List<RecipeDto> getAllActiveRecipes() {
+        return recipeService.findAllActiveRecipes();
     }
 
     @Override
     @GetMapping("/list")
-    public List<RecipeRepository.RecipePreview> getRecipesPreviewList() {
-        return recipeService.findAllRecipePreview();
+    public List<RecipePreviewDto> getRecipesPreviewList() {
+        return recipeService.findAllActiveRecipePreview();
     }
 
     @Override
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Recipe addRecipe(@RequestParam(value = "imageFile") MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
+    public RecipeDto addRecipe(@RequestParam(value = "imageFile") MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
         return recipeService.addRecipe(imageFile, recipeString);
     }
 
     @Override
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Recipe updateRecipe(@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
+    public RecipeDto updateRecipe(@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, @RequestParam(value = "recipe") String recipeString) {
         return recipeService.updateRecipe(imageFile, recipeString);
     }
 
     @Override
     @PutMapping("/markAsDeleted/{id}")
-    public Recipe markRecipeAsDeleted(@PathVariable Integer id) {
+    public RecipeDto markRecipeAsDeleted(@PathVariable Integer id) {
         return recipeService.markAsDeleted(id);
     }
 
     @Override
     @PutMapping("/restore/{id}")
-    public Recipe restore(@PathVariable Integer id) {
+    public RecipeDto restore(@PathVariable Integer id) {
         return recipeService.restore(id);
     }
 
     @Override
     @GetMapping("/listIgnoreDeleted")
-    public List<Recipe> getAllRecipesIgnoreDeleted() {
+    public List<RecipeDto> getAllRecipesIgnoreDeleted() {
         return recipeService.findAll();
     }
 }

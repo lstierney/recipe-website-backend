@@ -39,6 +39,8 @@ public final class TestConstants {
     public static final String IDEA_NAME = "Idea Name";
     public static final String IDEA_URL = "https://www.bbcgoodfood.com/?IGNORE_GEO_REDIRECT_GLOBAL=true&v=1083955399";
 
+    public static final String BASE_IMAGE_FOLDER_PATH = "/opt/recipewebsite/images/";
+
 
 
     private TestConstants() {

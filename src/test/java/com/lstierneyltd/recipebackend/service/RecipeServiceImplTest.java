@@ -1,10 +1,13 @@
 package com.lstierneyltd.recipebackend.service;
 
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.entities.RecipePreviewImpl;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,8 +25,7 @@ import java.util.Optional;
 import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
 import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_NAME;
 import static com.lstierneyltd.recipebackend.utils.TestConstants.*;
-import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipe;
-import static com.lstierneyltd.recipebackend.utils.TestStubs.getRecipePreview;
+import static com.lstierneyltd.recipebackend.utils.TestStubs.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,6 +38,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class RecipeServiceImplTest {
     @Mock
     private FileService fileService;
+
+    @Mock
+    private DtoService dtoService;
 
     @Mock
     private ObjectMapperService objectMapperService;
@@ -54,15 +59,44 @@ public class RecipeServiceImplTest {
     @InjectMocks
     private RecipeServiceImpl recipeService;
 
+    private List<Recipe> recipes;
+
+    private Recipe recipe;
+
+    private RecipeDto recipeDto;
+
+    private List<RecipeDto> recipeDtos;
+
+    private RecipePreviewImpl recipePreview;
+
+    private List<RecipeRepository.RecipePreview> recipePreviews;
+
+    private RecipePreviewDto recipePreviewDto;
+
+    private List<RecipePreviewDto> recipePreviewDtos;
+
+    @BeforeEach
+    void before() {
+        recipe = getRecipe();
+        recipes = List.of(recipe);
+        recipeDto = getRecipeDto();
+        recipeDtos = List.of(recipeDto);
+
+        recipePreview = getRecipePreview();
+        recipePreviews = List.of(recipePreview);
+        recipePreviewDto = getRecipePreviewDto();
+        recipePreviewDtos = List.of(recipePreviewDto);
+
+    }
+
     @AfterEach
     void after() {
-        verifyNoMoreInteractions(fileService, objectMapperService, recipeRepository, userService);
+        verifyNoMoreInteractions(fileService, objectMapperService, recipeRepository, userService, dtoService);
     }
 
     @Test
     public void addRecipe() {
         String json = "JSON String";
-        Recipe recipe = getRecipe();
 
         // given
         given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(recipe);
@@ -75,28 +109,10 @@ public class RecipeServiceImplTest {
         // then
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
         then(recipeRepository).should().save(recipeArgumentCaptor.capture());
-        then(fileService).should().saveMultiPartFile(multipartFile);
+        then(fileService).should().createImageFolder(recipe);
+        then(fileService).should().addImageToRecipe(multipartFile, recipe);
         then(userService).should().getLoggedInUsername();
-    }
-
-    @Test
-    public void addRecipe_noImage() {
-        String json = "JSON String";
-        Recipe recipe = getRecipe();
-
-        // given
-        given(objectMapperService.jsonStringToObject(json, Recipe.class)).willReturn(recipe);
-        given(recipeRepository.save(recipe)).willReturn(recipe);
-        given(userService.getLoggedInUsername()).willReturn(USER_NAME);
-
-        // when
-        recipeService.addRecipe(null, json);
-
-        // then
-        then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
-        then(recipeRepository).should().save(recipe);
-        then(fileService).shouldHaveNoInteractions();
-        then(userService).should().getLoggedInUsername();
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
@@ -125,7 +141,9 @@ public class RecipeServiceImplTest {
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
         then(recipeRepository).should().save(recipeArgumentCaptor.capture());
         then(recipeRepository).should().findById(ID);
-        then(fileService).should().saveMultiPartFile(multipartFile);
+        then(fileService).should().createImageFolder(existingRecipe);
+        then(fileService).should().addImageToRecipe(multipartFile, existingRecipe);
+        then(dtoService).should().recipeToRecipeDto(existingRecipe);
 
         // test properties on the updated recipe
         Recipe updatedRecipe = recipeArgumentCaptor.getValue();
@@ -158,6 +176,7 @@ public class RecipeServiceImplTest {
         then(recipeRepository).should().findById(ID);
         then(recipeRepository).should().save(existingRecipe);
         then(userService).should().getLoggedInUsername();
+        then(dtoService).should().recipeToRecipeDto(existingRecipe);
     }
 
     @Test
@@ -170,25 +189,26 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // when
-        Recipe updatedRecipe = recipeService.updateRecipe(multipartFile, json);
+        RecipeDto updatedRecipeDto = recipeService.updateRecipe(multipartFile, json);
 
         // then
         then(objectMapperService).should().jsonStringToObject(json, Recipe.class);
         then(recipeRepository).should().findById(ID);
 
-        assertThat(updatedRecipe, is(nullValue()));
+        assertThat(updatedRecipeDto, is(nullValue()));
     }
 
     @Test
     public void findById() {
         // Given
-        given(recipeRepository.findById(ID)).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
 
         // when
         recipeService.findById(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
@@ -207,52 +227,56 @@ public class RecipeServiceImplTest {
     @Test
     public void findByName() {
         // Given
-        given(recipeRepository.findActiveByName(NAME)).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName(NAME)).willReturn(Optional.of(recipe));
 
         // when
         recipeService.findByName(NAME);
 
         // then
         then(recipeRepository).should().findActiveByName(NAME);
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
     public void findByName_nameWithMixedCase() {
         // Given
         String name = "Mixed Case";
-        given(recipeRepository.findActiveByName("mixed case")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("mixed case")).willReturn(Optional.of(recipe));
 
         // when
         recipeService.findByName(name);
 
         // then
         then(recipeRepository).should().findActiveByName("mixed case");
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
     public void findByName_nameWithHyphens() {
         // Given
         String name = "name-with-hyphens";
-        given(recipeRepository.findActiveByName("name with hyphens")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("name with hyphens")).willReturn(Optional.of(recipe));
 
         // when
         recipeService.findByName(name);
 
         // then
         then(recipeRepository).should().findActiveByName("name with hyphens");
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
     public void findByName_nameWithMixedCaseANDHyphens() {
         // Given
         String name = "NAme-With-mixed-CASE-and-hyphens";
-        given(recipeRepository.findActiveByName("name with mixed case and hyphens")).willReturn(Optional.of(getRecipe()));
+        given(recipeRepository.findActiveByName("name with mixed case and hyphens")).willReturn(Optional.of(recipe));
 
         // when
         recipeService.findByName(name);
 
         // then
         then(recipeRepository).should().findActiveByName("name with mixed case and hyphens");
+        then(dtoService).should().recipeToRecipeDto(recipe);
     }
 
     @Test
@@ -270,18 +294,26 @@ public class RecipeServiceImplTest {
 
     @Test
     public void findByTagName() {
-        // when
+        // Given
         List<String> tagNames = List.of(TAG_NAME);
+        given(recipeRepository.findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size())).willReturn(recipes);
+        given(dtoService.recipesToRecipeDtos(recipes)).willReturn(recipeDtos);
+
+        // when
         recipeService.findByTagNames(tagNames);
 
         // then
         then(recipeRepository).should().findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size());
+        then(dtoService).should().recipesToRecipeDtos(recipes);
     }
 
     @Test
-    public void findAllActive() {
+    public void findAllActiveRecipes() {
+        given(recipeRepository.findActiveRecipes()).willReturn(recipes);
+        given(dtoService.recipesToRecipeDtos(recipes)).willReturn(recipeDtos);
+
         // when
-        recipeService.findAllActive();
+        recipeService.findAllActiveRecipes();
 
         // then
         then(recipeRepository).should().findActiveRecipes();
@@ -289,79 +321,94 @@ public class RecipeServiceImplTest {
 
     @Test
     public void findAll() {
+        // Given
+        given(recipeRepository.findAll()).willReturn(recipes);
+
         // when
         recipeService.findAll();
 
         // then
         then(recipeRepository).should().findAll();
+        then(dtoService).should().recipesToRecipeDtos(recipes);
     }
 
     @Test
-    public void findAllRecipePreviewBy() {
+    public void findAllRecipePreview() {
+        // Given
+        given(recipeRepository.findAllActiveRecipePreviews()).willReturn(recipePreviews);
+        given(dtoService.recipePreviewsToRecipePreviewDtos(recipePreviews)).willReturn(recipePreviewDtos);
+
         // when
-        recipeService.findAllRecipePreview();
+        recipeService.findAllActiveRecipePreview();
 
         // then
         then(recipeRepository).should().findAllActiveRecipePreviews();
+        then(dtoService).should().recipePreviewsToRecipePreviewDtos(recipePreviews);
     }
 
     @Test
-    public void findLatest() {
+    public void findLatestPreviews() {
         // Given
-        RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findSixLatestActiveDinnerPreviews()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findSixLatestActiveDinnerPreviews()).willReturn(recipePreviews);
+        given(dtoService.recipePreviewsToRecipePreviewDtos(recipePreviews)).willReturn(List.of(recipePreviewDto));
 
         // when
-        List<RecipeRepository.RecipePreview> latest = recipeService.findLatest();
+        List<RecipePreviewDto> latest = recipeService.findLatestPreviews();
 
         // then
         then(recipeRepository).should().findSixLatestActiveDinnerPreviews();
-        assertThat(latest.get(0), equalTo(recipePreview));
+        then(dtoService).should().recipePreviewsToRecipePreviewDtos(recipePreviews);
+        assertThat(latest.get(0), equalTo(recipePreviewDto));
     }
 
     @Test
     public void findRandomDinners() {
         // Given
-        RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findSixRandomActiveDinners()).willReturn(List.of(recipePreview));
+        given(recipeRepository.findSixRandomActiveDinners()).willReturn(recipePreviews);
+        given(dtoService.recipePreviewsToRecipePreviewDtos(recipePreviews)).willReturn(recipePreviewDtos);
 
         // when
-        List<RecipeRepository.RecipePreview> randomDinners = recipeService.findRandomDinners();
+        List<RecipePreviewDto> randomDinners = recipeService.findRandomDinnersPreviews();
 
         // then
         then(recipeRepository).should().findSixRandomActiveDinners();
-        assertThat(randomDinners.get(0), equalTo(recipePreview));
+        then(dtoService).should().recipePreviewsToRecipePreviewDtos(recipePreviews);
+        assertThat(randomDinners.get(0), equalTo(recipePreviewDto));
     }
 
     @Test
     public void findRandomDinner() {
         // Given
-        RecipePreviewImpl recipePreview = getRecipePreview();
-        given(recipeRepository.findRandomActiveDinner()).willReturn(recipePreview);
+        given(recipeRepository.findRandomActiveDinnerPreview()).willReturn(recipePreview);
+        given(dtoService.recipePreviewToRecipePreviewDto(recipePreview)).willReturn(recipePreviewDto);
 
         // when
-        RecipeRepository.RecipePreview randomDinner = recipeService.findRandomDinner();
+        RecipePreviewDto randomDinner = recipeService.findRandomDinnerPreview();
 
         // then
-        then(recipeRepository).should().findRandomActiveDinner();
-        assertThat(randomDinner, equalTo(recipePreview));
-    }
+        then(recipeRepository).should().findRandomActiveDinnerPreview();
+        then(dtoService).should().recipePreviewToRecipePreviewDto(recipePreview);
 
+        assertThat(randomDinner, equalTo(recipePreviewDto));
+    }
 
     @Test
     public void markAsCooked() {
         // Given
-        Recipe recipe = getRecipe();
         given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
+        given(dtoService.recipeToRecipeDto(recipe)).willReturn(recipeDto);
 
         // when
-        Recipe cookedRecipe = recipeService.markAsCooked(ID);
+        RecipeDto cookedRecipeDto = recipeService.markAsCooked(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
-        then(recipeRepository).should().save(recipe);
+        then(recipeRepository).should().save(recipeArgumentCaptor.capture());
+        then(dtoService).should().recipeToRecipeDto(recipe);
 
-        assertThat(cookedRecipe.getCooked(), is(COOKED + 1));
+        Recipe capturedRecipe = recipeArgumentCaptor.getValue();
+
+        assertThat(capturedRecipe.getCooked(), is(COOKED + 1));
     }
 
     @Test
@@ -380,19 +427,22 @@ public class RecipeServiceImplTest {
     @Test
     public void markAsDeleted() {
         // Given
-        Recipe recipe = getRecipe();
         given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
         given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+        given(dtoService.recipeToRecipeDto(recipe)).willReturn(recipeDto);
+        given(recipeRepository.save(recipe)).willReturn(recipe);
 
         // when
-        Recipe deletedRecipe = recipeService.markAsDeleted(ID);
+        recipeService.markAsDeleted(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
-        then(recipeRepository).should().save(recipe);
+        then(recipeRepository).should().save(recipeArgumentCaptor.capture());
         then(userService).should().getLoggedInUsername();
+        then(dtoService).should().recipeToRecipeDto(recipe);
 
-        assertThat(deletedRecipe.isDeleted(), is(true));
+        Recipe capturedRecipe = recipeArgumentCaptor.getValue();
+        assertThat(capturedRecipe.isDeleted(), is(true));
     }
 
     @Test
@@ -412,19 +462,20 @@ public class RecipeServiceImplTest {
     @Test
     public void restore() {
         // Given
-        Recipe recipe = getRecipe();
         given(recipeRepository.findById(ID)).willReturn(Optional.of(recipe));
         given(userService.getLoggedInUsername()).willReturn(USER_NAME);
+        given(dtoService.recipeToRecipeDto(recipe)).willReturn(recipeDto);
 
         // when
-        Recipe restoredRecipe = recipeService.restore(ID);
+        RecipeDto restoredRecipeDto = recipeService.restore(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
         then(recipeRepository).should().save(recipe);
         then(userService).should().getLoggedInUsername();
+        then(dtoService).should().recipeToRecipeDto(recipe);
 
-        assertThat(restoredRecipe.isDeleted(), is(false));
+        assertThat(restoredRecipeDto.isDeleted(), is(false));
     }
 
     @Test

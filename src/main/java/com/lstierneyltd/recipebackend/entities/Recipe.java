@@ -20,7 +20,6 @@ public class Recipe extends Auditable implements java.io.Serializable {
     private int id;
     private String name;
     private String description;
-    private String imageFileName;
     private int cooked;
     private LocalDateTime lastCooked;
     private int cookingTime;
@@ -146,15 +145,6 @@ public class Recipe extends Auditable implements java.io.Serializable {
         this.tags = tags;
     }
 
-    @Column(name = "image_filename", length = 100)
-    public String getImageFileName() {
-        return this.imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
     @Column(name = "based_on", length = 250)
     public String getBasedOn() {
         return this.basedOn;
@@ -181,6 +171,15 @@ public class Recipe extends Auditable implements java.io.Serializable {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Transient
+    public String getImageFolderName() {
+        if (id > 0) {
+            return id + " " + "- " + name;
+        } else {
+            return "No ID available yet";
+        }
     }
 
     @Generated

@@ -1,6 +1,8 @@
 package com.lstierneyltd.recipebackend.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import com.lstierneyltd.recipebackend.entities.*;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import com.lstierneyltd.recipebackend.utils.FileUtils;
@@ -93,19 +95,25 @@ public class RestIntegrationTests {
         assertThat(unit.getAbbreviation(), equalTo("lb"));
     }
 
+    private static void verifyRecipePreviewDto(RecipePreviewDto recipePreviewDto) {
+        assertThat(recipePreviewDto.getId(), is(2));
+        assertThat(recipePreviewDto.getName(), is("Spaghetti Bolognese"));
+        assertThat(recipePreviewDto.getDescription(), is("Everybody has their own version of this recipe; this is mine"));
+    }
+
     @Test
     @Order(3)
     public void testPostRecipe() throws Exception {
-        ResponseEntity<Recipe> response = postRecipe("json/sample_post.json");
+        ResponseEntity<RecipeDto> response = postRecipe("json/sample_post.json");
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         // Good recipe?
-        verifyRecipe(requireNonNull(response.getBody()));
+        verifyRecipeDto(requireNonNull(response.getBody()));
     }
 
-    private ResponseEntity<Recipe> postRecipe(String pathToRecipeJson) throws IOException {
+    private ResponseEntity<RecipeDto> postRecipe(String pathToRecipeJson) throws IOException {
         String json = FileUtils.getFileAsString(pathToRecipeJson);
         ClassPathResource classPathResource = new ClassPathResource("/images/bolognese_test.jpg");
 
@@ -118,14 +126,7 @@ public class RestIntegrationTests {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        return testRestTemplate.postForEntity(API_RECIPE, requestEntity, Recipe.class);
-    }
-
-    private static void verifyRecipePreview(RecipeRepository.RecipePreview preview) {
-        assertThat(preview.getId(), is(2));
-        assertThat(preview.getName(), is("Spaghetti Bolognese"));
-        assertThat(preview.getDescription(), is("Everybody has their own version of this recipe; this is mine"));
-        assertThat(preview.getImageFileName(), is("bolognese.jpg"));
+        return testRestTemplate.postForEntity(API_RECIPE, requestEntity, RecipeDto.class);
     }
 
     private void verifyIngredient(Ingredient ingredient1, String description, BigDecimal quantity, Unit unit) {
@@ -151,63 +152,63 @@ public class RestIntegrationTests {
         assertThat(note.getDescription(), equalTo(description));
     }
 
-    private void verifyRecipe(final Recipe recipe) {
-        logger.info("Verifying Recipe: " + recipe);
+    private void verifyRecipeDto(final RecipeDto recipeDto) {
+        logger.info("Verifying RecipeDto: " + recipeDto);
         // The recipe
-        assertThat(recipe.getId(), is(6));
-        assertThat(recipe.getName(), equalTo("Spaghetti Bolognaise"));
-        assertThat(recipe.getDescription(), equalTo("The all time favourite"));
-        assertThat(recipe.getCookingTime(), equalTo(30));
-        assertThat(recipe.getBasedOn(), equalTo("This recipe was based on this one"));
+        assertThat(recipeDto.getId(), is(6));
+        assertThat(recipeDto.getName(), equalTo("Spaghetti Bolognaise"));
+        assertThat(recipeDto.getDescription(), equalTo("The all time favourite"));
+        assertThat(recipeDto.getCookingTime(), equalTo(30));
+        assertThat(recipeDto.getBasedOn(), equalTo("This recipe was based on this one"));
 
 
         // Ingredients
-        assertThat(recipe.getIngredients().size(), equalTo(3));
-        verifyIngredient(recipe.getIngredients().get(0), "Chopped Tomatoes", BigDecimal.valueOf(1.00), new Unit(8, "400g can", "can"));
-        verifyIngredient(recipe.getIngredients().get(1), "Onion (small)", BigDecimal.valueOf(0.50), null);
-        verifyIngredient(recipe.getIngredients().get(2), "Cloves of Garlic", BigDecimal.valueOf(2.00), null);
+        assertThat(recipeDto.getIngredients().size(), equalTo(3));
+        verifyIngredient(recipeDto.getIngredients().get(0), "Chopped Tomatoes", BigDecimal.valueOf(1.00), new Unit(8, "400g can", "can"));
+        verifyIngredient(recipeDto.getIngredients().get(1), "Onion (small)", BigDecimal.valueOf(0.50), null);
+        verifyIngredient(recipeDto.getIngredients().get(2), "Cloves of Garlic", BigDecimal.valueOf(2.00), null);
 
         // Method steps
-        assertThat(recipe.getMethodSteps().size(), equalTo(2));
-        verifyMethodStep(recipe.getMethodSteps().get(0), 1, "Finely chop the onion and garlic");
-        verifyMethodStep(recipe.getMethodSteps().get(1), 2, "Add to small pot with a little olive oil");
+        assertThat(recipeDto.getMethodSteps().size(), equalTo(2));
+        verifyMethodStep(recipeDto.getMethodSteps().get(0), 1, "Finely chop the onion and garlic");
+        verifyMethodStep(recipeDto.getMethodSteps().get(1), 2, "Add to small pot with a little olive oil");
 
         // Tags
-        assertThat(recipe.getTags().size(), equalTo(2));
-        verifyTag("old-school", "Just like wot you remember", recipe.getTags().toArray(new Tag[0]));
-        verifyTag("one-pot", "Gotta keep that washing down", recipe.getTags().toArray(new Tag[0]));
+        assertThat(recipeDto.getTags().size(), equalTo(2));
+        verifyTag("old-school", "Just like wot you remember", recipeDto.getTags().toArray(new Tag[0]));
+        verifyTag("one-pot", "Gotta keep that washing down", recipeDto.getTags().toArray(new Tag[0]));
 
         // Notes
-        assertThat(recipe.getNotes().size(), equalTo(2));
-        verifyNote(recipe.getNotes().get(0), 1, "This is the first note");
-        verifyNote(recipe.getNotes().get(1), 2, "This is the second note");
+        assertThat(recipeDto.getNotes().size(), equalTo(2));
+        verifyNote(recipeDto.getNotes().get(0), 1, "This is the first note");
+        verifyNote(recipeDto.getNotes().get(1), 2, "This is the second note");
 
         // ServedOn
-        assertThat(recipe.getServedOn().isHeated(), is(true));
-        assertThat(recipe.getServedOn().getCrockery().getDescription(), is("White Plates"));
+        assertThat(recipeDto.getServedOn().isHeated(), is(true));
+        assertThat(recipeDto.getServedOn().getCrockery().getDescription(), is("White Plates"));
 
         // Cooked
-        assertThat(recipe.getCooked(), is(2));
+        assertThat(recipeDto.getCooked(), is(2));
 
         // CreatedDate
-        assertTrue(areWithinSeconds(recipe.getCreatedDate(), LocalDateTime.now(), 10));
-        assertThat(recipe.getCreatedBy(), is("anonymousUser")); // because we are not logged in
+        assertTrue(areWithinSeconds(recipeDto.getCreatedDate(), LocalDateTime.now(), 10));
+        assertThat(recipeDto.getCreatedBy(), is("anonymousUser")); // because we are not logged in
     }
 
     @Test
     @Order(4)
     public void testGetAllRecipes() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+        ResponseEntity<RecipeDto[]> response = testRestTemplate.getForEntity(API_RECIPE, RecipeDto[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         // Recipe
-        final Recipe[] recipes = requireNonNull(response.getBody());
-        assertThat(recipes.length, equalTo(6));
+        final RecipeDto[] recipeDtos = requireNonNull(response.getBody());
+        assertThat(recipeDtos.length, equalTo(6));
 
         // Just one just now
-        verifyRecipe(recipes[5]);
+        verifyRecipeDto(recipeDtos[5]);
     }
 
     @Test
@@ -225,12 +226,12 @@ public class RestIntegrationTests {
     @Test
     @Order(5)
     public void testGetRecipeById() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity(API_RECIPE + "/id/6", Recipe.class);
+        ResponseEntity<RecipeDto> response = testRestTemplate.getForEntity(API_RECIPE + "/id/6", RecipeDto.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        verifyRecipe(requireNonNull(response.getBody()));
+        verifyRecipeDto(requireNonNull(response.getBody()));
     }
 
     @Test
@@ -290,29 +291,29 @@ public class RestIntegrationTests {
     @Test
     @Order(25)
     public void testGetRecipesByTagName() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=one-pot", Recipe[].class);
+        ResponseEntity<RecipeDto[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=one-pot", RecipeDto[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         // Recipes
-        final Recipe[] recipes = requireNonNull(response.getBody());
-        assertThat(recipes.length, equalTo(2));
+        final RecipeDto[] recipeDtos = requireNonNull(response.getBody());
+        assertThat(recipeDtos.length, equalTo(2));
 
-        verifyRecipe(recipes[1]);
+        verifyRecipeDto(recipeDtos[1]);
     }
 
     @Test
     @Order(26)
     public void testGetRecipesByTagNames_1tags() {
-        ResponseEntity<Recipe[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=new-name", Recipe[].class);
+        ResponseEntity<RecipeDto[]> response = testRestTemplate.getForEntity(API_RECIPE + "?tagNames=new-name", RecipeDto[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
         // Recipes
-        final Recipe[] recipes = requireNonNull(response.getBody());
-        assertThat(recipes.length, equalTo(3));
+        final RecipeDto[] recipeDtos = requireNonNull(response.getBody());
+        assertThat(recipeDtos.length, equalTo(3));
     }
     @Test
     @Order(27)
@@ -330,26 +331,26 @@ public class RestIntegrationTests {
     @Test
     @Order(29)
     public void testGetLatestRecipes() {
-        ResponseEntity<RecipePreviewImpl[]> response = testRestTemplate.getForEntity(API_RECIPE + "/latest", RecipePreviewImpl[].class);
+        ResponseEntity<RecipePreviewDto[]> response = testRestTemplate.getForEntity(API_RECIPE + "/latest", RecipePreviewDto[].class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        RecipeRepository.RecipePreview[] previews = requireNonNull(response.getBody());
-        assertThat(previews.length, is(2));
-        verifyRecipePreview(previews[0]);
+        RecipePreviewDto[] recipePreviewDtos = requireNonNull(response.getBody());
+        assertThat(recipePreviewDtos.length, is(2));
+        verifyRecipePreviewDto(recipePreviewDtos[0]);
     }
 
     @Test
     @Order(30)
     public void testGetRecipeByName() {
-        ResponseEntity<Recipe> response = testRestTemplate.getForEntity(API_RECIPE + "/spaghetti-bolognaise", Recipe.class);
+        ResponseEntity<RecipeDto> response = testRestTemplate.getForEntity(API_RECIPE + "/spaghetti-bolognaise", RecipeDto.class);
 
         // Good status?
         verifyStatusOk(response.getStatusCode());
 
-        Recipe recipe = requireNonNull(response.getBody());
-        verifyRecipe(recipe);
+        RecipeDto recipeDto = requireNonNull(response.getBody());
+        verifyRecipeDto(recipeDto);
     }
 
     @Test
@@ -378,14 +379,14 @@ public class RestIntegrationTests {
     @Test
     @Order(50)
     void testMarkRecipeAsCooked() {
-        final ResponseEntity<Recipe> response = testRestTemplate.postForEntity(API_RECIPE + "/markascooked/6", null, Recipe.class);
+        final ResponseEntity<RecipeDto> response = testRestTemplate.postForEntity(API_RECIPE + "/markascooked/6", null, RecipeDto.class);
         LocalDateTime now = LocalDateTime.now();
 
         verifyStatusOk(response.getStatusCode());
-        final Recipe recipe = requireNonNull(response.getBody());
+        final RecipeDto recipeDto = requireNonNull(response.getBody());
 
-        long secondsBetween = ChronoUnit.SECONDS.between(now, recipe.getLastCooked());
-        assertThat(recipe.getCooked(), is(3));
+        long secondsBetween = ChronoUnit.SECONDS.between(now, recipeDto.getLastCooked());
+        assertThat(recipeDto.getCooked(), is(3));
         assertThat(secondsBetween, lessThanOrEqualTo(5L));
     }
 
@@ -405,17 +406,15 @@ public class RestIntegrationTests {
     @Test
     @Order(200)
     public void testUpdateRecipe() throws Exception {
-        ResponseEntity<Recipe> response = postRecipe("json/chana_masala.json");
+        ResponseEntity<RecipeDto> response = postRecipe("json/chana_masala.json");
         verifyStatusOk(response.getStatusCode());
 
         // So at this point we have inserted the nice, new, shiny recipe.
         // Lets update the recipe, PUT it and test the response
-        Recipe recipe = requireNonNull(response.getBody());
-        recipe.setName("This is modified recipe name");
-        recipe.setDescription("This is the modified description");
-        recipe.setCookingTime(123);
-        recipe.setImageFileName("new_image.jpg");
-        recipe.setBasedOn("http://www.random.com");
+        RecipeDto recipeDto = requireNonNull(response.getBody());
+        recipeDto.setDescription("This is the modified description");
+        recipeDto.setCookingTime(123);
+        recipeDto.setBasedOn("http://www.random.com");
 
         ServedOn servedOn = new ServedOn();
         Crockery crockery = new Crockery();
@@ -423,12 +422,12 @@ public class RestIntegrationTests {
         crockery.setDescription("White Plates");
         servedOn.setHeated(false);
         servedOn.setCrockery(crockery);
-        recipe.setServedOn(servedOn);
+        recipeDto.setServedOn(servedOn);
 
         // Do the collections
 
         // Notes
-        List<Note> notes = recipe.getNotes();
+        List<Note> notes = recipeDto.getNotes();
         // Delete an existing Note
         notes.remove(1);
         // Modify an existing Note
@@ -439,10 +438,10 @@ public class RestIntegrationTests {
         newNote.setDescription("New Note desc");
         newNote.setOrdering(420);
         notes.add(newNote);
-        recipe.setNotes(notes);
+        recipeDto.setNotes(notes);
 
         // MethodSteps - starts with 8 MethodSteps
-        List<MethodStep> methodSteps = recipe.getMethodSteps();
+        List<MethodStep> methodSteps = recipeDto.getMethodSteps();
         methodSteps.remove(0);
         methodSteps.remove(0);
         methodSteps.get(0).setDescription("Method Step modified desc");
@@ -451,10 +450,10 @@ public class RestIntegrationTests {
         methodStep.setDescription("Desc for new MethodStep");
         methodStep.setOrdering(321);
         methodSteps.add(methodStep);
-        recipe.setMethodSteps(methodSteps);
+        recipeDto.setMethodSteps(methodSteps);
 
         // Ingredients - starts with 18 Ingredients
-        List<Ingredient> ingredients = recipe.getIngredients();
+        List<Ingredient> ingredients = recipeDto.getIngredients();
         ingredients.remove(0); // delete the first
         ingredients.remove(ingredients.size() - 1); // delete the last
         ingredients.remove(7); // delete one from in the middle
@@ -473,58 +472,56 @@ public class RestIntegrationTests {
         ingredient.setUnit(unit);
 
         ingredients.add(ingredient);
-        recipe.setIngredients(ingredients);
+        recipeDto.setIngredients(ingredients);
 
 
         // Tags
-        Set<Tag> tags = recipe.getTags();
+        Set<Tag> tags = recipeDto.getTags();
         Tag tag = new Tag();
         tag.setId(4);
         tag.setName("old-school");
         tag.setDescription("Just like wot you remember");
         tags.add(tag);
-        recipe.setTags(tags);
+        recipeDto.setTags(tags);
 
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         final MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("recipe", objectMapper.writeValueAsString(recipe));
+        body.add("recipe", objectMapper.writeValueAsString(recipeDto));
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        response = testRestTemplate.exchange(API_RECIPE, HttpMethod.PUT, requestEntity, Recipe.class);
-        recipe = requireNonNull(response.getBody());
+        response = testRestTemplate.exchange(API_RECIPE, HttpMethod.PUT, requestEntity, RecipeDto.class);
+        recipeDto = requireNonNull(response.getBody());
 
         // Scalar properties
-        assertThat(recipe.getName(), is("This is modified recipe name"));
-        assertThat(recipe.getDescription(), is("This is the modified description"));
-        assertThat(recipe.getCookingTime(), is(123));
-        assertThat(recipe.getImageFileName(), is("new_image.jpg"));
-        assertThat(recipe.getBasedOn(), is("http://www.random.com"));
-        assertThat(recipe.getLastUpdatedBy(), is("anonymousUser"));
-        assertThat(recipe.getCreatedBy(), is("anonymousUser"));
-        assertTrue(areWithinSeconds(recipe.getCreatedDate(), LocalDateTime.now(), 10));
-        assertTrue(areWithinSeconds(recipe.getLastUpdatedDate(), LocalDateTime.now(), 10));
+        assertThat(recipeDto.getDescription(), is("This is the modified description"));
+        assertThat(recipeDto.getCookingTime(), is(123));
+        assertThat(recipeDto.getBasedOn(), is("http://www.random.com"));
+        assertThat(recipeDto.getLastUpdatedBy(), is("anonymousUser"));
+        assertThat(recipeDto.getCreatedBy(), is("anonymousUser"));
+        assertTrue(areWithinSeconds(recipeDto.getCreatedDate(), LocalDateTime.now(), 10));
+        assertTrue(areWithinSeconds(recipeDto.getLastUpdatedDate(), LocalDateTime.now(), 10));
 
         // Notes
-        assertThat(recipe.getNotes().size(), is(2));
-        Note noteToCheck = recipe.getNotes().get(0);
+        assertThat(recipeDto.getNotes().size(), is(2));
+        Note noteToCheck = recipeDto.getNotes().get(0);
         assertThat(noteToCheck.getDescription(), is("Note 1 modified desc"));
         assertThat(noteToCheck.getOrdering(), is(69));
 
-        noteToCheck = recipe.getNotes().get(1);
+        noteToCheck = recipeDto.getNotes().get(1);
         assertThat(noteToCheck.getDescription(), is("New Note desc"));
         assertThat(noteToCheck.getOrdering(), is(420));
 
         // ServedOn
-        servedOn = recipe.getServedOn();
+        servedOn = recipeDto.getServedOn();
         assertThat(servedOn.isHeated(), is(false));
         assertThat(servedOn.getCrockery().getDescription(), is("White Plates"));
         assertThat(servedOn.getCrockery().getId(), is(1));
 
         // Tags
-        tags = recipe.getTags();
+        tags = recipeDto.getTags();
         assertThat(tags.size(), is(2));
         tag.setDescription("old-school");
         assertTrue(tags.contains(tag));
@@ -532,7 +529,7 @@ public class RestIntegrationTests {
         assertTrue(tags.contains(tag));
 
         // MethodSteps
-        methodSteps = recipe.getMethodSteps();
+        methodSteps = recipeDto.getMethodSteps();
         assertThat(methodSteps.size(), is(7));
         methodStep = methodSteps.get(0);
         assertThat(methodStep.getDescription(), is("Method Step modified desc"));
@@ -542,7 +539,7 @@ public class RestIntegrationTests {
         assertThat(methodStep.getOrdering(), is(321));
 
         // Ingredients
-        ingredients = recipe.getIngredients();
+        ingredients = recipeDto.getIngredients();
         assertThat(ingredients.size(), is(16));
 
         // Test the modified Ingredient
@@ -653,49 +650,49 @@ public class RestIntegrationTests {
     @Test
     @Order(400)
     public void testMarkRecipeAsDeleted() {
-        ResponseEntity<Recipe[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+        ResponseEntity<RecipeDto[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, RecipeDto[].class);
 
         // 7 recipes before "deletion"
-        Recipe[] recipes = requireNonNull(allRecipesResponse.getBody());
-        assertThat(recipes.length, equalTo(7));
+        RecipeDto[] recipeDtos = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipeDtos.length, equalTo(7));
 
         // "Delete" one
         HttpEntity<Void> httpEntity = new HttpEntity<>(null); // No body, No headers
-        int idToDelete = recipes[0].getId();
-        ResponseEntity<Recipe> deleteResponse =
+        int idToDelete = recipeDtos[0].getId();
+        ResponseEntity<RecipeDto> deleteResponse =
                 testRestTemplate.exchange(API_RECIPE + "/markAsDeleted/" + idToDelete,
                         HttpMethod.PUT,
                         httpEntity,
-                        Recipe.class);
+                        RecipeDto.class);
         assertThat(deleteResponse.getBody().isDeleted(), is(true));
 
         // Should only be 6 recipes now
-        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
-        recipes = requireNonNull(allRecipesResponse.getBody());
-        assertThat(recipes.length, equalTo(6));
+        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, RecipeDto[].class);
+        recipeDtos = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipeDtos.length, equalTo(6));
     }
 
     @Test
     @Order(410)
     public void testRestore() {
-        ResponseEntity<Recipe[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
+        ResponseEntity<RecipeDto[]> allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, RecipeDto[].class);
 
         // 6 recipes before "restore"
-        Recipe[] recipes = requireNonNull(allRecipesResponse.getBody());
-        assertThat(recipes.length, equalTo(6));
+        RecipeDto[] recipeDtos = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipeDtos.length, equalTo(6));
 
         // Restore
         HttpEntity<Void> httpEntity = new HttpEntity<>(null); // No body, No headers
-        ResponseEntity<Recipe> restoreResponse =
+        ResponseEntity<RecipeDto> restoreResponse =
                 testRestTemplate.exchange(API_RECIPE + "/restore/" + 1,
                         HttpMethod.PUT,
                         httpEntity,
-                        Recipe.class);
+                        RecipeDto.class);
         assertThat(restoreResponse.getBody().isDeleted(), is(false));
 
         // Should be 7 recipes now
-        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, Recipe[].class);
-        recipes = requireNonNull(allRecipesResponse.getBody());
-        assertThat(recipes.length, equalTo(7));
+        allRecipesResponse = testRestTemplate.getForEntity(API_RECIPE, RecipeDto[].class);
+        recipeDtos = requireNonNull(allRecipesResponse.getBody());
+        assertThat(recipeDtos.length, equalTo(7));
     }
 }
