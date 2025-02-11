@@ -1,5 +1,7 @@
 package com.lstierneyltd.recipebackend.utils;
 
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import com.lstierneyltd.recipebackend.entities.*;
 
 import java.util.ArrayList;
@@ -19,6 +21,43 @@ public final class TestStubs {
         unit.setName(NAME);
         unit.setAbbreviation(ABBREVIATION);
         return unit;
+    }
+
+    public static RecipeDto getRecipeDto() {
+        Recipe recipe = getRecipe();
+        return new RecipeDto.Builder()
+                .withId(recipe.getId())
+                .withName(recipe.getName())
+                .withDescription(recipe.getDescription())
+                .withCooked(recipe.getCooked())
+                .withLastCooked(recipe.getLastCooked())
+                .withCookingTime(recipe.getCookingTime())
+                .withBasedOn(recipe.getBasedOn())
+                .withMethodSteps(recipe.getMethodSteps())
+                .withIngredients(recipe.getIngredients())
+                .withNotes(recipe.getNotes())
+                .withTags(recipe.getTags())
+                .withServedOn(recipe.getServedOn())
+                .withDeleted(recipe.isDeleted())
+                .withImageFolderPath(BASE_IMAGE_FOLDER_PATH + recipe.getImageFolderName())
+                .withImageFileNames(List.of(RECIPE_1_IMAGE_FILENAME))
+                .withCreatedBy(CREATED_BY)
+                .withLastUpdatedBy(LAST_UPDATED_BY)
+                .withCreatedDate(CREATED_DATE)
+                .withLastUpdatedDate(LAST_UPDATED_DATE)
+                .build();
+    }
+
+    public static RecipePreviewDto getRecipePreviewDto() {
+        Recipe recipe = getRecipe();
+        return new RecipePreviewDto.Builder()
+                .withLastCooked(recipe.getLastCooked())
+                .withName(recipe.getName())
+                .withId(recipe.getId())
+                .withDescription(recipe.getDescription())
+                .withImageFileNames(List.of(RECIPE_1_IMAGE_FILENAME))
+                .withImageFolderPath(BASE_IMAGE_FOLDER_PATH)
+                .build();
     }
 
     public static Recipe getRecipe() {
@@ -42,7 +81,6 @@ public final class TestStubs {
         recipePreview.setId(ID);
         recipePreview.setDescription(DESCRIPTION);
         recipePreview.setName(NAME);
-        recipePreview.setImageFileName(RECIPE_1_IMAGE_FILENAME);
         return recipePreview;
     }
 

@@ -1,38 +1,38 @@
 package com.lstierneyltd.recipebackend.service;
 
-import com.lstierneyltd.recipebackend.entities.Recipe;
-import com.lstierneyltd.recipebackend.repository.RecipeRepository;
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface RecipeService {
-    Recipe addRecipe(MultipartFile imageFile, String recipeString);
+    RecipeDto addRecipe(MultipartFile imageFile, String recipeString);
 
-    Recipe updateRecipe(MultipartFile imageFile, String recipeString);
+    RecipeDto updateRecipe(MultipartFile imageFile, String recipeString);
 
-    Recipe findById(int id);
+    RecipeDto findById(int id);
 
-    Recipe findByName(String name);
+    RecipeDto findByName(String name);
 
-    List<Recipe> findByTagNames(List<String> tagNames);
+    List<RecipeDto> findByTagNames(List<String> tagNames);
 
-    List<Recipe> findAllActive();
+    List<RecipeDto> findAllActiveRecipes();
 
-    List<Recipe> findAll();
+    List<RecipeDto> findAll();
 
-    List<RecipeRepository.RecipePreview> findAllRecipePreview();
+    List<RecipePreviewDto> findAllActiveRecipePreview();
 
-    List<RecipeRepository.RecipePreview> findLatest();
+    List<RecipePreviewDto> findLatestPreviews();
 
-    List<RecipeRepository.RecipePreview> findRandomDinners();
+    List<RecipePreviewDto> findRandomDinnersPreviews();
 
-    RecipeRepository.RecipePreview findRandomDinner();
+    RecipePreviewDto findRandomDinnerPreview();
 
-    Recipe markAsCooked(Integer id);
+    RecipeDto markAsCooked(Integer id);
 
-    Recipe markAsDeleted(Integer id);
+    RecipeDto markAsDeleted(Integer id);
 
-    Recipe restore(Integer id);
+    RecipeDto restore(Integer id);
 }
 

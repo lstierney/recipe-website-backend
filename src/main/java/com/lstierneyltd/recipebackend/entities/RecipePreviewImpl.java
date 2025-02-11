@@ -9,9 +9,7 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
     private int id;
     private String name;
     private String description;
-    private String imageFileName;
     private int cooked;
-
     private LocalDateTime lastCooked;
 
     @Override
@@ -42,15 +40,6 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
     }
 
     @Override
-    public String getImageFileName() {
-        return imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
-    @Override
     public int getCooked() {
         return cooked;
     }
@@ -75,7 +64,6 @@ public class RecipePreviewImpl implements RecipeRepository.RecipePreview {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", imageFileName='" + imageFileName + '\'' +
                 ", cooked='" + cooked + '\'' +
                 ", lastCooked='" + lastCooked + '\'' +
                 '}';

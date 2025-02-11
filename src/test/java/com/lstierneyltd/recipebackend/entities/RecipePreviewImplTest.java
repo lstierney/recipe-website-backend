@@ -34,12 +34,6 @@ public class RecipePreviewImplTest {
     }
 
     @Test
-    public void testSetGetImageFileName() {
-        preview.setImageFileName(RECIPE_1_IMAGE_FILENAME);
-        assertThat(preview.getImageFileName(), equalTo(RECIPE_1_IMAGE_FILENAME));
-    }
-
-    @Test
     public void testSetGetCooked() {
         preview.setCooked(COOKED);
         assertThat(preview.getCooked(), equalTo(COOKED));

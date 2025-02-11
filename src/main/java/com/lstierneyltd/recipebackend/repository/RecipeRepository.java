@@ -22,7 +22,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<RecipePreview> findSixRandomActiveDinners();
 
     @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' AND r.deleted = false ORDER BY RAND() LIMIT 1")
-    RecipePreview findRandomActiveDinner();
+    RecipePreview findRandomActiveDinnerPreview();
 
     @Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t.name = 'dinner' AND r.deleted = false ORDER BY r.id desc LIMIT 6")
     List<RecipePreview> findSixLatestActiveDinnerPreviews();
@@ -41,8 +41,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
         int getId();
 
         String getName();
-
-        String getImageFileName();
 
         String getDescription();
 

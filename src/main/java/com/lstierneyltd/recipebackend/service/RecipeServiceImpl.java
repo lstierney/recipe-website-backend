@@ -1,9 +1,12 @@
 package com.lstierneyltd.recipebackend.service;
 
+import com.lstierneyltd.recipebackend.dto.RecipeDto;
+import com.lstierneyltd.recipebackend.dto.RecipePreviewDto;
 import com.lstierneyltd.recipebackend.entities.Recipe;
 import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,34 +23,37 @@ public class RecipeServiceImpl implements RecipeService {
     private final ObjectMapperService objectMapperService;
     private final RecipeRepository recipeRepository;
     private final UserService userService;
+    private final DtoService dtoService;
 
-    public RecipeServiceImpl(FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository, UserService userService) {
+    @Value("${file.upload.directory}")
+    private String fileUploadDirectory;
+
+    public RecipeServiceImpl(FileService fileService, ObjectMapperService objectMapperService, RecipeRepository recipeRepository, UserService userService, DtoService dtoService) {
         this.fileService = fileService;
         this.objectMapperService = objectMapperService;
         this.recipeRepository = recipeRepository;
         this.userService = userService;
+        this.dtoService = dtoService;
     }
 
     @Override
-    public Recipe addRecipe(MultipartFile imageFile, String recipeString) {
-        final Recipe recipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
-        recipe.markAsCreated(userService.getLoggedInUsername());
+    public RecipeDto addRecipe(MultipartFile imageFile, String recipeString) {
+        final Recipe transientRecipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
+        transientRecipe.markAsCreated(userService.getLoggedInUsername());
 
-        logger.info("Adding new recipe: " + recipe);
+        logger.info("Adding new recipe: " + transientRecipe);
 
-        if (imageFile != null) {
-            handleUploadedFile(imageFile, recipe);
-        }
+        final Recipe persistentRecipe = recipeRepository.save(transientRecipe);
 
-        final Recipe newRecipe = recipeRepository.save(recipe);
+        handleUploadedFile(imageFile, persistentRecipe);
 
-        logger.info("New recipe added. Id: " + newRecipe.getId());
+        logger.info("New recipe added. Id: " + persistentRecipe.getId());
 
-        return newRecipe;
+        return dtoService.recipeToRecipeDto(persistentRecipe);
     }
 
     @Override
-    public Recipe updateRecipe(MultipartFile imageFile, String recipeString) {
+    public RecipeDto updateRecipe(MultipartFile imageFile, String recipeString) {
         final Recipe submittedRecipe = objectMapperService.jsonStringToObject(recipeString, Recipe.class);
 
         logger.info("Updating Recipe: " + submittedRecipe.getId() + ": " + submittedRecipe.getName());
@@ -58,7 +64,6 @@ public class RecipeServiceImpl implements RecipeService {
             existingRecipe.markAsUpdated(userService.getLoggedInUsername()); // We do this manually as @PreUpdate doesn't work for nested collections
             existingRecipe.setName(submittedRecipe.getName());
             existingRecipe.setDescription(submittedRecipe.getDescription());
-            existingRecipe.setImageFileName(submittedRecipe.getImageFileName());
             existingRecipe.setCookingTime(submittedRecipe.getCookingTime());
             existingRecipe.setBasedOn(submittedRecipe.getBasedOn());
 
@@ -77,14 +82,14 @@ public class RecipeServiceImpl implements RecipeService {
             existingRecipe.setServedOn(submittedRecipe.getServedOn());
 
             if (imageFile != null) {
-                handleUploadedFile(imageFile, submittedRecipe);
+                handleUploadedFile(imageFile, existingRecipe);
             }
 
             recipeRepository.save(existingRecipe);
 
             logger.info("Successfully updated Recipe: " + existingRecipe.getId() + ": " + existingRecipe.getName());
 
-            return existingRecipe;
+            return dtoService.recipeToRecipeDto(existingRecipe);
         } else {
             logger.warn("Could not find Recipe with Id: " + submittedRecipe.getId() + " to update");
             return null;
@@ -92,19 +97,20 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void handleUploadedFile(MultipartFile imageFile, Recipe recipe) {
-        fileService.saveMultiPartFile(imageFile);
-        recipe.setImageFileName(imageFile.getOriginalFilename());
+        fileService.createImageFolder(recipe);
+        fileService.addImageToRecipe(imageFile, recipe);
     }
 
     @Override
-    public Recipe findById(int id) {
-        return recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+    public RecipeDto findById(int id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        return dtoService.recipeToRecipeDto(recipe);
     }
 
     @Override
-    public Recipe findByName(String name) {
+    public RecipeDto findByName(String name) {
         String formattedName = getFormattedRecipeName(name);
-        return recipeRepository.findActiveByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName));
+        return dtoService.recipeToRecipeDto(recipeRepository.findActiveByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName)));
     }
 
     private String getFormattedRecipeName(String name) {
@@ -112,66 +118,68 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<Recipe> findByTagNames(List<String> tagNames) {
-        return recipeRepository.findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size());
+    public List<RecipeDto> findByTagNames(List<String> tagNames) {
+        return dtoService.recipesToRecipeDtos(recipeRepository.findByAllActiveRecipesByTagNames(tagNames, (long) tagNames.size()));
     }
 
     @Override
-    public List<Recipe> findAllActive() {
-        return recipeRepository.findActiveRecipes();
+    public List<RecipeDto> findAllActiveRecipes() {
+        return dtoService.recipesToRecipeDtos(recipeRepository.findActiveRecipes());
     }
 
     @Override
-    public List<Recipe> findAll() {
-        return recipeRepository.findAll();
+    public List<RecipeDto> findAll() {
+        return dtoService.recipesToRecipeDtos(recipeRepository.findAll());
     }
 
 
     @Override
-    public List<RecipeRepository.RecipePreview> findAllRecipePreview() {
-        return recipeRepository.findAllActiveRecipePreviews();
+    public List<RecipePreviewDto> findAllActiveRecipePreview() {
+        return dtoService.recipePreviewsToRecipePreviewDtos(recipeRepository.findAllActiveRecipePreviews());
     }
 
     @Override
-    public List<RecipeRepository.RecipePreview> findLatest() {
-        return recipeRepository.findSixLatestActiveDinnerPreviews();
+    public List<RecipePreviewDto> findLatestPreviews() {
+        return dtoService.recipePreviewsToRecipePreviewDtos(recipeRepository.findSixLatestActiveDinnerPreviews());
     }
 
     @Override
-    public List<RecipeRepository.RecipePreview> findRandomDinners() {
-        return recipeRepository.findSixRandomActiveDinners();
+    public List<RecipePreviewDto> findRandomDinnersPreviews() {
+        List<RecipeRepository.RecipePreview> sixRandomActiveDinners = recipeRepository.findSixRandomActiveDinners();
+        List<RecipePreviewDto> recipePreviewDtos = dtoService.recipePreviewsToRecipePreviewDtos(sixRandomActiveDinners);
+        return recipePreviewDtos;
     }
 
     @Override
-    public RecipeRepository.RecipePreview findRandomDinner() {
-        return recipeRepository.findRandomActiveDinner();
+    public RecipePreviewDto findRandomDinnerPreview() {
+        return dtoService.recipePreviewToRecipePreviewDto(recipeRepository.findRandomActiveDinnerPreview());
     }
 
     @Override
-    public Recipe markAsCooked(Integer id) {
-        Recipe recipe = findById(id);
+    public RecipeDto markAsCooked(Integer id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.markedAsCooked();
         recipeRepository.save(recipe);
-        return recipe;
+        return dtoService.recipeToRecipeDto(recipe);
     }
 
     @Override
-    public Recipe markAsDeleted(Integer id) {
-        Recipe recipe = findById(id);
+    public RecipeDto markAsDeleted(Integer id) {
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.setDeleted(true);
         recipe.markAsUpdated(userService.getLoggedInUsername());
-        recipeRepository.save(recipe);
-        return recipe;
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+        return dtoService.recipeToRecipeDto(updatedRecipe);
     }
 
     @Override
-    public Recipe restore(Integer id) {
+    public RecipeDto restore(Integer id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.setDeleted(false);
         recipe.markAsUpdated(userService.getLoggedInUsername());
         recipeRepository.save(recipe);
-        return recipe;
+        return dtoService.recipeToRecipeDto(recipe);
     }
 }
 

@@ -60,7 +60,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getAllActiveRecipes();
 
         // then
-        then(recipeService).should().findAllActive();
+        then(recipeService).should().findAllActiveRecipes();
     }
 
     @Test
@@ -69,7 +69,7 @@ public class RecipeRestControllerImplTest {
         recipeRestController.getRecipesPreviewList();
 
         // then
-        then(recipeService).should().findAllRecipePreview();
+        then(recipeService).should().findAllActiveRecipePreview();
     }
 
     @Test
@@ -106,28 +106,28 @@ public class RecipeRestControllerImplTest {
     @Test
     public void testGetLatestRecipe() {
         // when
-        recipeRestController.getLatestRecipes();
+        recipeRestController.getLatestRecipePreviews();
 
         // then
-        then(recipeService).should().findLatest();
+        then(recipeService).should().findLatestPreviews();
     }
 
     @Test
     public void testGetRandomDinners() {
         // when
-        recipeRestController.getRandomDinners();
+        recipeRestController.getRandomDinnerPreviews();
 
         // then
-        then(recipeService).should().findRandomDinners();
+        then(recipeService).should().findRandomDinnersPreviews();
     }
 
     @Test
     public void testGetRandomDinner() {
         // when
-        recipeRestController.getRandomDinner();
+        recipeRestController.getRandomDinnerPreview();
 
         // then
-        then(recipeService).should().findRandomDinner();
+        then(recipeService).should().findRandomDinnerPreview();
     }
 
     @Test
