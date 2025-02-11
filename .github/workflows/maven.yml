@@ -29,8 +29,10 @@ jobs:
       - name: Create Directories
         run: |
           mkdir -p "/opt/recipe-website/images/1 - Moroccan Vegetable Stew with Cous Cous"
-          mkdir -p "/opt/recipe-website/images/4 - Gnocchi Bake"
           mkdir -p "/opt/recipe-website/images/2 - Spaghetti Bolognese"
+          mkdir -p "/opt/recipe-website/images/3 - Sweet Chilli Noodles"
+          mkdir -p "/opt/recipe-website/images/4 - Gnocchi Bake"
+          mkdir -p "/opt/recipe-website/images/5 - Bangers and Mash"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
