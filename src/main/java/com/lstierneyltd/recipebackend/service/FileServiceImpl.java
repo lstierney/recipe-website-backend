@@ -60,10 +60,10 @@ public class FileServiceImpl implements FileService {
                 fileNames.add(p.getFileName().toString());
             }
         } catch (IOException e) {
-            logger.error("Could not read files in dir: " + dirPath);
-            // i think throwing an exception here is reasonable
+            logger.error("## Could not read files in dir: " + dirPath, e);
+            // I think throwing an exception here is reasonable
             // as we expect the folder, and at least one image, to exist
-            throw new RecipeBackendException(e.getMessage());
+            throw new RecipeBackendException(e);
         }
         return fileNames;
     }
