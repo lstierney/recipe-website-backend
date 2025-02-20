@@ -19,7 +19,7 @@ front-end.
 | License        | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)    |
 
 ## Demo Link
-http://myveggierecipes.com:8080
+https://myveggierecipes.com
 
 ## Installation
 
