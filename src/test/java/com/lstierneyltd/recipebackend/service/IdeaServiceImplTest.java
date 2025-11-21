@@ -10,9 +10,9 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.lstierneyltd.recipebackend.service.IdeaServiceImpl.COULD_NOT_FIND_IDEA_WITH_ID;
@@ -65,7 +65,7 @@ public class IdeaServiceImplTest {
         given(ideaRepository.findById(IDEA_ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> ideaService.getIdeaById(IDEA_ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> ideaService.getIdeaById(IDEA_ID));
 
         // Then
         then(ideaRepository).should().findById(IDEA_ID);
@@ -101,9 +101,6 @@ public class IdeaServiceImplTest {
 
     @Test
     public void testDelete_ideaFound() {
-        // Given
-        Idea idea = getIdea();
-
         // When
         ideaService.deleteIdea(IDEA_ID);
 

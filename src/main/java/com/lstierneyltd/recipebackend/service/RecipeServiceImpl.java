@@ -7,11 +7,11 @@ import com.lstierneyltd.recipebackend.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -103,14 +103,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDto findById(int id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         return dtoService.recipeToRecipeDto(recipe);
     }
 
     @Override
     public RecipeDto findByName(String name) {
         String formattedName = getFormattedRecipeName(name);
-        return dtoService.recipeToRecipeDto(recipeRepository.findActiveByName(formattedName).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName)));
+        return dtoService.recipeToRecipeDto(recipeRepository.findActiveByName(formattedName).orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_RECIPE_WITH_NAME + formattedName)));
     }
 
     private String getFormattedRecipeName(String name) {
@@ -157,7 +157,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDto markAsCooked(Integer id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.markedAsCooked();
         recipeRepository.save(recipe);
         return dtoService.recipeToRecipeDto(recipe);
@@ -165,7 +165,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDto markAsDeleted(Integer id) {
-        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+        Recipe recipe = recipeRepository.findById(id).orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.setDeleted(true);
         recipe.markAsUpdated(userService.getLoggedInUsername());
         Recipe updatedRecipe = recipeRepository.save(recipe);
@@ -175,7 +175,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeDto restore(Integer id) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
+                .orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_RECIPE_WITH_ID + id));
         recipe.setDeleted(false);
         recipe.markAsUpdated(userService.getLoggedInUsername());
         recipeRepository.save(recipe);

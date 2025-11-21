@@ -11,7 +11,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.*;
 
@@ -63,7 +62,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.getTagById(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> tagService.getTagById(ID));
 
         // Then
         then(tagRepository).should().findById(ID);
@@ -115,7 +114,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.deleteTag(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> tagService.deleteTag(ID));
 
         // Then
         then(tagRepository).should().findById(ID);
@@ -154,7 +153,7 @@ public class TagServiceImplTest {
         given(tagRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> tagService.updateTag(ID, getNewTag()));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> tagService.updateTag(ID, getNewTag()));
 
         // Then
         then(tagRepository).should().findById(ID);
