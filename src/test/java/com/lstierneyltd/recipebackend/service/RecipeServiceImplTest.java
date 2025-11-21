@@ -15,11 +15,11 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.lstierneyltd.recipebackend.service.RecipeServiceImpl.COULD_NOT_FIND_RECIPE_WITH_ID;
@@ -217,7 +217,7 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findById(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> recipeService.findById(ID));
 
         // Then
         then(recipeRepository).should().findById(ID);
@@ -285,7 +285,7 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findActiveByName(NAME)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.findByName(NAME));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> recipeService.findByName(NAME));
 
         // Then
         then(recipeRepository).should().findActiveByName(NAME);
@@ -399,7 +399,7 @@ public class RecipeServiceImplTest {
         given(dtoService.recipeToRecipeDto(recipe)).willReturn(recipeDto);
 
         // when
-        RecipeDto cookedRecipeDto = recipeService.markAsCooked(ID);
+        recipeService.markAsCooked(ID);
 
         // then
         then(recipeRepository).should().findById(ID);
@@ -417,7 +417,7 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.markAsCooked(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> recipeService.markAsCooked(ID));
 
         // Then
         then(recipeRepository).should().findById(ID);
@@ -451,7 +451,7 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.markAsDeleted(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> recipeService.markAsDeleted(ID));
 
         // Then
         then(recipeRepository).should().findById(ID);
@@ -484,7 +484,7 @@ public class RecipeServiceImplTest {
         given(recipeRepository.findById(ID)).willReturn(Optional.empty());
 
         // When
-        Exception exception = assertThrows(ResourceNotFoundException.class, () -> recipeService.restore(ID));
+        Exception exception = assertThrows(NoSuchElementException.class, () -> recipeService.restore(ID));
 
         // Then
         then(recipeRepository).should().findById(ID);

@@ -2,10 +2,10 @@ package com.lstierneyltd.recipebackend.service;
 
 import com.lstierneyltd.recipebackend.entities.Idea;
 import com.lstierneyltd.recipebackend.repository.IdeaRepository;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class IdeaServiceImpl implements IdeaService {
@@ -26,7 +26,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public Idea getIdeaById(Integer id) {
-        return ideaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(COULD_NOT_FIND_IDEA_WITH_ID + id));
+        return ideaRepository.findById(id).orElseThrow(() -> new NoSuchElementException(COULD_NOT_FIND_IDEA_WITH_ID + id));
     }
 
     @Override
