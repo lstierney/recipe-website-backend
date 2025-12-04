@@ -11,4 +11,6 @@ public interface FileService {
     void addImageToRecipe(MultipartFile imageFile, Recipe recipe);
 
     List<String> getFilesInDirectory(String imageFolderPath);
+
+    void renameImageFolder(String oldImageFolderName, String newImageFolderName);
 }

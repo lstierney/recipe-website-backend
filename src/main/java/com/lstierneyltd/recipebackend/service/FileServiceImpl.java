@@ -68,6 +68,21 @@ public class FileServiceImpl implements FileService {
         return fileNames;
     }
 
+    @Override
+    public void renameImageFolder(String oldImageFolderName, String newImageFolderName) {
+        logger.info("Renaming image folder from '{}' to '{}'", oldImageFolderName, newImageFolderName);
+
+        Path sourceDir = Paths.get(fileUploadDirectory + "/images/" + oldImageFolderName);
+        Path targetDir = Paths.get(fileUploadDirectory + "/images/" + newImageFolderName);
+
+        try {
+            Files.move(sourceDir, targetDir);
+            System.out.println("Directory renamed successfully!");
+        } catch (Exception e) {
+            throw new RecipeBackendException(e);
+        }
+    }
+
     private String getRecipeFolderPath(Recipe recipe) {
         return fileUploadDirectory + "/images/" + recipe.getImageFolderName();
     }

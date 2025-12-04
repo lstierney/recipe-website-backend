@@ -61,6 +61,8 @@ public class RecipeServiceImpl implements RecipeService {
         final Optional<Recipe> existingRecipeOptional = recipeRepository.findById(submittedRecipe.getId());
         if (existingRecipeOptional.isPresent()) {
             Recipe existingRecipe = existingRecipeOptional.get();
+            String oldImageFolderName = existingRecipe.getImageFolderName();
+
             existingRecipe.markAsUpdated(userService.getLoggedInUsername()); // We do this manually as @PreUpdate doesn't work for nested collections
             existingRecipe.setName(submittedRecipe.getName());
             existingRecipe.setDescription(submittedRecipe.getDescription());
@@ -84,7 +86,10 @@ public class RecipeServiceImpl implements RecipeService {
             if (imageFile != null) {
                 handleUploadedFile(imageFile, existingRecipe);
             }
-
+            if (!oldImageFolderName.equals(submittedRecipe.getImageFolderName())) {
+                // We need to rename the image folder on /opt/recipe-website/
+                fileService.renameImageFolder(oldImageFolderName, submittedRecipe.getImageFolderName());
+            }
             recipeRepository.save(existingRecipe);
 
             logger.info("Successfully updated Recipe: " + existingRecipe.getId() + ": " + existingRecipe.getName());
