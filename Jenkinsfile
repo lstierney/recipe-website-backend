@@ -5,6 +5,11 @@ pipeline {
         pollSCM('* * * * *')
     }
 
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+
     environment {
         // this is only for the build - not used in app
         JWT_SECRET = 'thisisthejwtsecret'
